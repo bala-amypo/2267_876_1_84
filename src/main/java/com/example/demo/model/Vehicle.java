@@ -22,21 +22,7 @@ public class Vehicle {
     private Long ownerId;
     private Boolean active = true;
     private Timestamp createdAt;
-    
-    public Vehicle() {
-    }
 
-    public Vehicle(Long id, String vin, String make, String model,
-                   Integer year, Long ownerId, Boolean active, Timestamp createdAt) {
-        this.id = id;
-        this.vin = vin;
-        this.make = make;
-        this.model = model;
-        this.year = year;
-        this.ownerId = ownerId;
-        this.active = active;
-        this.createdAt = createdAt;
-    }
     public Long getId() {
         return id;
     }
@@ -83,6 +69,20 @@ public class Vehicle {
         return createdAt;
     }
     public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+    public Vehicle() {
+    }
+
+    public Vehicle(Long id, String vin, String make, String model,
+                   Integer year, Long ownerId, Boolean active, Timestamp createdAt) {
+        this.id = id;
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.ownerId = ownerId;
+        this.active = active;
         this.createdAt = createdAt;
     }
 }
