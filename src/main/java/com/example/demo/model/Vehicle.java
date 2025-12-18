@@ -34,8 +34,12 @@ private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 public Vehicle() {}
 
 
-public Long getId() { return id; }
-public String getVin() { return vin; }
-public Boolean getActive() { return active; }
-public void setActive(Boolean active) { this.active = active; }
+public Long getId() { 
+    return id; }
+public String getVin() {
+     return vin; }
+public Boolean getActive() {
+     return active; }
+public void setActive(Boolean active) {
+     this.active = active; }
 }

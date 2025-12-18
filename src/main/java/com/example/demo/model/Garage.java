@@ -20,8 +20,13 @@ private String contactNumber;
 private Boolean active = true;
 
 
-public Garage() {}
-public Long getId() { return id; }
-public Boolean getActive() { return active; }
-public void setActive(Boolean active) { this.active = active; }
+public Garage() {
+
+}
+public Long getId() {
+     return id; }
+public Boolean getActive() { 
+    return active; }
+public void setActive(Boolean active) {
+     this.active = active; }
 }
