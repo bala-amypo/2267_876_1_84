@@ -1,9 +1,17 @@
 package com.example.demo.model;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import java.sql.Timestamp;
 
 @Entity
-public class Vehicle{
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Vehicle {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -15,7 +23,7 @@ public class Vehicle{
 
     private Long ownerId;
 
-    private Boolean active = true; // default true
+    private Boolean active = true;
 
     private Timestamp createdAt;
 
@@ -24,7 +32,7 @@ public class Vehicle{
 
     public Vehicle(Long id, String vin, String make, String model,
                    Integer year, Long ownerId, Boolean active, Timestamp createdAt) {
-        this.id = id;
+        //this.id = id;
         this.vin = vin;
         this.make = make;
         this.model = model;
