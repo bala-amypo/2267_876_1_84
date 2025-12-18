@@ -22,6 +22,7 @@ public class Vehicle {
     private Long ownerId;
     private Boolean active = true;
     private Timestamp createdAt;
+    
     public Vehicle() {
     }
 
