@@ -1,51 +1,54 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
 @Table(
     name = "vehicles",
-    uniqueConstraints = @UniqueConstraint(columnNames = "vin")
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "vin")
+    }
 )
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(nullable = false, unique = true)
     private String vin;
 
-    @NotBlank
-    @Column(nullable = false)
     private String make;
 
-    @NotBlank
-    @Column(nullable = false)
     private String model;
 
-    @NotNull
+    private Integer year;
+
     @Column(nullable = false)
     private Long ownerId;
 
-    @Column(nullable = false)
     private Boolean active = true;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false)
+    private Timestamp createdAt;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // Prevent nested output
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ServiceEntry> serviceEntries;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Timestamp.from(Instant.now());
+        if (this.active == null) {
+            this.active = true;
+        }
+    }
+
+    // getters & setters
 }
