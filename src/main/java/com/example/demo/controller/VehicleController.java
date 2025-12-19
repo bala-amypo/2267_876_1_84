@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
 import com.example.demo.service.VehicleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,41 @@ public class VehicleController {
     }
 
     @PostMapping
-    public Vehicle addVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.addVehicle(vehicle);
+    public ResponseEntity<Vehicle> createVehicle(
+            @RequestBody Vehicle vehicle
+    ) {
+        return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
     }
 
-    @GetMapping("/{vin}")
-    public Vehicle getByVin(@PathVariable String vin) {
-        return vehicleService.getVehicleByVin(vin);
+    @GetMapping("/{id}")
+    public ResponseEntity<Vehicle> getVehicleById(
+            @PathVariable Long id
+    ) {
+        return vehicleService.getVehicleById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+        return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
-        return vehicleService.getVehiclesByOwner(ownerId);
+    public ResponseEntity<List<Vehicle>> getByOwner(
+            @PathVariable Long ownerId
+    ) {
+        return ResponseEntity.ok(
+                vehicleService.getVehiclesByOwner(ownerId)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Vehicle> deactivateVehicle(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(
+                vehicleService.deactivateVehicle(id)
+        );
     }
 }
