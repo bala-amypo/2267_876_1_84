@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "vehicles", uniqueConstraints = {
@@ -21,9 +20,6 @@ public class Vehicle {
     private Long ownerId;
     private Boolean active;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    private List<ServiceEntry> serviceEntries;
-
     public Vehicle() {
     }
 
@@ -39,16 +35,16 @@ public class Vehicle {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getVin() {
         return vin;
     }
 
     public void setVin(String vin) {
         this.vin = vin;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getMake() {
@@ -81,13 +77,5 @@ public class Vehicle {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public List<ServiceEntry> getServiceEntries() {
-        return serviceEntries;
-    }
-
-    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
-        this.serviceEntries = serviceEntries;
     }
 }
