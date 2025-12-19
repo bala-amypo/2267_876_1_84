@@ -13,5 +13,7 @@ public interface VehicleService {
 
     List<Vehicle> getAllVehicles();
 
+    List<Vehicle> getVehiclesByOwner(Long ownerId);
+
     Vehicle deactivateVehicle(Long id);
 }
