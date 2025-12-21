@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -15,16 +16,22 @@ public class Vehicle {
     private String vin;
 
     private String make;
+
     private String model;
+
     private Long ownerId;
+
     private Boolean active;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    @JsonIgnore   // prevents infinite recursion in Swagger / JSON
     private List<ServiceEntry> serviceEntries;
 
+    // ✅ No-arg constructor (required by JPA)
     public Vehicle() {
     }
 
+    // ✅ Parameterized constructor (SRS allows)
     public Vehicle(String vin, String make, String model, Long ownerId, Boolean active) {
         this.vin = vin;
         this.make = make;
@@ -32,6 +39,8 @@ public class Vehicle {
         this.ownerId = ownerId;
         this.active = active;
     }
+
+    // ✅ Getters & Setters
 
     public Long getId() {
         return id;

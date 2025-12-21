@@ -17,26 +17,25 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-    // CREATE VEHICLE
+    // 🔹 Create Vehicle
     @PostMapping
     public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
         return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
     }
 
-    // GET VEHICLE BY ID
+    // 🔹 Get Vehicle by ID
     @GetMapping("/{id}")
     public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
         return ResponseEntity.ok(vehicleService.getVehicleById(id));
     }
 
-    // GET VEHICLES BY OWNER
+    // 🔹 Get Vehicles by Owner
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(
-            @PathVariable Long ownerId) {
+    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(@PathVariable Long ownerId) {
         return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 
-    // DEACTIVATE VEHICLE
+    // 🔹 Deactivate Vehicle
     @PostMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateVehicle(@PathVariable Long id) {
         vehicleService.deactivateVehicle(id);
