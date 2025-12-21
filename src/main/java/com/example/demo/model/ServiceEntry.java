@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "service_entries")
@@ -12,39 +12,37 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "vehicle_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    @ManyToOne
-    @JoinColumn(name = "garage_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "garage_id")
     private Garage garage;
 
+    @Column(nullable = false)
     private String serviceType;
+
+    @Column(nullable = false)
     private LocalDate serviceDate;
+
+    @Column(nullable = false)
     private Integer odometerReading;
 
-    @OneToMany(mappedBy = "serviceEntry", cascade = CascadeType.ALL)
-    private List<ServicePart> serviceParts;
+    private String description;
 
-    public ServiceEntry() {
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime recordedAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.recordedAt = LocalDateTime.now();
     }
 
-    public ServiceEntry(Vehicle vehicle, Garage garage, String serviceType,
-                        LocalDate serviceDate, Integer odometerReading) {
-        this.vehicle = vehicle;
-        this.garage = garage;
-        this.serviceType = serviceType;
-        this.serviceDate = serviceDate;
-        this.odometerReading = odometerReading;
-    }
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Vehicle getVehicle() {
@@ -87,11 +85,15 @@ public class ServiceEntry {
         this.odometerReading = odometerReading;
     }
 
-    public List<ServicePart> getServiceParts() {
-        return serviceParts;
+    public String getDescription() {
+        return description;
     }
 
-    public void setServiceParts(List<ServicePart> serviceParts) {
-        this.serviceParts = serviceParts;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getRecordedAt() {
+        return recordedAt;
     }
 }
