@@ -19,10 +19,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
-        vehicleRepository.findByVin(vehicle.getVin())
-                .ifPresent(v -> {
-                    throw new IllegalArgumentException("VIN already exists");
-                });
+        if (vehicleRepository.findByVin(vehicle.getVin()).isPresent()) {
+            throw new IllegalArgumentException("VIN already exists");
+        }
         return vehicleRepository.save(vehicle);
     }
 
