@@ -27,11 +27,11 @@ public class Vehicle {
     @JsonIgnore   // prevents infinite recursion in Swagger / JSON
     private List<ServiceEntry> serviceEntries;
 
-    // ✅ No-arg constructor (required by JPA)
+    //  No-arg constructor
     public Vehicle() {
     }
 
-    // ✅ Parameterized constructor (SRS allows)
+    //  Parameterized constructor 
     public Vehicle(String vin, String make, String model, Long ownerId, Boolean active) {
         this.vin = vin;
         this.make = make;
@@ -40,7 +40,7 @@ public class Vehicle {
         this.active = active;
     }
 
-    // ✅ Getters & Setters
+    //  Getters & Setters
 
     public Long getId() {
         return id;
