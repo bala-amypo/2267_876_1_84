@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/garages")
+@RequestMapping("/api/garages")
 public class GarageController {
 
     private final GarageService garageService;
@@ -21,13 +21,23 @@ public class GarageController {
         return garageService.createGarage(garage);
     }
 
-    @GetMapping
-    public List<Garage> getAllGarages() {
-        return garageService.getAllGarages();
+    @PutMapping("/{id}")
+    public Garage updateGarage(@PathVariable Long id, @RequestBody Garage garage) {
+        return garageService.updateGarage(id, garage);
     }
 
     @GetMapping("/{id}")
     public Garage getGarageById(@PathVariable Long id) {
         return garageService.getGarageById(id);
+    }
+
+    @GetMapping
+    public List<Garage> getAllGarages() {
+        return garageService.getAllGarages();
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public void deactivateGarage(@PathVariable Long id) {
+        garageService.deactivateGarage(id);
     }
 }

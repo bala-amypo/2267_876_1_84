@@ -1,15 +1,11 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(
-    name = "garages",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = "garage_name")
-    }
+        name = "garages",
+        uniqueConstraints = @UniqueConstraint(columnNames = "garage_name")
 )
 public class Garage {
 
@@ -29,13 +25,7 @@ public class Garage {
     @Column(nullable = false)
     private Boolean active = true;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "garage", fetch = FetchType.LAZY)
-    private List<ServiceEntry> serviceEntries;
-
-    public Garage() {}
-
-    // ===== Getters & Setters =====
+    // ----- Getters and Setters -----
 
     public Long getId() {
         return id;
