@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(
@@ -30,6 +32,15 @@ public class Vehicle {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
+    // 🔗 One Vehicle → Many ServiceEntries
+    @OneToMany(
+        mappedBy = "vehicle",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JsonManagedReference
+    private List<ServiceEntry> serviceEntries;
+
     @PrePersist
     public void onCreate() {
         this.createdAt = Instant.now();
@@ -40,17 +51,29 @@ public class Vehicle {
 
     // getters & setters
     public Long getId() { return id; }
+
     public String getVin() { return vin; }
     public void setVin(String vin) { this.vin = vin; }
+
     public String getMake() { return make; }
     public void setMake(String make) { this.make = make; }
+
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
+
     public Integer getYear() { return year; }
     public void setYear(Integer year) { this.year = year; }
+
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+
     public Instant getCreatedAt() { return createdAt; }
+
+    public List<ServiceEntry> getServiceEntries() { return serviceEntries; }
+    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
+        this.serviceEntries = serviceEntries;
+    }
 }
