@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    boolean existsByVin(String vin);
-
     Optional<Vehicle> findByVin(String vin);
 
     List<Vehicle> findByOwnerId(Long ownerId);

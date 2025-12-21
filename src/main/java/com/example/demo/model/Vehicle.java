@@ -1,8 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
@@ -21,35 +20,30 @@ public class Vehicle {
 
     private String make;
     private String model;
-    private Integer year;
 
     @Column(nullable = false)
     private Long ownerId;
 
     @Column(nullable = false)
-    private Boolean active = true;
+    private Boolean active;
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
-
-    // 🔗 One Vehicle → Many ServiceEntries
-    @OneToMany(
-        mappedBy = "vehicle",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JsonManagedReference
+    // One Vehicle -> Many ServiceEntries (DB only, not API)
+    @OneToMany(mappedBy = "vehicle")
+    @JsonIgnore
     private List<ServiceEntry> serviceEntries;
 
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = Instant.now();
-        if (this.active == null) {
-            this.active = true;
-        }
+    // Constructors
+    public Vehicle() {}
+
+    public Vehicle(String vin, String make, String model, Long ownerId, Boolean active) {
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.ownerId = ownerId;
+        this.active = active;
     }
 
-    // getters & setters
+    // Getters & Setters
     public Long getId() { return id; }
 
     public String getVin() { return vin; }
@@ -61,19 +55,9 @@ public class Vehicle {
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
 
-    public Integer getYear() { return year; }
-    public void setYear(Integer year) { this.year = year; }
-
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
-
-    public Instant getCreatedAt() { return createdAt; }
-
-    public List<ServiceEntry> getServiceEntries() { return serviceEntries; }
-    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
-        this.serviceEntries = serviceEntries;
-    }
 }
