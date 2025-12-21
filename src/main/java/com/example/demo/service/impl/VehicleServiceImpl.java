@@ -5,7 +5,6 @@ import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -19,22 +18,22 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
-        // ❌ VIN uniqueness check REMOVED
+        if (vehicleRepository.findByVin(vehicle.getVin()).isPresent()) {
+            throw new IllegalArgumentException("VIN");
+        }
         return vehicleRepository.save(vehicle);
     }
 
     @Override
     public Vehicle getVehicleById(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
     }
 
     @Override
     public Vehicle getVehicleByVin(String vin) {
         return vehicleRepository.findByVin(vin)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
     }
 
     @Override
