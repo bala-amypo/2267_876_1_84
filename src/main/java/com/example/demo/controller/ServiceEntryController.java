@@ -12,29 +12,29 @@ import java.util.List;
 @Tag(name = "Service Entries")
 public class ServiceEntryController {
 
-    private final ServiceEntryService service;
+    private final ServiceEntryService serviceEntryService;
 
-    public ServiceEntryController(ServiceEntryService service) {
-        this.service = service;
+    public ServiceEntryController(ServiceEntryService serviceEntryService) {
+        this.serviceEntryService = serviceEntryService;
     }
 
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
-        return service.create(entry);
+        return serviceEntryService.createServiceEntry(entry);
     }
 
     @GetMapping("/{id}")
     public ServiceEntry getById(@PathVariable Long id) {
-        return service.getById(id);
+        return serviceEntryService.getServiceEntryById(id);
     }
 
     @GetMapping("/vehicle/{vehicleId}")
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
-        return service.getByVehicle(vehicleId);
+        return serviceEntryService.getEntriesForVehicle(vehicleId);
     }
 
     @GetMapping("/garage/{garageId}")
     public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
-        return service.getByGarage(garageId);
+        return serviceEntryService.getEntriesByGarage(garageId);
     }
 }

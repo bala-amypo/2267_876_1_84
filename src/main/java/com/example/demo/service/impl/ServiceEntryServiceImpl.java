@@ -15,15 +15,15 @@ import java.util.List;
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
-    private final ServiceEntryRepository serviceEntryRepo;
+    private final ServiceEntryRepository entryRepo;
     private final VehicleRepository vehicleRepo;
     private final GarageRepository garageRepo;
 
     public ServiceEntryServiceImpl(
-            ServiceEntryRepository serviceEntryRepo,
+            ServiceEntryRepository entryRepo,
             VehicleRepository vehicleRepo,
             GarageRepository garageRepo) {
-        this.serviceEntryRepo = serviceEntryRepo;
+        this.entryRepo = entryRepo;
         this.vehicleRepo = vehicleRepo;
         this.garageRepo = garageRepo;
     }
@@ -31,34 +31,31 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry create(ServiceEntry entry) {
 
-        Long vehicleId = entry.getVehicle().getId();
-        Long garageId = entry.getGarage().getId();
-
-        Vehicle vehicle = vehicleRepo.findById(vehicleId)
+        Vehicle vehicle = vehicleRepo.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        Garage garage = garageRepo.findById(garageId)
+        Garage garage = garageRepo.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
 
-        return serviceEntryRepo.save(entry);
+        return entryRepo.save(entry);
     }
 
     @Override
     public ServiceEntry getById(Long id) {
-        return serviceEntryRepo.findById(id)
+        return entryRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Service entry not found"));
     }
 
     @Override
     public List<ServiceEntry> getByVehicle(Long vehicleId) {
-        return serviceEntryRepo.findByVehicleId(vehicleId);
+        return entryRepo.findByVehicleId(vehicleId);
     }
 
     @Override
     public List<ServiceEntry> getByGarage(Long garageId) {
-        return serviceEntryRepo.findByGarageId(garageId);
+        return entryRepo.findByGarageId(garageId);
     }
 }
