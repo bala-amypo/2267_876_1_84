@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "garage")
+@Table(name = "garages")
 public class Garage {
 
     @Id
@@ -15,12 +15,13 @@ public class Garage {
 
     private String address;
 
-    private boolean active = true;
+    private boolean active;
 
-    @OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ServiceEntry> serviceEntries;
 
-    // ===== Getters and Setters =====
+    public Garage() {
+    }
 
     public Long getId() {
         return id;

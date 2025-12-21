@@ -17,7 +17,7 @@ public class GarageServiceImpl implements GarageService {
     }
 
     @Override
-    public Garage saveGarage(Garage garage) {
+    public Garage createGarage(Garage garage) {
         return garageRepository.save(garage);
     }
 
@@ -28,12 +28,6 @@ public class GarageServiceImpl implements GarageService {
 
     @Override
     public Garage getGarageById(Long id) {
-        return garageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Garage not found with id: " + id));
-    }
-
-    @Override
-    public void deleteGarage(Long id) {
-        garageRepository.deleteById(id);
+        return garageRepository.findById(id).orElse(null);
     }
 }

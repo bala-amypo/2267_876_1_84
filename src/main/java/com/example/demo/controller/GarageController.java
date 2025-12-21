@@ -18,7 +18,7 @@ public class GarageController {
 
     @PostMapping
     public Garage createGarage(@RequestBody Garage garage) {
-        return garageService.saveGarage(garage);
+        return garageService.createGarage(garage);
     }
 
     @GetMapping
@@ -29,10 +29,5 @@ public class GarageController {
     @GetMapping("/{id}")
     public Garage getGarageById(@PathVariable Long id) {
         return garageService.getGarageById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteGarage(@PathVariable Long id) {
-        garageService.deleteGarage(id);
     }
 }
