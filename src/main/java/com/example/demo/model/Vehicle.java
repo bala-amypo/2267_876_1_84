@@ -3,22 +3,39 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "vehicles")
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String vin;
 
     private String make;
     private String model;
     private Integer year;
+
+    @Column(nullable = false)
     private Long ownerId;
+
     private Boolean active = true;
 
-    // getters & setters
+    // ===== constructors =====
+    public Vehicle() {}
+
+    public Vehicle(Long id, String vin, String make, String model, Integer year, Long ownerId, Boolean active) {
+        this.id = id;
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.ownerId = ownerId;
+        this.active = active;
+    }
+
+    // ===== getters & setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

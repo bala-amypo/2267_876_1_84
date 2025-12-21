@@ -4,18 +4,29 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "verification_logs")
 public class VerificationLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
     private LocalDateTime verifiedAt;
 
-    // getters & setters
+    // ===== constructors =====
+    public VerificationLog() {}
+
+    public VerificationLog(Long id, ServiceEntry serviceEntry, LocalDateTime verifiedAt) {
+        this.id = id;
+        this.serviceEntry = serviceEntry;
+        this.verifiedAt = verifiedAt;
+    }
+
+    // ===== getters & setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
