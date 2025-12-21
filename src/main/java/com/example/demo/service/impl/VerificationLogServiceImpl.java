@@ -1,33 +1,17 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.model.VerificationLog;
-import com.example.demo.repository.VerificationLogRepository;
-import com.example.demo.service.VerificationLogService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
-public class VerificationLogServiceImpl implements VerificationLogService {
+public class VerificationLogServiceImpl {
 
-    private final VerificationLogRepository repository;
+    private final VerificationLogRepository repo;
+    private final ServiceEntryRepository entryRepo;
 
-    public VerificationLogServiceImpl(VerificationLogRepository repository) {
-        this.repository = repository;
+    public VerificationLogServiceImpl(VerificationLogRepository r, ServiceEntryRepository e) {
+        this.repo = r;
+        this.entryRepo = e;
     }
 
-    @Override
     public VerificationLog createLog(VerificationLog log) {
-        return repository.save(log);
-    }
-
-    @Override
-    public VerificationLog getLogById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    @Override
-    public List<VerificationLog> getLogsByEntry(Long entryId) {
-        return repository.findByServiceEntryId(entryId);
+        entryRepo.findById(log.getServiceEntry().getId()).orElseThrow();
+        log.setVerifiedAt(LocalDateTime.now());
+        return repo.save(log);
     }
 }

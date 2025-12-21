@@ -1,66 +1,35 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
-import com.example.demo.model.Garage;
-import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VehicleRepository;
-import com.example.demo.repository.GarageRepository;
-import com.example.demo.service.ServiceEntryService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
-public class ServiceEntryServiceImpl implements ServiceEntryService {
+public class ServiceEntryServiceImpl {
 
-    private final ServiceEntryRepository serviceEntryRepository;
-    private final VehicleRepository vehicleRepository;
-    private final GarageRepository garageRepository;
+    private final ServiceEntryRepository repo;
+    private final VehicleRepository vehicleRepo;
+    private final GarageRepository garageRepo;
 
-    public ServiceEntryServiceImpl(
-            ServiceEntryRepository serviceEntryRepository,
-            VehicleRepository vehicleRepository,
-            GarageRepository garageRepository) {
-        this.serviceEntryRepository = serviceEntryRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.garageRepository = garageRepository;
+    public ServiceEntryServiceImpl(ServiceEntryRepository r, VehicleRepository v, GarageRepository g) {
+        this.repo = r;
+        this.vehicleRepo = v;
+        this.garageRepo = g;
     }
 
-    @Override
-    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+    public ServiceEntry createServiceEntry(ServiceEntry e) {
+        Vehicle v = vehicleRepo.findById(e.getVehicle().getId()).orElseThrow();
+        Garage g = garageRepo.findById(e.getGarage().getId()).orElseThrow();
 
-        // ✅ FETCH existing Vehicle
-        Vehicle vehicle = vehicleRepository.findById(
-                entry.getVehicle().getId()
-        ).orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        if (!v.getActive()) throw new IllegalArgumentException("Only active vehicles allowed");
+        if (!g.getActive()) throw new IllegalArgumentException("Inactive garage");
 
-        // ✅ FETCH existing Garage
-        Garage garage = garageRepository.findById(
-                entry.getGarage().getId()
-        ).orElseThrow(() -> new RuntimeException("Garage not found"));
+        if (e.getServiceDate().isAfter(LocalDate.now()))
+            throw new IllegalArgumentException("future date");
 
-        // ✅ SET managed entities
-        entry.setVehicle(vehicle);
-        entry.setGarage(garage);
+        repo.findTopByVehicleOrderByOdometerReadingDesc(v).ifPresent(last -> {
+            if (e.getOdometerReading() < last.getOdometerReading())
+                throw new IllegalArgumentException(">=");
+        });
 
-        // ✅ SAVE only ServiceEntry
-        return serviceEntryRepository.save(entry);
+        return repo.save(e);
     }
 
-    @Override
-    public ServiceEntry getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ServiceEntry not found"));
-    }
-
-    @Override
-    public List<ServiceEntry> getEntriesByVehicle(Long vehicleId) {
-        return serviceEntryRepository.findByVehicleId(vehicleId);
-    }
-
-    @Override
-    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
-        return serviceEntryRepository.findByGarageId(garageId);
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+        return repo.findByVehicleId(vehicleId);
     }
 }
