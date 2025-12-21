@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle createVehicle(Vehicle vehicle);
+    Vehicle registerVehicle(Vehicle vehicle);
 
     Vehicle getVehicleById(Long id);
 
@@ -13,5 +13,5 @@ public interface VehicleService {
 
     List<Vehicle> getVehiclesByOwner(Long ownerId);
 
-    void deactivateVehicle(Long id);
+    Vehicle deactivateVehicle(Long id);
 }
