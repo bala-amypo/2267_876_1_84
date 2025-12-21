@@ -5,24 +5,37 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "garages")
+@Table(
+    name = "garages",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "garage_name")
+    }
+)
 public class Garage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "garage_name", nullable = false, unique = true)
     private String garageName;
 
+    @Column(nullable = false)
     private String address;
 
-    private boolean active;
+    @Column(nullable = false)
+    private String contactNumber;
+
+    @Column(nullable = false)
+    private Boolean active = true;
 
     @JsonIgnore
     @OneToMany(mappedBy = "garage", fetch = FetchType.LAZY)
     private List<ServiceEntry> serviceEntries;
 
     public Garage() {}
+
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
@@ -48,11 +61,19 @@ public class Garage {
         this.address = address;
     }
 
-    public boolean isActive() {
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 }
