@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "garages")
 public class Garage {
 
     @Id
@@ -16,10 +15,11 @@ public class Garage {
     private String contactNumber;
     private boolean active;
 
-    @OneToMany(mappedBy = "garage", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "garage")
     private List<ServiceEntry> serviceEntries;
 
-    public Garage() {}
+    public Garage() {
+    }
 
     public Garage(Long id, String garageName, String address,
                   String contactNumber, boolean active) {
@@ -40,9 +40,7 @@ public class Garage {
     public void setAddress(String address) { this.address = address; }
 
     public String getContactNumber() { return contactNumber; }
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }

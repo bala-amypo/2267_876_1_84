@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "vehicles")
 public class Vehicle {
 
     @Id
@@ -18,11 +17,14 @@ public class Vehicle {
     private Long ownerId;
     private boolean active;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vehicle")
     private List<ServiceEntry> serviceEntries;
 
-    public Vehicle() {}
+    // No-args constructor
+    public Vehicle() {
+    }
 
+    // All-args constructor
     public Vehicle(Long id, String vin, String make, String model,
                    int year, Long ownerId, boolean active) {
         this.id = id;
@@ -34,6 +36,7 @@ public class Vehicle {
         this.active = active;
     }
 
+    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

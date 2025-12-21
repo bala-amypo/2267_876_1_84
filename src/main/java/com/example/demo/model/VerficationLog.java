@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "verification_logs")
 public class VerificationLog {
 
     @Id
@@ -19,12 +18,11 @@ public class VerificationLog {
     @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
-    public VerificationLog() {}
+    public VerificationLog() {
+    }
 
-    public VerificationLog(Long id, String status,
-                           String remarks,
-                           LocalDateTime verifiedAt,
-                           ServiceEntry serviceEntry) {
+    public VerificationLog(Long id, String status, String remarks,
+                           LocalDateTime verifiedAt, ServiceEntry serviceEntry) {
         this.id = id;
         this.status = status;
         this.remarks = remarks;

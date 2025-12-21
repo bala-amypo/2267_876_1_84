@@ -3,7 +3,6 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "service_parts")
 public class ServicePart {
 
     @Id
@@ -17,10 +16,10 @@ public class ServicePart {
     @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
-    public ServicePart() {}
+    public ServicePart() {
+    }
 
-    public ServicePart(Long id, String partName,
-                       double cost, ServiceEntry serviceEntry) {
+    public ServicePart(Long id, String partName, double cost, ServiceEntry serviceEntry) {
         this.id = id;
         this.partName = partName;
         this.cost = cost;

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "service_entries")
 public class ServiceEntry {
 
     @Id
@@ -23,13 +22,14 @@ public class ServiceEntry {
     private LocalDate serviceDate;
     private int odometerReading;
 
-    @OneToMany(mappedBy = "serviceEntry", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serviceEntry")
     private List<ServicePart> serviceParts;
 
-    @OneToMany(mappedBy = "serviceEntry", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "serviceEntry")
     private List<VerificationLog> verificationLogs;
 
-    public ServiceEntry() {}
+    public ServiceEntry() {
+    }
 
     public ServiceEntry(Long id, Vehicle vehicle, Garage garage,
                         LocalDate serviceDate, int odometerReading) {
@@ -50,12 +50,8 @@ public class ServiceEntry {
     public void setGarage(Garage garage) { this.garage = garage; }
 
     public LocalDate getServiceDate() { return serviceDate; }
-    public void setServiceDate(LocalDate serviceDate) {
-        this.serviceDate = serviceDate;
-    }
+    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
 
     public int getOdometerReading() { return odometerReading; }
-    public void setOdometerReading(int odometerReading) {
-        this.odometerReading = odometerReading;
-    }
+    public void setOdometerReading(int odometerReading) { this.odometerReading = odometerReading; }
 }
