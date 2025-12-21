@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -17,11 +18,11 @@ public class Garage {
 
     private boolean active;
 
-    @OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "garage", fetch = FetchType.LAZY)
     private List<ServiceEntry> serviceEntries;
 
-    public Garage() {
-    }
+    public Garage() {}
 
     public Long getId() {
         return id;
@@ -53,13 +54,5 @@ public class Garage {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<ServiceEntry> getServiceEntries() {
-        return serviceEntries;
-    }
-
-    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
-        this.serviceEntries = serviceEntries;
     }
 }
