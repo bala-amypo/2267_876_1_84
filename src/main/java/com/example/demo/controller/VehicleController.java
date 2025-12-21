@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
 import com.example.demo.service.VehicleService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +32,10 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 
-    @PostMapping("/{id}/deactivate")
+    // ✅ PUT for deactivate (SRS-compliant)
+    @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivateVehicle(@PathVariable Long id) {
         vehicleService.deactivateVehicle(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
