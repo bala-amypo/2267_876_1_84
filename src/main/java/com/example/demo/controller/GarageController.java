@@ -1,0 +1,50 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.Garage;
+import com.example.demo.service.GarageService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/garages")
+public class GarageController {
+
+    private final GarageService garageService;
+
+    public GarageController(GarageService garageService) {
+        this.garageService = garageService;
+    }
+
+    // POST /api/garages
+    @PostMapping
+    public Garage createGarage(@RequestBody Garage garage) {
+        return garageService.createGarage(garage);
+    }
+
+    // PUT /api/garages/{id}
+    @PutMapping("/{id}")
+    public Garage updateGarage(
+            @PathVariable Long id,
+            @RequestBody Garage garage) {
+        return garageService.updateGarage(id, garage);
+    }
+
+    // GET /api/garages/{id}
+    @GetMapping("/{id}")
+    public Garage getGarageById(@PathVariable Long id) {
+        return garageService.getGarageById(id);
+    }
+
+    // GET /api/garages
+    @GetMapping
+    public List<Garage> getAllGarages() {
+        return garageService.getAllGarages();
+    }
+
+    // PUT /api/garages/{id}/deactivate
+    @PutMapping("/{id}/deactivate")
+    public Garage deactivateGarage(@PathVariable Long id) {
+        return garageService.deactivateGarage(id);
+    }
+}
