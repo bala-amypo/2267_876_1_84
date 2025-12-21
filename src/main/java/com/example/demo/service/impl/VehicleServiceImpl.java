@@ -1,13 +1,24 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.model.Vehicle;
+import com.example.demo.repository.VehicleRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class VehicleServiceImpl {
 
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    public Vehicle createVehicle(Vehicle v) {
-        if (vehicleRepository.findByVin(v.getVin()).isPresent())
+    public Vehicle createVehicle(Vehicle vehicle) {
+        if (vehicleRepository.findByVin(vehicle.getVin()).isPresent()) {
             throw new IllegalArgumentException("VIN already exists");
-        return vehicleRepository.save(v);
+        }
+        return vehicleRepository.save(vehicle);
     }
 
     public Vehicle getVehicleById(Long id) {
@@ -25,8 +36,8 @@ public class VehicleServiceImpl {
     }
 
     public void deactivateVehicle(Long id) {
-        Vehicle v = getVehicleById(id);
-        v.setActive(false);
-        vehicleRepository.save(v);
+        Vehicle vehicle = getVehicleById(id);
+        vehicle.setActive(false);
+        vehicleRepository.save(vehicle);
     }
 }

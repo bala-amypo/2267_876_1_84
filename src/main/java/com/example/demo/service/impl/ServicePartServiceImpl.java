@@ -1,18 +1,29 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.model.ServicePart;
+import com.example.demo.repository.ServiceEntryRepository;
+import com.example.demo.repository.ServicePartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 public class ServicePartServiceImpl {
 
-    private final ServicePartRepository repo;
-    private final ServiceEntryRepository entryRepo;
+    @Autowired
+    private ServicePartRepository servicePartRepository;
 
-    public ServicePartServiceImpl(ServicePartRepository r, ServiceEntryRepository e) {
-        this.repo = r;
-        this.entryRepo = e;
-    }
+    @Autowired
+    private ServiceEntryRepository serviceEntryRepository;
 
-    public ServicePart createPart(ServicePart p) {
-        entryRepo.findById(p.getServiceEntry().getId()).orElseThrow();
-        if (p.getQuantity() <= 0)
-            throw new IllegalArgumentException("Quantity must be positive");
-        return repo.save(p);
+    public ServicePart createPart(ServicePart part) {
+
+        if (part.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity");
+        }
+
+        serviceEntryRepository.findById(part.getServiceEntry().getId())
+                .orElseThrow();
+
+        return servicePartRepository.save(part);
     }
 }

@@ -1,35 +1,57 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.model.Garage;
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.Vehicle;
+import com.example.demo.repository.GarageRepository;
+import com.example.demo.repository.ServiceEntryRepository;
+import com.example.demo.repository.VehicleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class ServiceEntryServiceImpl {
 
-    private final ServiceEntryRepository repo;
-    private final VehicleRepository vehicleRepo;
-    private final GarageRepository garageRepo;
+    @Autowired
+    private ServiceEntryRepository serviceEntryRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository r, VehicleRepository v, GarageRepository g) {
-        this.repo = r;
-        this.vehicleRepo = v;
-        this.garageRepo = g;
-    }
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
-    public ServiceEntry createServiceEntry(ServiceEntry e) {
-        Vehicle v = vehicleRepo.findById(e.getVehicle().getId()).orElseThrow();
-        Garage g = garageRepo.findById(e.getGarage().getId()).orElseThrow();
+    @Autowired
+    private GarageRepository garageRepository;
 
-        if (!v.getActive()) throw new IllegalArgumentException("Only active vehicles allowed");
-        if (!g.getActive()) throw new IllegalArgumentException("Inactive garage");
+    public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        if (e.getServiceDate().isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("future date");
+        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
+                .orElseThrow();
 
-        repo.findTopByVehicleOrderByOdometerReadingDesc(v).ifPresent(last -> {
-            if (e.getOdometerReading() < last.getOdometerReading())
-                throw new IllegalArgumentException(">=");
-        });
+        Garage garage = garageRepository.findById(entry.getGarage().getId())
+                .orElseThrow();
 
-        return repo.save(e);
+        if (!vehicle.getActive()) {
+            throw new IllegalArgumentException("active vehicles");
+        }
+
+        if (entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("future");
+        }
+
+        serviceEntryRepository
+                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
+                .ifPresent(last -> {
+                    if (entry.getOdometerReading() < last.getOdometerReading()) {
+                        throw new IllegalArgumentException(">=");
+                    }
+                });
+
+        return serviceEntryRepository.save(entry);
     }
 
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
-        return repo.findByVehicleId(vehicleId);
+        return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 }
