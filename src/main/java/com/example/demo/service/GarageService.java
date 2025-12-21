@@ -1,8 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Garage;
+import com.example.demo.model.ServiceEntry;
+import java.util.List;
 
-public interface GarageService {
+public interface ServiceEntryService {
 
-    Garage createGarage(Garage garage);
+    ServiceEntry create(ServiceEntry entry);
+
+    ServiceEntry getById(Long id);
+
+    List<ServiceEntry> getByVehicle(Long vehicleId);
+
+    List<ServiceEntry> getByGarage(Long garageId);
 }

@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle createVehicle(Vehicle vehicle);
+    Vehicle create(Vehicle vehicle);
 
-    Vehicle getVehicleById(Long id);
+    Vehicle getById(Long id);
 
-    Vehicle getVehicleByVin(String vin);
+    List<Vehicle> getByOwner(Long ownerId);
 
-    List<Vehicle> getVehiclesByOwner(Long ownerId);
+    Vehicle update(Long id, Vehicle vehicle);
 
-    void deactivateVehicle(Long id);
+    void deactivate(Long id);
 }
