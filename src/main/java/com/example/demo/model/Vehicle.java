@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -28,7 +30,10 @@ public class Vehicle {
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
+    // ✅ Relationship exists (SRS compliant)
+    // ❌ Hidden from API response
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ServiceEntry> serviceEntries;
 
     @PrePersist
@@ -61,9 +66,4 @@ public class Vehicle {
     public void setActive(Boolean active) { this.active = active; }
 
     public Instant getCreatedAt() { return createdAt; }
-
-    public List<ServiceEntry> getServiceEntries() { return serviceEntries; }
-    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
-        this.serviceEntries = serviceEntries;
-    }
 }
