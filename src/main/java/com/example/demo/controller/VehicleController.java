@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("/vehicles")
 public class VehicleController {
 
     private final VehicleService vehicleService;
@@ -17,31 +17,29 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
+    // CREATE VEHICLE
     @PostMapping
     public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
         return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
-    }
-
+    // GET VEHICLE BY ID
     @GetMapping("/{id}")
     public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
         return ResponseEntity.ok(vehicleService.getVehicleById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Vehicle> updateVehicle(
-            @PathVariable Long id,
-            @RequestBody Vehicle vehicle) {
-        return ResponseEntity.ok(vehicleService.updateVehicle(id, vehicle));
+    // GET VEHICLES BY OWNER
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(
+            @PathVariable Long ownerId) {
+        return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
-        vehicleService.deleteVehicle(id);
-        return ResponseEntity.noContent().build();
+    // DEACTIVATE VEHICLE
+    @PostMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivateVehicle(@PathVariable Long id) {
+        vehicleService.deactivateVehicle(id);
+        return ResponseEntity.ok().build();
     }
 }
