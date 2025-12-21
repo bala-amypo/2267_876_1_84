@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 public class Vehicle {
@@ -10,33 +9,25 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String vin;
+
     private String make;
     private String model;
-    private int year;
     private Long ownerId;
-    private boolean active;
+    private Boolean active = true;
 
-    @OneToMany(mappedBy = "vehicle")
-    private List<ServiceEntry> serviceEntries;
+    public Vehicle() {}
 
-    // No-args constructor
-    public Vehicle() {
-    }
-
-    // All-args constructor
-    public Vehicle(Long id, String vin, String make, String model,
-                   int year, Long ownerId, boolean active) {
+    public Vehicle(Long id, String vin, String make, String model, Long ownerId, Boolean active) {
         this.id = id;
         this.vin = vin;
         this.make = make;
         this.model = model;
-        this.year = year;
         this.ownerId = ownerId;
         this.active = active;
     }
 
-    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,12 +40,9 @@ public class Vehicle {
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
 
-    public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
-
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }
