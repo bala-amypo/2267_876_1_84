@@ -1,12 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Vehicle;
+import com.example.demo.model.ServiceEntry;
 import java.util.List;
 
-public interface VehicleService {
-    Vehicle createVehicle(Vehicle vehicle);
-    Vehicle getVehicleById(Long id);
-    Vehicle getVehicleByVin(String vin);
-    List<Vehicle> getVehiclesByOwner(Long ownerId);
-    void deactivateVehicle(Long id);
+public interface ServiceEntryService {
+
+    ServiceEntry create(ServiceEntry entry);
+
+    ServiceEntry getById(Long id);
+
+    List<ServiceEntry> getByVehicle(Long vehicleId);
+
+    List<ServiceEntry> getByGarage(Long garageId);
 }
