@@ -1,20 +1,18 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "vehicles")
+@Table(name = "vehicles", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String vin;
 
     private String make;
@@ -24,28 +22,17 @@ public class Vehicle {
     @Column(nullable = false)
     private Long ownerId;
 
-    @Column(nullable = false)
     private Boolean active = true;
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ✅ Relationship exists (SRS compliant)
-    // ❌ Hidden from API response
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "vehicle")
     private List<ServiceEntry> serviceEntries;
 
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = Instant.now();
-        if (this.active == null) {
-            this.active = true;
-        }
-    }
+    public Vehicle() {}
 
-    // getters & setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getVin() { return vin; }
     public void setVin(String vin) { this.vin = vin; }
@@ -65,5 +52,11 @@ public class Vehicle {
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
 
-    public Instant getCreatedAt() { return createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public List<ServiceEntry> getServiceEntries() { return serviceEntries; }
+    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
+        this.serviceEntries = serviceEntries;
+    }
 }
