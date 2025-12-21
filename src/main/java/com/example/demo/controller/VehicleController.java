@@ -10,39 +10,39 @@ import java.util.List;
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
-    private final VehicleService vehicleService;
+    private final VehicleService service;
 
-    public VehicleController(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
+    public VehicleController(VehicleService service) {
+        this.service = service;
     }
 
-    // POST /api/vehicles
+    // POST – Register vehicle
     @PostMapping
-    public Vehicle registerVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.registerVehicle(vehicle);
+    public Vehicle register(@RequestBody Vehicle vehicle) {
+        return service.registerVehicle(vehicle);
     }
 
-    // GET /api/vehicles/{id}
+    // GET – Vehicle by ID
     @GetMapping("/{id}")
-    public Vehicle getVehicleById(@PathVariable Long id) {
-        return vehicleService.getVehicleById(id);
+    public Vehicle getById(@PathVariable Long id) {
+        return service.getVehicleById(id);
     }
 
-    // GET /api/vehicles/vin/{vin}
+    // GET – Vehicle by VIN
     @GetMapping("/vin/{vin}")
-    public Vehicle getVehicleByVin(@PathVariable String vin) {
-        return vehicleService.getVehicleByVin(vin);
+    public Vehicle getByVin(@PathVariable String vin) {
+        return service.getVehicleByVin(vin);
     }
 
-    // GET /api/vehicles/owner/{ownerId}
+    // GET – Vehicles by Owner
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getVehiclesByOwner(@PathVariable Long ownerId) {
-        return vehicleService.getVehiclesByOwner(ownerId);
+    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
+        return service.getVehiclesByOwner(ownerId);
     }
 
-    // PUT /api/vehicles/{id}/deactivate
+    // PUT – Deactivate vehicle
     @PutMapping("/{id}/deactivate")
-    public Vehicle deactivateVehicle(@PathVariable Long id) {
-        return vehicleService.deactivateVehicle(id);
+    public Vehicle deactivate(@PathVariable Long id) {
+        return service.deactivateVehicle(id);
     }
 }

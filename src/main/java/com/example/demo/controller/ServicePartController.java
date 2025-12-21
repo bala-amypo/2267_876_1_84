@@ -10,27 +10,27 @@ import java.util.List;
 @RequestMapping("/api/service-parts")
 public class ServicePartController {
 
-    private final ServicePartService servicePartService;
+    private final ServicePartService service;
 
-    public ServicePartController(ServicePartService servicePartService) {
-        this.servicePartService = servicePartService;
+    public ServicePartController(ServicePartService service) {
+        this.service = service;
     }
 
-    // POST /api/service-parts
+    // POST – Add service part
     @PostMapping
-    public ServicePart addPart(@RequestBody ServicePart part) {
-        return servicePartService.addPart(part);
+    public ServicePart add(@RequestBody ServicePart part) {
+        return service.addPart(part);
     }
 
-    // GET /api/service-parts/{id}
+    // GET – Part by ID
     @GetMapping("/{id}")
-    public ServicePart getPartById(@PathVariable Long id) {
-        return servicePartService.getPartById(id);
+    public ServicePart getById(@PathVariable Long id) {
+        return service.getPartById(id);
     }
 
-    // GET /api/service-parts/entry/{entryId}
+    // GET – Parts by service entry
     @GetMapping("/entry/{entryId}")
-    public List<ServicePart> getPartsByEntry(@PathVariable Long entryId) {
-        return servicePartService.getPartsByEntry(entryId);
+    public List<ServicePart> getByEntry(@PathVariable Long entryId) {
+        return service.getPartsByEntry(entryId);
     }
 }

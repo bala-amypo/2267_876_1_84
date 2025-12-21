@@ -10,41 +10,39 @@ import java.util.List;
 @RequestMapping("/api/garages")
 public class GarageController {
 
-    private final GarageService garageService;
+    private final GarageService service;
 
-    public GarageController(GarageService garageService) {
-        this.garageService = garageService;
+    public GarageController(GarageService service) {
+        this.service = service;
     }
 
-    // POST /api/garages
+    // POST – Create garage
     @PostMapping
-    public Garage createGarage(@RequestBody Garage garage) {
-        return garageService.createGarage(garage);
+    public Garage create(@RequestBody Garage garage) {
+        return service.createGarage(garage);
     }
 
-    // PUT /api/garages/{id}
+    // PUT – Update garage
     @PutMapping("/{id}")
-    public Garage updateGarage(
-            @PathVariable Long id,
-            @RequestBody Garage garage) {
-        return garageService.updateGarage(id, garage);
+    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
+        return service.updateGarage(id, garage);
     }
 
-    // GET /api/garages/{id}
+    // GET – Garage by ID
     @GetMapping("/{id}")
-    public Garage getGarageById(@PathVariable Long id) {
-        return garageService.getGarageById(id);
+    public Garage getById(@PathVariable Long id) {
+        return service.getGarageById(id);
     }
 
-    // GET /api/garages
+    // GET – All garages
     @GetMapping
-    public List<Garage> getAllGarages() {
-        return garageService.getAllGarages();
+    public List<Garage> getAll() {
+        return service.getAllGarages();
     }
 
-    // PUT /api/garages/{id}/deactivate
+    // PUT – Deactivate garage
     @PutMapping("/{id}/deactivate")
-    public Garage deactivateGarage(@PathVariable Long id) {
-        return garageService.deactivateGarage(id);
+    public Garage deactivate(@PathVariable Long id) {
+        return service.deactivateGarage(id);
     }
 }

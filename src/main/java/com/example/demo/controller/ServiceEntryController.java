@@ -10,33 +10,33 @@ import java.util.List;
 @RequestMapping("/api/service-entries")
 public class ServiceEntryController {
 
-    private final ServiceEntryService serviceEntryService;
+    private final ServiceEntryService service;
 
-    public ServiceEntryController(ServiceEntryService serviceEntryService) {
-        this.serviceEntryService = serviceEntryService;
+    public ServiceEntryController(ServiceEntryService service) {
+        this.service = service;
     }
 
-    // POST /api/service-entries
+    // POST – Create service entry
     @PostMapping
-    public ServiceEntry createServiceEntry(@RequestBody ServiceEntry entry) {
-        return serviceEntryService.createServiceEntry(entry);
+    public ServiceEntry create(@RequestBody ServiceEntry entry) {
+        return service.createServiceEntry(entry);
     }
 
-    // GET /api/service-entries/{id}
+    // GET – Entry by ID
     @GetMapping("/{id}")
-    public ServiceEntry getEntryById(@PathVariable Long id) {
-        return serviceEntryService.getEntryById(id);
+    public ServiceEntry getById(@PathVariable Long id) {
+        return service.getServiceEntryById(id);
     }
 
-    // GET /api/service-entries/vehicle/{vehicleId}
+    // GET – Entries by vehicle
     @GetMapping("/vehicle/{vehicleId}")
-    public List<ServiceEntry> getEntriesByVehicle(@PathVariable Long vehicleId) {
-        return serviceEntryService.getEntriesByVehicle(vehicleId);
+    public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
+        return service.getEntriesByVehicle(vehicleId);
     }
 
-    // GET /api/service-entries/garage/{garageId}
+    // GET – Entries by garage
     @GetMapping("/garage/{garageId}")
-    public List<ServiceEntry> getEntriesByGarage(@PathVariable Long garageId) {
-        return serviceEntryService.getEntriesByGarage(garageId);
+    public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
+        return service.getEntriesByGarage(garageId);
     }
 }
