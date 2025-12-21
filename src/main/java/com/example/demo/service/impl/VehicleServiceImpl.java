@@ -6,8 +6,7 @@ import com.example.demo.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;       // ✅ FIXED
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -18,21 +17,17 @@ public class VehicleServiceImpl implements VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
+    // createVehicle: check duplicate VIN
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
-
-        Optional<Vehicle> existing = vehicleRepository.findByVin(vehicle.getVin());
-        if (existing.isPresent()) {
+        if (vehicleRepository.existsByVin(vehicle.getVin())) {
             throw new IllegalArgumentException("VIN already exists");
         }
-
-        if (vehicle.getActive() == null) {
-            vehicle.setActive(true);
-        }
-
+        vehicle.setActive(true);
         return vehicleRepository.save(vehicle);
     }
 
+    // getVehicleById: throw if not found
     @Override
     public Vehicle getVehicleById(Long id) {
         return vehicleRepository.findById(id)
@@ -52,6 +47,7 @@ public class VehicleServiceImpl implements VehicleService {
         return vehicleRepository.findByOwnerId(ownerId);
     }
 
+    // deactivateVehicle
     @Override
     public void deactivateVehicle(Long id) {
         Vehicle vehicle = getVehicleById(id);
