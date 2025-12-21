@@ -2,45 +2,58 @@ package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "vehicles")
+@Table(
+    name = "vehicles",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "vin")
+    }
+)
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String vin;
 
+    @Column(nullable = false)
     private String make;
 
+    @Column(nullable = false)
     private String model;
 
+    @Column
+    private Integer year;
+
+    @Column(nullable = false)
     private Long ownerId;
 
-    private Boolean active;
+    @Column(nullable = false)
+    private Boolean active = true;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    @JsonIgnore   // prevents infinite recursion in Swagger / JSON
+    @Column(nullable = false, updatable = false)
+    private Timestamp createdAt;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
     private List<ServiceEntry> serviceEntries;
 
-    //  No-arg constructor
-    public Vehicle() {
+    public Vehicle() {}
+
+    // Automatically set createdAt on insert
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Timestamp.from(Instant.now());
     }
 
-    //  Parameterized constructor 
-    public Vehicle(String vin, String make, String model, Long ownerId, Boolean active) {
-        this.vin = vin;
-        this.make = make;
-        this.model = model;
-        this.ownerId = ownerId;
-        this.active = active;
-    }
-
-    //  Getters & Setters
+    // ===== Getters and Setters =====
 
     public Long getId() {
         return id;
@@ -74,6 +87,14 @@ public class Vehicle {
         this.model = model;
     }
 
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
     public Long getOwnerId() {
         return ownerId;
     }
@@ -90,11 +111,7 @@ public class Vehicle {
         this.active = active;
     }
 
-    public List<ServiceEntry> getServiceEntries() {
-        return serviceEntries;
-    }
-
-    public void setServiceEntries(List<ServiceEntry> serviceEntries) {
-        this.serviceEntries = serviceEntries;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 }

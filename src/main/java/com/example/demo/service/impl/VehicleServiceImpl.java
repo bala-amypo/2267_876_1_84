@@ -17,29 +17,24 @@ public class VehicleServiceImpl implements VehicleService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    // createVehicle: check duplicate VIN
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
-        if (vehicleRepository.existsByVin(vehicle.getVin())) {
+        if (vehicleRepository.findByVin(vehicle.getVin()).isPresent()) {
             throw new IllegalArgumentException("VIN already exists");
         }
-        vehicle.setActive(true);
         return vehicleRepository.save(vehicle);
     }
 
-    // getVehicleById: throw if not found
     @Override
     public Vehicle getVehicleById(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
     }
 
     @Override
     public Vehicle getVehicleByVin(String vin) {
         return vehicleRepository.findByVin(vin)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
     }
 
     @Override
@@ -47,7 +42,6 @@ public class VehicleServiceImpl implements VehicleService {
         return vehicleRepository.findByOwnerId(ownerId);
     }
 
-    // deactivateVehicle
     @Override
     public void deactivateVehicle(Long id) {
         Vehicle vehicle = getVehicleById(id);
