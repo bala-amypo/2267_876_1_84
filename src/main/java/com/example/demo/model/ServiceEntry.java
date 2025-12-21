@@ -18,10 +18,9 @@ public class ServiceEntry {
 
     private String serviceType;
     private LocalDate serviceDate;
-    private int odometerReading;
+    private Integer odometerReading;
 
-    public ServiceEntry() {}
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -37,6 +36,6 @@ public class ServiceEntry {
     public LocalDate getServiceDate() { return serviceDate; }
     public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
 
-    public int getOdometerReading() { return odometerReading; }
-    public void setOdometerReading(int odometerReading) { this.odometerReading = odometerReading; }
+    public Integer getOdometerReading() { return odometerReading; }
+    public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
 }

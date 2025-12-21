@@ -9,25 +9,16 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String vin;
 
     private String make;
     private String model;
+    private Integer year;
     private Long ownerId;
     private Boolean active = true;
 
-    public Vehicle() {}
-
-    public Vehicle(Long id, String vin, String make, String model, Long ownerId, Boolean active) {
-        this.id = id;
-        this.vin = vin;
-        this.make = make;
-        this.model = model;
-        this.ownerId = ownerId;
-        this.active = active;
-    }
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -39,6 +30,9 @@ public class Vehicle {
 
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
+
+    public Integer getYear() { return year; }
+    public void setYear(Integer year) { this.year = year; }
 
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
