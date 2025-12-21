@@ -10,15 +10,14 @@ public class ServiceEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
-    @JoinColumn(name = "vehicle_id")
+    @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
     @ManyToOne
-    @JoinColumn(name = "garage_id")
+    @JoinColumn(name = "garage_id", nullable = false)
     private Garage garage;
-
+    
     private LocalDate serviceDate;
     private int odometerReading;
 
@@ -27,6 +26,8 @@ public class ServiceEntry {
 
     @OneToMany(mappedBy = "serviceEntry")
     private List<VerificationLog> verificationLogs;
+
+   
 
     public ServiceEntry() {
     }
