@@ -6,6 +6,7 @@ import com.example.demo.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;       // ✅ FIXED
 import java.util.Optional;
 
 @Service
@@ -20,13 +21,11 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
 
-        // 🔹 VIN uniqueness check (SRS rule)
         Optional<Vehicle> existing = vehicleRepository.findByVin(vehicle.getVin());
         if (existing.isPresent()) {
             throw new IllegalArgumentException("VIN already exists");
         }
 
-        // 🔹 Default active = true if not provided
         if (vehicle.getActive() == null) {
             vehicle.setActive(true);
         }
