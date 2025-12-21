@@ -17,30 +17,18 @@ public class GarageServiceImpl implements GarageService {
         this.garageRepository = garageRepository;
     }
 
-    // createGarage: check unique name
     @Override
     public Garage createGarage(Garage garage) {
-        if (garageRepository.existsByGarageName(garage.getGarageName())) {
-            throw new IllegalArgumentException("Garage name already exists");
+        if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
+            throw new IllegalArgumentException("Garage already exists");
         }
-        garage.setActive(true);
         return garageRepository.save(garage);
-    }
-
-    @Override
-    public Garage updateGarage(Long id, Garage garage) {
-        Garage existing = getGarageById(id);
-        existing.setGarageName(garage.getGarageName());
-        existing.setAddress(garage.getAddress());
-        existing.setContactNumber(garage.getContactNumber());
-        return garageRepository.save(existing);
     }
 
     @Override
     public Garage getGarageById(Long id) {
         return garageRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Garage not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
     }
 
     @Override
