@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.Vehicle;
 import com.example.demo.service.VehicleService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -17,21 +16,26 @@ public class VehicleController {
     }
 
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle vehicle) {
-        return service.createVehicle(vehicle);
+    public Vehicle create(@RequestBody Vehicle v) {
+        return service.createVehicle(v);
     }
 
     @GetMapping("/{id}")
-    public Vehicle getById(@PathVariable Long id) {
+    public Vehicle get(@PathVariable Long id) {
         return service.getVehicleById(id);
     }
 
+    @GetMapping("/vin/{vin}")
+    public Vehicle getByVin(@PathVariable String vin) {
+        return service.getVehicleByVin(vin);
+    }
+
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
+    public List<Vehicle> byOwner(@PathVariable Long ownerId) {
         return service.getVehiclesByOwner(ownerId);
     }
 
-    @PostMapping("/{id}/deactivate")
+    @PutMapping("/{id}/deactivate")
     public void deactivate(@PathVariable Long id) {
         service.deactivateVehicle(id);
     }
