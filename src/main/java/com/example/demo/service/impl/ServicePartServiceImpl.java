@@ -1,36 +1,33 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.ServicePart;
-import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.ServicePartRepository;
 import com.example.demo.service.ServicePartService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ServicePartServiceImpl implements ServicePartService {
 
-    private final ServicePartRepository servicePartRepository;
-    private final ServiceEntryRepository serviceEntryRepository;
+    private final ServicePartRepository repository;
 
-    public ServicePartServiceImpl(ServicePartRepository servicePartRepository,
-                                  ServiceEntryRepository serviceEntryRepository) {
-        this.servicePartRepository = servicePartRepository;
-        this.serviceEntryRepository = serviceEntryRepository;
+    public ServicePartServiceImpl(ServicePartRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public ServicePart createPart(ServicePart part) {
+    public ServicePart addPart(ServicePart part) {
+        return repository.save(part);
+    }
 
-        if (part.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
+    @Override
+    public ServicePart getPartById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 
-        ServiceEntry entry = serviceEntryRepository.findById(part.getServiceEntry().getId())
-                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
-
-        part.setServiceEntry(entry);
-        return servicePartRepository.save(part);
+    @Override
+    public List<ServicePart> getPartsByEntry(Long entryId) {
+        return repository.findByServiceEntryId(entryId);
     }
 }

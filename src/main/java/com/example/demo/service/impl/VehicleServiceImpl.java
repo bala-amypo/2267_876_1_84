@@ -3,50 +3,45 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Vehicle;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.VehicleService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
-    private final VehicleRepository vehicleRepository;
+    private final VehicleRepository repository;
 
-    public VehicleServiceImpl(VehicleRepository vehicleRepository) {
-        this.vehicleRepository = vehicleRepository;
+    public VehicleServiceImpl(VehicleRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public Vehicle createVehicle(Vehicle vehicle) {
-        if (vehicleRepository.findByVin(vehicle.getVin()).isPresent()) {
-            throw new IllegalArgumentException("VIN already exists");
-        }
+    public Vehicle registerVehicle(Vehicle vehicle) {
         vehicle.setActive(true);
-        return vehicleRepository.save(vehicle);
+        return repository.save(vehicle);
     }
 
     @Override
     public Vehicle getVehicleById(Long id) {
-        return vehicleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public Vehicle getVehicleByVin(String vin) {
-        return vehicleRepository.findByVin(vin)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+        return repository.findByVin(vin).orElse(null);
     }
 
     @Override
-    public List<Vehicle> getVehiclesByOwner(Long ownerId) {
-        return vehicleRepository.findByOwnerId(ownerId);
+    public java.util.List<Vehicle> getVehiclesByOwner(Long ownerId) {
+        return repository.findByOwnerId(ownerId);
     }
 
     @Override
-    public void deactivateVehicle(Long id) {
-        Vehicle v = getVehicleById(id);
-        v.setActive(false);
-        vehicleRepository.save(v);
+    public Vehicle deactivateVehicle(Long id) {
+        Vehicle vehicle = repository.findById(id).orElse(null);
+        if (vehicle != null) {
+            vehicle.setActive(false);
+            return repository.save(vehicle);
+        }
+        return null;
     }
 }
