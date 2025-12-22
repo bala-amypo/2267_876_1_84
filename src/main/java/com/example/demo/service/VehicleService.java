@@ -7,11 +7,11 @@ public interface VehicleService {
 
     Vehicle registerVehicle(Vehicle vehicle);
 
-    Vehicle getVehicleById(Long id);          // ✅ ADD THIS
+    Vehicle getVehicleById(Long id);          
 
     Vehicle getVehicleByVin(String vin);
 
     List<Vehicle> getVehiclesByOwner(Long ownerId);
 
-    Vehicle deactivateVehicle(Long vehicleId); // ✅ CHANGE return type
+    Vehicle deactivateVehicle(Long vehicleId);
 }

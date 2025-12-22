@@ -35,7 +35,6 @@ public class VehicleController {
         return service.getVehiclesByOwner(ownerId);
     }
 
-    // PUT – Deactivate vehicle
     @PutMapping("/{id}/deactivate")
     public Vehicle deactivate(@PathVariable Long id) {
         return service.deactivateVehicle(id);
