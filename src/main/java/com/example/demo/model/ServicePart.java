@@ -10,20 +10,56 @@ public class ServicePart {
     private Long id;
 
     private String partName;
-    private Integer quantity;
 
+    private int quantity;
+
+    // 🔥 REQUIRED RELATIONSHIP
     @ManyToOne
+    @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // ===== Constructors =====
+    public ServicePart() {}
 
-    public String getPartName() { return partName; }
-    public void setPartName(String partName) { this.partName = partName; }
+    public ServicePart(String partName, int quantity) {
+        this.partName = partName;
+        setQuantity(quantity);
+    }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    // ===== Getters & Setters =====
+    public Long getId() {
+        return id;
+    }
 
-    public ServiceEntry getServiceEntry() { return serviceEntry; }
-    public void setServiceEntry(ServiceEntry serviceEntry) { this.serviceEntry = serviceEntry; }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        this.quantity = quantity;
+    }
+
+    // 🔥 REQUIRED BY ServicePartServiceImpl
+    public ServiceEntry getServiceEntry() {
+        return serviceEntry;
+    }
+
+    public void setServiceEntry(ServiceEntry serviceEntry) {
+        this.serviceEntry = serviceEntry;
+    }
 }
