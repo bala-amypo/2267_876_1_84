@@ -6,27 +6,46 @@ import jakarta.persistence.*;
 @Table(name = "vehicles")
 public class Vehicle {
 
+    // ================= PRIMARY KEY =================
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    // ================= VEHICLE DETAILS =================
+    @Column(nullable = false, unique = true)
     private String vin;
 
+    @Column(nullable = false, unique = true)
     private String registrationNumber;
 
+    // ================= OWNER DETAILS =================
+    @Column(nullable = false)
     private String ownerName;
 
+    @Column(nullable = false)
+    private Long ownerId;   // ✅ REQUIRED for findByOwnerId()
+
+    // ================= STATUS =================
+    @Column(nullable = false)
     private boolean active = true;
 
-    // ===== GETTERS & SETTERS =====
-
-    public Long getId() {
-        return id;
+    // ================= CONSTRUCTORS =================
+    public Vehicle() {
+        // Default constructor required by JPA
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Vehicle(String vin, String registrationNumber,
+                   String ownerName, Long ownerId) {
+        this.vin = vin;
+        this.registrationNumber = registrationNumber;
+        this.ownerName = ownerName;
+        this.ownerId = ownerId;
+        this.active = true;
+    }
+
+    // ================= GETTERS & SETTERS =================
+    public Long getId() {
+        return id;
     }
 
     public String getVin() {
@@ -51,6 +70,14 @@ public class Vehicle {
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public boolean isActive() {
