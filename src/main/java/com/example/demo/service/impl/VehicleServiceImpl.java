@@ -22,6 +22,12 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
+    public Vehicle getVehicleById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+    }
+
+    @Override
     public Vehicle getVehicleByVin(String vin) {
         return repository.findByVin(vin)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
@@ -33,10 +39,9 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void deactivateVehicle(Long vehicleId) {
-        Vehicle vehicle = repository.findById(vehicleId)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+    public Vehicle deactivateVehicle(Long vehicleId) {
+        Vehicle vehicle = getVehicleById(vehicleId);
         vehicle.setActive(false);
-        repository.save(vehicle);
+        return repository.save(vehicle); // ✅ RETURN VEHICLE
     }
 }
