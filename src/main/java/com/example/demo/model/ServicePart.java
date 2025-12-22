@@ -14,14 +14,17 @@ public class ServicePart {
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
-    public ServicePart() {
+    public ServicePart() {}
+
+    // ✅ NO validation here
+    public int getQuantity() {
+        return quantity;
     }
 
-    public Long getId() {
-        return id;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getPartName() {
@@ -32,23 +35,15 @@ public class ServicePart {
         this.partName = partName;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    // ✅ test expects this validation
-    public void setQuantity(int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-        this.quantity = quantity;
-    }
-
     public ServiceEntry getServiceEntry() {
         return serviceEntry;
     }
 
     public void setServiceEntry(ServiceEntry serviceEntry) {
         this.serviceEntry = serviceEntry;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
