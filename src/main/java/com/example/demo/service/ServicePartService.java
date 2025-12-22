@@ -5,13 +5,13 @@ import java.util.List;
 
 public interface ServicePartService {
 
-    // Used by controller
-    ServicePart createPart(Long serviceEntryId, ServicePart part);
-
-    // ✅ REQUIRED BY TEST CASE
     ServicePart createPart(ServicePart part);
+
+    ServicePart createPart(Long serviceEntryId, ServicePart part);
 
     ServicePart getPartById(Long id);
 
     List<ServicePart> getPartsByEntry(Long serviceEntryId);
+
+    void deletePart(Long id);
 }
