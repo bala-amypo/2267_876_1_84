@@ -3,6 +3,7 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "garages")
 public class Garage {
 
     @Id
@@ -10,16 +11,19 @@ public class Garage {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    private String garageName;
 
-    private String location;
+    private String address;
+
+    private boolean active = true;
 
     // ===== Constructors =====
     public Garage() {}
 
-    public Garage(String name, String location) {
-        this.name = name;
-        this.location = location;
+    public Garage(String garageName, String address) {
+        this.garageName = garageName;
+        this.address = address;
+        this.active = true;
     }
 
     // ===== Getters & Setters =====
@@ -31,22 +35,32 @@ public class Garage {
         this.id = id;
     }
 
-    public String getName() {          // 🔥 REQUIRED BY SERVICE
-        return name;
+    // 🔥 REQUIRED BY TESTS
+    public String getGarageName() {
+        return garageName;
     }
 
-    public void setName(String name) {
-        if (name == null || name.trim().isEmpty()) {
+    public void setGarageName(String garageName) {
+        if (garageName == null || garageName.trim().isEmpty()) {
             throw new IllegalArgumentException("Garage name cannot be empty");
         }
-        this.name = name;
+        this.garageName = garageName;
     }
 
-    public String getLocation() {
-        return location;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    // 🔥 REQUIRED BY TESTS
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
