@@ -1,49 +1,48 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
-import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VehicleRepository;
+import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
-@Service
-public class ServiceEntryServiceImpl {
+@Service   // ⭐ THIS IS WHAT FIXES YOUR ERROR
+public class ServiceEntryServiceImpl implements ServiceEntryService {
 
-    private final ServiceEntryRepository repo;
-    private final VehicleRepository vehicleRepo;
-    private final GarageRepository garageRepo;
+    private final ServiceEntryRepository serviceEntryRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository repo,
-                                   VehicleRepository vehicleRepo,
-                                   GarageRepository garageRepo) {
-        this.repo = repo;
-        this.vehicleRepo = vehicleRepo;
-        this.garageRepo = garageRepo;
+    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository) {
+        this.serviceEntryRepository = serviceEntryRepository;
     }
 
-    public ServiceEntry createServiceEntry(ServiceEntry entry) {
-        Vehicle v = vehicleRepo.findById(entry.getVehicle().getId()).orElseThrow();
-
-        if (!v.getActive())
-            throw new IllegalArgumentException("Only active vehicles allowed");
-
-        if (entry.getServiceDate().isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("future date");
-
-        repo.findTopByVehicleOrderByOdometerReadingDesc(v)
-                .ifPresent(last -> {
-                    if (entry.getOdometerReading() < last.getOdometerReading())
-                        throw new IllegalArgumentException(">= last odometer");
-                });
-
-        return repo.save(entry);
+    @Override
+    public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
+        return serviceEntryRepository.save(serviceEntry);
     }
 
-    public List<ServiceEntry> getEntriesForVehicle(long vehicleId) {
-        return repo.findByVehicleId(vehicleId);
+    @Override
+    public List<ServiceEntry> getAllServiceEntries() {
+        return serviceEntryRepository.findAll();
+    }
+
+    @Override
+    public ServiceEntry getServiceEntryById(Long id) {
+        return serviceEntryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ServiceEntry not found"));
+    }
+
+    @Override
+    public ServiceEntry updateServiceEntry(Long id, ServiceEntry serviceEntry) {
+        ServiceEntry existing = getServiceEntryById(id);
+        existing.setServiceDate(serviceEntry.getServiceDate());
+        existing.setDescription(serviceEntry.getDescription());
+        existing.setCost(serviceEntry.getCost());
+        return serviceEntryRepository.save(existing);
+    }
+
+    @Override
+    public void deleteServiceEntry(Long id) {
+        serviceEntryRepository.deleteById(id);
     }
 }

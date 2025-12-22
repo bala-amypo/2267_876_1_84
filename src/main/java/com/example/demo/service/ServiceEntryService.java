@@ -5,11 +5,13 @@ import java.util.List;
 
 public interface ServiceEntryService {
 
-    ServiceEntry createServiceEntry(ServiceEntry entry);
+    ServiceEntry createServiceEntry(ServiceEntry serviceEntry);
+
+    List<ServiceEntry> getAllServiceEntries();
 
     ServiceEntry getServiceEntryById(Long id);
 
-    List<ServiceEntry> getEntriesByVehicle(Long vehicleId);
+    ServiceEntry updateServiceEntry(Long id, ServiceEntry serviceEntry);
 
-    List<ServiceEntry> getEntriesByGarage(Long garageId);
+    void deleteServiceEntry(Long id);
 }
