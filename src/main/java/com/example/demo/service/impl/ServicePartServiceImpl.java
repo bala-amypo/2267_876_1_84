@@ -16,18 +16,29 @@ public class ServicePartServiceImpl implements ServicePartService {
         this.repository = repository;
     }
 
-    // Controller usage
+    // ================= CREATE =================
+
     @Override
-    public ServicePart createPart(Long serviceEntryId, ServicePart part) {
-        // assume serviceEntry already set by controller
+    public ServicePart createPart(ServicePart part) {
+
+        if (part.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
         return repository.save(part);
     }
 
-    // ✅ Test case usage
     @Override
-    public ServicePart createPart(ServicePart part) {
+    public ServicePart createPart(Long serviceEntryId, ServicePart part) {
+
+        if (part.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
         return repository.save(part);
     }
+
+    // ================= READ =================
 
     @Override
     public ServicePart getPartById(Long id) {
@@ -37,5 +48,12 @@ public class ServicePartServiceImpl implements ServicePartService {
     @Override
     public List<ServicePart> getPartsByEntry(Long serviceEntryId) {
         return repository.findByServiceEntryId(serviceEntryId);
+    }
+
+    // ================= DELETE =================
+
+    @Override
+    public void deletePart(Long id) {
+        repository.deleteById(id);
     }
 }
