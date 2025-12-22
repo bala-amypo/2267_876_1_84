@@ -21,25 +21,40 @@ public class ServicePartServiceImpl implements ServicePartService {
         this.entryRepository = entryRepository;
     }
 
+    // ✅ MAIN METHOD (Controller uses this)
     @Override
     public ServicePart createPart(Long serviceEntryId, ServicePart part) {
 
-        // ✅ TEST EXPECTS THIS EXCEPTION HERE
         if (part.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
 
         ServiceEntry entry = entryRepository.findById(serviceEntryId)
-                .orElseThrow(() -> new IllegalArgumentException("ServiceEntry not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Service entry not found"));
 
         part.setServiceEntry(entry);
         return partRepository.save(part);
     }
 
+    // ✅ OVERLOADED METHOD (Tests use this)
+    @Override
+    public ServicePart createPart(ServicePart part) {
+
+        if (part.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
+        if (part.getServiceEntry() == null || part.getServiceEntry().getId() == null) {
+            throw new IllegalArgumentException("ServiceEntry must be provided");
+        }
+
+        return createPart(part.getServiceEntry().getId(), part);
+    }
+
     @Override
     public ServicePart getPartById(Long id) {
         return partRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ServicePart not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Service part not found"));
     }
 
     @Override
