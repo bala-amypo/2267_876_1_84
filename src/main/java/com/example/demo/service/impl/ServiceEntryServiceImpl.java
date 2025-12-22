@@ -7,42 +7,54 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // ⭐ THIS IS WHAT FIXES YOUR ERROR
+@Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
-    private final ServiceEntryRepository serviceEntryRepository;
+    private final ServiceEntryRepository repository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository) {
-        this.serviceEntryRepository = serviceEntryRepository;
+    public ServiceEntryServiceImpl(ServiceEntryRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
-        return serviceEntryRepository.save(serviceEntry);
+        return repository.save(serviceEntry);
     }
 
     @Override
     public List<ServiceEntry> getAllServiceEntries() {
-        return serviceEntryRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ServiceEntry not found"));
+    }
+
+    @Override
+    public List<ServiceEntry> getEntriesByVehicle(Long vehicleId) {
+        return repository.findByVehicleId(vehicleId);
+    }
+
+    @Override
+    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
+        return repository.findByGarageId(garageId);
     }
 
     @Override
     public ServiceEntry updateServiceEntry(Long id, ServiceEntry serviceEntry) {
         ServiceEntry existing = getServiceEntryById(id);
+
         existing.setServiceDate(serviceEntry.getServiceDate());
-        existing.setDescription(serviceEntry.getDescription());
-        existing.setCost(serviceEntry.getCost());
-        return serviceEntryRepository.save(existing);
+        existing.setNotes(serviceEntry.getNotes());
+        existing.setAmount(serviceEntry.getAmount());
+
+        return repository.save(existing);
     }
 
     @Override
     public void deleteServiceEntry(Long id) {
-        serviceEntryRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }

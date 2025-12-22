@@ -11,6 +11,10 @@ public interface ServiceEntryService {
 
     ServiceEntry getServiceEntryById(Long id);
 
+    List<ServiceEntry> getEntriesByVehicle(Long vehicleId);
+
+    List<ServiceEntry> getEntriesByGarage(Long garageId);
+
     ServiceEntry updateServiceEntry(Long id, ServiceEntry serviceEntry);
 
     void deleteServiceEntry(Long id);
