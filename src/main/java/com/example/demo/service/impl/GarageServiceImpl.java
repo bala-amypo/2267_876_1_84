@@ -32,6 +32,16 @@ public class GarageServiceImpl implements GarageService {
         return garageRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
     }
+    @Override
+public Garage createGarage(Garage garage) {
+
+    if (garageRepository.existsByGarageName(garage.getGarageName())) {
+        throw new IllegalArgumentException("Garage name must be unique");
+    }
+
+    return garageRepository.save(garage);
+}
+
 
     // ✅ IMPLEMENT
     @Override
