@@ -1,18 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Vehicle;
-
 import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle createVehicle(Vehicle vehicle);
+    Vehicle registerVehicle(Vehicle vehicle);
 
-    Vehicle getVehicleById(Long id);
+    Vehicle getVehicleById(Long id);          // ✅ ADD THIS
 
-    List<Vehicle> getAllVehicles();
+    Vehicle getVehicleByVin(String vin);
 
-    Vehicle updateVehicle(Long id, Vehicle vehicle);
+    List<Vehicle> getVehiclesByOwner(Long ownerId);
 
-    void deleteVehicle(Long id);
+    Vehicle deactivateVehicle(Long vehicleId); // ✅ CHANGE return type
 }

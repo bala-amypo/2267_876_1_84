@@ -1,16 +1,14 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
 import com.example.demo.model.Vehicle;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface VehicleService {
+public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    Vehicle registerVehicle(Vehicle vehicle);
+    Optional<Vehicle> findByVin(String vin);
 
-    Vehicle getVehicleByVin(String vin);
-
-    List<Vehicle> getVehiclesByOwner(Long ownerId);
-
-    void deactivateVehicle(Long vehicleId);
+    List<Vehicle> findByOwnerId(Long ownerId);
 }
