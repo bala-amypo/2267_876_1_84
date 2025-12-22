@@ -18,45 +18,19 @@ public class GarageServiceImpl implements GarageService {
 
     @Override
     public Garage createGarage(Garage garage) {
-        garageRepository.findByGarageName(garage.getGarageName())
-                .ifPresent(g -> {
-                    throw new IllegalArgumentException("Garage name must be unique");
-                });
-
-        garage.setActive(true);
+        if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
+            throw new IllegalArgumentException("Garage name must be unique");
+        }
         return garageRepository.save(garage);
     }
 
-    @Override
-    public Garage getGarageById(Long id) {
-        return garageRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
-    }
-    @Override
-public Garage createGarage(Garage garage) {
-
-    if (garageRepository.existsByGarageName(garage.getGarageName())) {
-        throw new IllegalArgumentException("Garage name must be unique");
-    }
-
-    return garageRepository.save(garage);
-}
-
-
-    // ✅ IMPLEMENT
-    @Override
-    public List<Garage> getAllGarages() {
-        return garageRepository.findAll();
-    }
-
-    // ✅ IMPLEMENT
     @Override
     public Garage updateGarage(Long id, Garage updatedGarage) {
         Garage existing = garageRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
 
         existing.setGarageName(updatedGarage.getGarageName());
-        existing.setAddress(updatedGarage.getAddress());
+        existing.setLocation(updatedGarage.getLocation());
         existing.setContactNumber(updatedGarage.getContactNumber());
 
         return garageRepository.save(existing);
@@ -69,5 +43,10 @@ public Garage createGarage(Garage garage) {
 
         garage.setActive(false);
         return garageRepository.save(garage);
+    }
+
+    @Override
+    public List<Garage> getAllGarages() {
+        return garageRepository.findAll();
     }
 }

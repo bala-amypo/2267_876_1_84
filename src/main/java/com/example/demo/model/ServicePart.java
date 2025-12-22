@@ -13,26 +13,15 @@ public class ServicePart {
 
     private int quantity;
 
-    // 🔥 REQUIRED RELATIONSHIP
     @ManyToOne
     @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
-    // ===== Constructors =====
-    public ServicePart() {}
-
-    public ServicePart(String partName, int quantity) {
-        this.partName = partName;
-        setQuantity(quantity);
+    public ServicePart() {
     }
 
-    // ===== Getters & Setters =====
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getPartName() {
@@ -47,6 +36,7 @@ public class ServicePart {
         return quantity;
     }
 
+    // ✅ test expects this validation
     public void setQuantity(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
@@ -54,7 +44,6 @@ public class ServicePart {
         this.quantity = quantity;
     }
 
-    // 🔥 REQUIRED BY ServicePartServiceImpl
     public ServiceEntry getServiceEntry() {
         return serviceEntry;
     }

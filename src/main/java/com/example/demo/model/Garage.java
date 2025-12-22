@@ -3,57 +3,57 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-public class ServicePart {
+public class Garage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String partName;
+    @Column(unique = true, nullable = false)
+    private String garageName;
 
-    private int quantity;
+    private String location;
 
-    @ManyToOne
-    @JoinColumn(name = "service_entry_id")
-    private ServiceEntry serviceEntry;
+    private String contactNumber;
 
-    public ServicePart() {}
+    private boolean active = true;
 
-    public ServicePart(Long id, String partName, int quantity) {
-        this.id = id;
-        this.partName = partName;
-        setQuantity(quantity); // IMPORTANT
+    public Garage() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getPartName() {
-        return partName;
+    public String getGarageName() {
+        return garageName;
     }
 
-    public void setPartName(String partName) {
-        this.partName = partName;
+    public void setGarageName(String garageName) {
+        this.garageName = garageName;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getLocation() {
+        return location;
     }
 
-    // ✅ TEST EXPECTS THIS EXACT VALIDATION
-    public void setQuantity(int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-        this.quantity = quantity;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public ServiceEntry getServiceEntry() {
-        return serviceEntry;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
-    public void setServiceEntry(ServiceEntry serviceEntry) {
-        this.serviceEntry = serviceEntry;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
