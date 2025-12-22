@@ -5,6 +5,8 @@ import com.example.demo.repository.GarageRepository;
 import com.example.demo.service.GarageService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GarageServiceImpl implements GarageService {
 
@@ -16,9 +18,8 @@ public class GarageServiceImpl implements GarageService {
 
     @Override
     public Garage createGarage(Garage garage) {
-
         garageRepository.findByGarageName(garage.getGarageName())
-                .ifPresent(existing -> {
+                .ifPresent(g -> {
                     throw new IllegalArgumentException("Garage name must be unique");
                 });
 
@@ -32,13 +33,31 @@ public class GarageServiceImpl implements GarageService {
                 .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
     }
 
-    // ✅ ADD THIS METHOD
+    // ✅ IMPLEMENT
     @Override
-    public void deactivateGarage(Long id) {
+    public List<Garage> getAllGarages() {
+        return garageRepository.findAll();
+    }
+
+    // ✅ IMPLEMENT
+    @Override
+    public Garage updateGarage(Long id, Garage updatedGarage) {
+        Garage existing = garageRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
+
+        existing.setGarageName(updatedGarage.getGarageName());
+        existing.setAddress(updatedGarage.getAddress());
+        existing.setContactNumber(updatedGarage.getContactNumber());
+
+        return garageRepository.save(existing);
+    }
+
+    @Override
+    public Garage deactivateGarage(Long id) {
         Garage garage = garageRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
 
         garage.setActive(false);
-        garageRepository.save(garage);
+        return garageRepository.save(garage);
     }
 }
