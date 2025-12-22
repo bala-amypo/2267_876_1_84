@@ -2,13 +2,13 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.Vehicle;
 import com.example.demo.repository.VehicleRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.demo.service.VehicleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class VehicleServiceImpl {
+public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository repository;
 
@@ -16,30 +16,33 @@ public class VehicleServiceImpl {
         this.repository = repository;
     }
 
-    public Vehicle createVehicle(Vehicle v) {
-        repository.findByVin(v.getVin()).ifPresent(x -> {
-            throw new IllegalArgumentException("VIN already exists");
-        });
-        return repository.save(v);
+    @Override
+    public Vehicle createVehicle(Vehicle vehicle) {
+        return repository.save(vehicle);
     }
 
+    @Override
     public Vehicle getVehicleById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
     }
 
-    public Vehicle getVehicleByVin(String vin) {
-        return repository.findByVin(vin)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+    @Override
+    public List<Vehicle> getAllVehicles() {
+        return repository.findAll();
     }
 
-    public List<Vehicle> getVehiclesByOwner(Long ownerId) {
-        return repository.findByOwnerId(ownerId);
+    @Override
+    public Vehicle updateVehicle(Long id, Vehicle vehicle) {
+        Vehicle existing = getVehicleById(id);
+        existing.setRegistrationNumber(vehicle.getRegistrationNumber());
+        existing.setOwnerName(vehicle.getOwnerName());
+        existing.setModel(vehicle.getModel());
+        return repository.save(existing);
     }
 
-    public void deactivateVehicle(Long id) {
-        Vehicle v = getVehicleById(id);
-        v.setActive(false);
-        repository.save(v);
+    @Override
+    public void deleteVehicle(Long id) {
+        repository.deleteById(id);
     }
 }
