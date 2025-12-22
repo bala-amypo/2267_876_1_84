@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface GarageRepository extends JpaRepository<Garage, Long> {
 
-    // 🔥 REQUIRED BY TESTS
     Optional<Garage> findByGarageName(String garageName);
+
+    boolean existsByGarageName(String garageName);
 }
