@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 public class ServiceEntry {
@@ -12,34 +11,16 @@ public class ServiceEntry {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     @ManyToOne
-    @JoinColumn(name = "garage_id")
     private Garage garage;
 
+    private String serviceType;
     private LocalDate serviceDate;
-    private int odometerReading;
+    private Integer odometerReading;
 
-    @OneToMany(mappedBy = "serviceEntry")
-    private List<ServicePart> serviceParts;
-
-    @OneToMany(mappedBy = "serviceEntry")
-    private List<VerificationLog> verificationLogs;
-
-    public ServiceEntry() {
-    }
-
-    public ServiceEntry(Long id, Vehicle vehicle, Garage garage,
-                        LocalDate serviceDate, int odometerReading) {
-        this.id = id;
-        this.vehicle = vehicle;
-        this.garage = garage;
-        this.serviceDate = serviceDate;
-        this.odometerReading = odometerReading;
-    }
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,9 +30,12 @@ public class ServiceEntry {
     public Garage getGarage() { return garage; }
     public void setGarage(Garage garage) { this.garage = garage; }
 
+    public String getServiceType() { return serviceType; }
+    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+
     public LocalDate getServiceDate() { return serviceDate; }
     public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
 
-    public int getOdometerReading() { return odometerReading; }
-    public void setOdometerReading(int odometerReading) { this.odometerReading = odometerReading; }
+    public Integer getOdometerReading() { return odometerReading; }
+    public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
 }
