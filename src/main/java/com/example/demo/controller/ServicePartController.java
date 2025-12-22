@@ -2,13 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ServicePart;
 import com.example.demo.service.ServicePartService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/service-parts")
+@RequestMapping("/service-parts")
 public class ServicePartController {
 
     private final ServicePartService service;
@@ -17,18 +16,24 @@ public class ServicePartController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<ServicePart> create(@RequestBody ServicePart part) {
-        return ResponseEntity.ok(service.createPart(part));
+    // ✅ CREATE PART (FIXED)
+    @PostMapping("/service-entry/{serviceEntryId}")
+    public ServicePart createPart(
+            @PathVariable Long serviceEntryId,
+            @RequestBody ServicePart part) {
+
+        return service.createPart(serviceEntryId, part);
     }
 
+    // GET PART BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<ServicePart> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getPartById(id));
+    public ServicePart getPartById(@PathVariable Long id) {
+        return service.getPartById(id);
     }
 
-    @GetMapping("/service-entry/{entryId}")
-    public ResponseEntity<List<ServicePart>> getByServiceEntry(@PathVariable Long entryId) {
-        return ResponseEntity.ok(service.getPartsByEntry(entryId));
+    // GET PARTS BY SERVICE ENTRY
+    @GetMapping("/service-entry/{serviceEntryId}")
+    public List<ServicePart> getPartsByEntry(@PathVariable Long serviceEntryId) {
+        return service.getPartsByEntry(serviceEntryId);
     }
 }

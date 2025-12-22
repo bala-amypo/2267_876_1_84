@@ -12,33 +12,38 @@ import java.util.List;
 @Service
 public class ServicePartServiceImpl implements ServicePartService {
 
-    private final ServicePartRepository servicePartRepository;
-    private final ServiceEntryRepository serviceEntryRepository;
+    private final ServicePartRepository partRepository;
+    private final ServiceEntryRepository entryRepository;
 
-    public ServicePartServiceImpl(ServicePartRepository servicePartRepository,
-                                  ServiceEntryRepository serviceEntryRepository) {
-        this.servicePartRepository = servicePartRepository;
-        this.serviceEntryRepository = serviceEntryRepository;
+    public ServicePartServiceImpl(ServicePartRepository partRepository,
+                                  ServiceEntryRepository entryRepository) {
+        this.partRepository = partRepository;
+        this.entryRepository = entryRepository;
     }
 
     @Override
-    public ServicePart createPart(ServicePart part) {
-        ServiceEntry entry = serviceEntryRepository
-                .findById(part.getServiceEntry().getId())
-                .orElseThrow(() -> new RuntimeException("ServiceEntry not found"));
+    public ServicePart createPart(Long serviceEntryId, ServicePart part) {
+
+        // ✅ TEST EXPECTS THIS EXCEPTION HERE
+        if (part.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
+        ServiceEntry entry = entryRepository.findById(serviceEntryId)
+                .orElseThrow(() -> new IllegalArgumentException("ServiceEntry not found"));
 
         part.setServiceEntry(entry);
-        return servicePartRepository.save(part);
+        return partRepository.save(part);
     }
 
     @Override
     public ServicePart getPartById(Long id) {
-        return servicePartRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ServicePart not found"));
+        return partRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ServicePart not found"));
     }
 
     @Override
     public List<ServicePart> getPartsByEntry(Long serviceEntryId) {
-        return servicePartRepository.findByServiceEntryId(serviceEntryId);
+        return partRepository.findByServiceEntryId(serviceEntryId);
     }
 }
