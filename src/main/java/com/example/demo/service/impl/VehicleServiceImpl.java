@@ -17,32 +17,26 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Vehicle createVehicle(Vehicle vehicle) {
+    public Vehicle registerVehicle(Vehicle vehicle) {
         return repository.save(vehicle);
     }
 
     @Override
-    public Vehicle getVehicleById(Long id) {
-        return repository.findById(id)
+    public Vehicle getVehicleByVin(String vin) {
+        return repository.findByVin(vin)
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
-        return repository.findAll();
+    public List<Vehicle> getVehiclesByOwner(Long ownerId) {
+        return repository.findByOwnerId(ownerId);
     }
 
     @Override
-    public Vehicle updateVehicle(Long id, Vehicle vehicle) {
-        Vehicle existing = getVehicleById(id);
-        existing.setRegistrationNumber(vehicle.getRegistrationNumber());
-        existing.setOwnerName(vehicle.getOwnerName());
-        existing.setModel(vehicle.getModel());
-        return repository.save(existing);
-    }
-
-    @Override
-    public void deleteVehicle(Long id) {
-        repository.deleteById(id);
+    public void deactivateVehicle(Long vehicleId) {
+        Vehicle vehicle = repository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        vehicle.setActive(false);
+        repository.save(vehicle);
     }
 }
