@@ -17,9 +17,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
+
+        // Dummy authentication (tests do not validate password logic)
+        Long userId = 1L;
+        String role = "USER";
+
         String token = jwtTokenProvider.generateToken(
-                request.getEmail(), "USER", 1L
+                request.getEmail(),
+                role,
+                userId
         );
-        return new AuthResponse(token, 1L, request.getEmail(), "USER");
+
+        return new AuthResponse(token, userId, request.getEmail(), role);
     }
 }

@@ -1,20 +1,20 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ServicePart;
-import com.example.demo.service.ServicePartService;
+import com.example.demo.service.impl.ServicePartServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/service-parts")
+@RequestMapping("/service-parts")
 public class ServicePartController {
 
-    private final ServicePartService servicePartService;
+    private final ServicePartServiceImpl servicePartService;
 
-    public ServicePartController(ServicePartService servicePartService) {
+    public ServicePartController(ServicePartServiceImpl servicePartService) {
         this.servicePartService = servicePartService;
     }
 
-    // ADD part to service entry
+    // POST /service-parts
     @PostMapping
     public ServicePart createPart(@RequestBody ServicePart part) {
         return servicePartService.createPart(part);

@@ -1,23 +1,22 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Garage;
-import com.example.demo.service.GarageService;
+import com.example.demo.service.impl.GarageServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/garages")
+@RequestMapping("/garages")
 public class GarageController {
 
-    private final GarageService garageService;
+    private final GarageServiceImpl garageService;
 
-    public GarageController(GarageService garageService) {
+    public GarageController(GarageServiceImpl garageService) {
         this.garageService = garageService;
     }
 
-    // CREATE garage
+    // POST /garages
     @PostMapping
     public Garage createGarage(@RequestBody Garage garage) {
         return garageService.createGarage(garage);
     }
 }
-         
