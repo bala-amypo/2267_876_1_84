@@ -6,7 +6,7 @@ import com.example.demo.service.GarageService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service   // ✅ THIS IS MANDATORY
+@Service
 public class GarageServiceImpl implements GarageService {
 
     private final GarageRepository garageRepository;
@@ -33,8 +33,8 @@ public class GarageServiceImpl implements GarageService {
 
     @Override
     public void deactivateGarage(Long id) {
-        Garage g = getGarageById(id);
-        g.setActive(false);
-        garageRepository.save(g);
+        Garage garage = getGarageById(id);
+        garage.setActive(false);
+        garageRepository.save(garage);
     }
 }
