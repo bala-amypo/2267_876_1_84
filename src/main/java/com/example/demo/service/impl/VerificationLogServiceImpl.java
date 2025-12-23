@@ -1,54 +1,38 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Vehicle;
-import com.example.demo.repository.VehicleRepository;
-import com.example.demo.service.VehicleService;
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.VerificationLog;
+import com.example.demo.repository.ServiceEntryRepository;
+import com.example.demo.repository.VerificationLogRepository;
+import com.example.demo.service.VerificationLogService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
-public class VehicleServiceImpl implements VehicleService {
+public class VerificationLogServiceImpl implements VerificationLogService {
 
-    private final VehicleRepository vehicleRepository;
+    private final VerificationLogRepository verificationLogRepository;
+    private final ServiceEntryRepository serviceEntryRepository;
 
-    public VehicleServiceImpl(VehicleRepository vehicleRepository) {
-        this.vehicleRepository = vehicleRepository;
+    public VerificationLogServiceImpl(VerificationLogRepository verificationLogRepository,
+                                      ServiceEntryRepository serviceEntryRepository) {
+        this.verificationLogRepository = verificationLogRepository;
+        this.serviceEntryRepository = serviceEntryRepository;
     }
 
     @Override
-    public Vehicle createVehicle(Vehicle vehicle) {
-        vehicleRepository.findByVin(vehicle.getVin())
-                .ifPresent(v -> {
-                    throw new IllegalArgumentException("VIN already exists");
-                });
-        return vehicleRepository.save(vehicle);
-    }
+    public VerificationLog createLog(VerificationLog log) {
 
-    @Override
-    public Vehicle getVehicleById(Long id) {
-        return vehicleRepository.findById(id)
+        ServiceEntry entry = serviceEntryRepository.findById(
+                log.getServiceEntry().getId())
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
-    }
+                        new EntityNotFoundException("ServiceEntry not found"));
 
-    @Override
-    public Vehicle getVehicleByVin(String vin) {
-        return vehicleRepository.findByVin(vin)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
-    }
+        log.setServiceEntry(entry);
+        log.setVerifiedAt(LocalDateTime.now());
 
-    @Override
-    public List<Vehicle> getVehiclesByOwner(Long ownerId) {
-        return vehicleRepository.findByOwnerId(ownerId);
-    }
-
-    @Override
-    public void deactivateVehicle(Long id) {
-        Vehicle vehicle = getVehicleById(id);
-        vehicle.setActive(false);
-        vehicleRepository.save(vehicle);
+        return verificationLogRepository.save(log);
     }
 }
