@@ -34,5 +34,5 @@ public class ServicePart {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public BigDecimal getCost() { return cost; }
-public void setCost(BigDecimal cost) { this.cost = cost; }
+    public void setCost(BigDecimal cost) { this.cost = cost; }
 }

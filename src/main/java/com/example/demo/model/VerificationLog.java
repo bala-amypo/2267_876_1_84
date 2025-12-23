@@ -14,6 +14,7 @@ public class VerificationLog {
     private ServiceEntry serviceEntry;
 
     private LocalDateTime verifiedAt;
+    private Boolean verifiedBySystem = true;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -23,4 +24,12 @@ public class VerificationLog {
 
     public LocalDateTime getVerifiedAt() { return verifiedAt; }
     public void setVerifiedAt(LocalDateTime verifiedAt) { this.verifiedAt = verifiedAt; }
+
+    public Boolean getVerifiedBySystem() { return verifiedBySystem; }
+    public void setVerifiedBySystem(Boolean verifiedBySystem) {
+    this.verifiedBySystem = verifiedBySystem;
 }
+
+}
+
+
