@@ -1,11 +1,22 @@
 package com.example.demo.dto;
 
-public class AuthRequest {
+import jakarta.validation.constraints.*;
 
+public class AuthRequest {
+    @NotBlank
+    @Email
     private String email;
+
+    @NotBlank
+    @Size(min = 6)
     private String password;
 
     public AuthRequest() {}
+
+    public AuthRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

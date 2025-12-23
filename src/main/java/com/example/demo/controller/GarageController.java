@@ -1,22 +1,40 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Garage;
-import com.example.demo.service.impl.GarageServiceImpl;
+import com.example.demo.service.GarageService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
-@RequestMapping("/garages")
+@RequestMapping("/api/garages")
 public class GarageController {
+    private final GarageService garageService;
 
-    private final GarageServiceImpl garageService;
-
-    public GarageController(GarageServiceImpl garageService) {
+    public GarageController(GarageService garageService) {
         this.garageService = garageService;
     }
 
-    // POST /garages
     @PostMapping
-    public Garage createGarage(@RequestBody Garage garage) {
-        return garageService.createGarage(garage);
+    public ResponseEntity<Garage> createGarage(@Valid @RequestBody Garage garage) {
+        return ResponseEntity.ok(garageService.createGarage(garage));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Garage> getGarageById(@PathVariable Long id) {
+        return garageService.getGarageById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Garage>> getAllGarages() {
+        return ResponseEntity.ok(garageService.getAllGarages());
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Garage> deactivateGarage(@PathVariable Long id) {
+        return ResponseEntity.ok(garageService.deactivateGarage(id));
     }
 }

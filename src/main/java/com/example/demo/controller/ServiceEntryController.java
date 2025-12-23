@@ -1,30 +1,45 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
-import com.example.demo.service.impl.ServiceEntryServiceImpl;
+import com.example.demo.service.ServiceEntryService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/service-entries")
+@RequestMapping("/api/service-entries")
 public class ServiceEntryController {
+    private final ServiceEntryService serviceEntryService;
 
-    private final ServiceEntryServiceImpl serviceEntryService;
-
-    public ServiceEntryController(ServiceEntryServiceImpl serviceEntryService) {
+    public ServiceEntryController(ServiceEntryService serviceEntryService) {
         this.serviceEntryService = serviceEntryService;
     }
 
-    // POST /service-entries
     @PostMapping
-    public ServiceEntry createServiceEntry(@RequestBody ServiceEntry entry) {
-        return serviceEntryService.createServiceEntry(entry);
+    public ResponseEntity<ServiceEntry> createServiceEntry(@Valid @RequestBody ServiceEntry entry) {
+        return ResponseEntity.ok(serviceEntryService.createServiceEntry(entry));
     }
 
-    // GET /service-entries/vehicle/{vehicleId}
+    @PutMapping("/{id}")
+    public ResponseEntity<ServiceEntry> updateServiceEntry(@PathVariable Long id, @Valid @RequestBody ServiceEntry entry) {
+        return ResponseEntity.ok(serviceEntryService.updateServiceEntry(id, entry));
+    }
+
     @GetMapping("/vehicle/{vehicleId}")
-    public List<ServiceEntry> getEntriesForVehicle(@PathVariable Long vehicleId) {
-        return serviceEntryService.getEntriesForVehicle(vehicleId);
+    public ResponseEntity<List<ServiceEntry>> getEntriesForVehicle(@PathVariable Long vehicleId) {
+        return ResponseEntity.ok(serviceEntryService.getEntriesForVehicle(vehicleId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ServiceEntry> getServiceEntryById(@PathVariable Long id) {
+        return serviceEntryService.getServiceEntryById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ServiceEntry>> getAllServiceEntries() {
+        return ResponseEntity.ok(serviceEntryService.getAllServiceEntries());
     }
 }

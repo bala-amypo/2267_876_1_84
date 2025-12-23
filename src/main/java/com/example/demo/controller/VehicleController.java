@@ -1,42 +1,45 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
-import com.example.demo.service.impl.VehicleServiceImpl;
+import com.example.demo.service.VehicleService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping("/api/vehicles")
 public class VehicleController {
+    private final VehicleService vehicleService;
 
-    private final VehicleServiceImpl vehicleService;
-
-    public VehicleController(VehicleServiceImpl vehicleService) {
+    public VehicleController(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
     }
 
-    // POST /vehicles
     @PostMapping
-    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.createVehicle(vehicle);
+    public ResponseEntity<Vehicle> createVehicle(@Valid @RequestBody Vehicle vehicle) {
+        return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
     }
 
-    // GET /vehicles/{id}
     @GetMapping("/{id}")
-    public Vehicle getVehicleById(@PathVariable Long id) {
-        return vehicleService.getVehicleById(id);
+    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
+        return vehicleService.getVehicleById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /vehicles/owner/{ownerId}
+    @GetMapping
+    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    }
+
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getVehiclesByOwner(@PathVariable Long ownerId) {
-        return vehicleService.getVehiclesByOwner(ownerId);
+    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 
-    // POST /vehicles/{id}/deactivate
-    @PostMapping("/{id}/deactivate")
-    public void deactivateVehicle(@PathVariable Long id) {
-        vehicleService.deactivateVehicle(id);
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Vehicle> deactivateVehicle(@PathVariable Long id) {
+        return ResponseEntity.ok(vehicleService.deactivateVehicle(id));
     }
 }
