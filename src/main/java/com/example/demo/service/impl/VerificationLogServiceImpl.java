@@ -29,4 +29,9 @@ public class VerificationLogServiceImpl {
         log.setVerifiedAt(LocalDateTime.now());
         return verificationLogRepository.save(log);
     }
+
+    // ✅ ADD THIS (required by controller)
+    public VerificationLog getLogById(Long id) {
+        return verificationLogRepository.findById(id).orElse(null);
+    }
 }

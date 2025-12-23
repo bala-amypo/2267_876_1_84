@@ -24,11 +24,15 @@ public class ServicePartServiceImpl {
                 .orElseThrow(() ->
                         new EntityNotFoundException("ServiceEntry not found"));
 
-        // test checks contains("Quantity")
         if (part.getQuantity() == null || part.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity");
         }
 
         return servicePartRepository.save(part);
+    }
+
+    // ✅ ADD THIS (required by controller)
+    public ServicePart getPartById(Long id) {
+        return servicePartRepository.findById(id).orElse(null);
     }
 }
