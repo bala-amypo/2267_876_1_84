@@ -1,33 +1,43 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.Garage;
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.Vehicle;
+import com.example.demo.repository.GarageRepository;
+import com.example.demo.repository.ServiceEntryRepository;
+import com.example.demo.repository.VehicleRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Service   // ✅ THIS WAS MISSING
 public class ServiceEntryServiceImpl {
 
     private final ServiceEntryRepository entryRepo;
     private final VehicleRepository vehicleRepo;
     private final GarageRepository garageRepo;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository e, VehicleRepository v, GarageRepository g) {
-        this.entryRepo = e;
-        this.vehicleRepo = v;
-        this.garageRepo = g;
+    public ServiceEntryServiceImpl(
+            ServiceEntryRepository entryRepo,
+            VehicleRepository vehicleRepo,
+            GarageRepository garageRepo
+    ) {
+        this.entryRepo = entryRepo;
+        this.vehicleRepo = vehicleRepo;
+        this.garageRepo = garageRepo;
     }
 
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        Vehicle v = vehicleRepo.findById(entry.getVehicle().getId())
-                .orElseThrow(EntityNotFoundException::new);
+        Vehicle vehicle = vehicleRepo.findById(entry.getVehicle().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        Garage g = garageRepo.findById(entry.getGarage().getId())
-                .orElseThrow(EntityNotFoundException::new);
+        Garage garage = garageRepo.findById(entry.getGarage().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (!v.getActive()) {
+        if (!vehicle.getActive()) {
             throw new IllegalArgumentException("active vehicles");
         }
 
@@ -35,15 +45,15 @@ public class ServiceEntryServiceImpl {
             throw new IllegalArgumentException("future");
         }
 
-        entryRepo.findTopByVehicleOrderByOdometerReadingDesc(v)
+        entryRepo.findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
                         throw new IllegalArgumentException(">=");
                     }
                 });
 
-        entry.setVehicle(v);
-        entry.setGarage(g);
+        entry.setVehicle(vehicle);
+        entry.setGarage(garage);
 
         return entryRepo.save(entry);
     }
