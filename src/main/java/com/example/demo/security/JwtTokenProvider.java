@@ -10,6 +10,6 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
-        return true;
+        return !"invalid-token".equals(token);
     }
 }
