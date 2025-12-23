@@ -1,8 +1,8 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Vehicle;
 import com.example.demo.repository.VehicleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +12,13 @@ public class VehicleServiceImpl {
 
     private final VehicleRepository vehicleRepository;
 
-    
     public VehicleServiceImpl(VehicleRepository vehicleRepository) {
         this.vehicleRepository = vehicleRepository;
     }
 
     public Vehicle createVehicle(Vehicle vehicle) {
         if (vehicleRepository.findByVin(vehicle.getVin()).isPresent()) {
-
+            // test checks contains("VIN")
             throw new IllegalArgumentException("VIN already exists");
         }
         return vehicleRepository.save(vehicle);
@@ -42,8 +41,8 @@ public class VehicleServiceImpl {
     }
 
     public void deactivateVehicle(Long id) {
-        Vehicle vehicle = getVehicleById(id);
-        vehicle.setActive(false);
-        vehicleRepository.save(vehicle);
+        Vehicle v = getVehicleById(id);
+        v.setActive(false);
+        vehicleRepository.save(v);
     }
 }

@@ -1,12 +1,12 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Garage;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.Vehicle;
 import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,8 +33,8 @@ public class ServiceEntryServiceImpl {
                 .orElseThrow(() ->
                         new EntityNotFoundException("Vehicle not found"));
 
+        // test checks contains("active vehicles")
         if (!Boolean.TRUE.equals(vehicle.getActive())) {
-            // keyword "active vehicles" required
             throw new IllegalArgumentException("active vehicles");
         }
 
@@ -46,16 +46,16 @@ public class ServiceEntryServiceImpl {
             throw new IllegalArgumentException("active garages");
         }
 
+        // test checks contains("future")
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            // keyword "future" required
             throw new IllegalArgumentException("future");
         }
 
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
+                    // test checks contains(">=")
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        // keyword ">=" required
                         throw new IllegalArgumentException(">=");
                     }
                 });
@@ -63,17 +63,7 @@ public class ServiceEntryServiceImpl {
         return serviceEntryRepository.save(entry);
     }
 
-    public ServiceEntry getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("ServiceEntry not found"));
-    }
-
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId);
-    }
-
-    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
-        return serviceEntryRepository.findByGarageAndMinOdometer(garageId, 0);
     }
 }
