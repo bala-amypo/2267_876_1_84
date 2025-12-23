@@ -3,24 +3,23 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 
-
-
 @Entity
 public class Vehicle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(unique = true)
     private String vin;
-
     private String make;
     private String model;
     private Integer year;
     private Long ownerId;
     private Boolean active = true;
     private Timestamp createdAt;
+
+    public Vehicle() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -33,6 +32,9 @@ public class Vehicle {
 
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
+
+    public Integer getYear() { return year; }
+    public void setYear(Integer year) { this.year = year; }
 
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }

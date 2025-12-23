@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 public class ServiceEntry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @ManyToOne
@@ -20,7 +20,10 @@ public class ServiceEntry {
     private String serviceType;
     private LocalDate serviceDate;
     private Integer odometerReading;
+    private String description;
     private Timestamp recordedAt;
+
+    public ServiceEntry() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
