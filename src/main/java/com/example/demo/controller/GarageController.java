@@ -1,48 +1,31 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Garage;
-import com.example.demo.service.GarageService;
+import com.example.demo.service.impl.GarageServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/garages")
+@Tag(name = "Garage Controller")
 public class GarageController {
 
-    private final GarageService service;
+    private final GarageServiceImpl garageService;
 
-    public GarageController(GarageService service) {
-        this.service = service;
+    public GarageController(GarageServiceImpl garageService) {
+        this.garageService = garageService;
     }
 
-    // POST – Create garage
     @PostMapping
     public Garage create(@RequestBody Garage garage) {
-        return service.createGarage(garage);
+        return garageService.createGarage(garage);
     }
 
-    // PUT – Update garage
-    @PutMapping("/{id}")
-    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
-        return service.updateGarage(id, garage);
-    }
-
-    // GET – Garage by ID
     @GetMapping("/{id}")
-    public Garage getById(@PathVariable Long id) {
-        return service.getGarageById(id);
+    public Garage get(@PathVariable Long id) {
+        return garageService.getGarageById(id);
     }
 
-    // GET – All garages
-    @GetMapping
-    public List<Garage> getAll() {
-        return service.getAllGarages();
-    }
-
-    // PUT – Deactivate garage
     @PutMapping("/{id}/deactivate")
-    public Garage deactivate(@PathVariable Long id) {
-        return service.deactivateGarage(id);
-    }
-}
+    public void deactivate(@PathVariable Long id) {
+        garageService.deactivateGarage(id
