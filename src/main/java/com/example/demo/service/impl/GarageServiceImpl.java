@@ -2,7 +2,9 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.Garage;
 import com.example.demo.repository.GarageRepository;
+import org.springframework.stereotype.Service;
 
+@Service   // ✅ REQUIRED
 public class GarageServiceImpl {
 
     private final GarageRepository repo;
