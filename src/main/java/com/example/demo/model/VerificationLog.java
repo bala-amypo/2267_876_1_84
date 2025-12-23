@@ -4,18 +4,16 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "verification_logs")
 public class VerificationLog {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne
     private ServiceEntry serviceEntry;
 
     private LocalDateTime verifiedAt;
-    private Boolean verifiedBySystem = true;
-    private String notes;
 
     public VerificationLog() {}
 

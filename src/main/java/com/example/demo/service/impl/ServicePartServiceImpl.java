@@ -1,36 +1,28 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.ServicePart;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.ServicePartRepository;
-import com.example.demo.service.ServicePartService;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityNotFoundException;
 
-@Service
-public class ServicePartServiceImpl implements ServicePartService {
+public class ServicePartServiceImpl {
 
-    private final ServicePartRepository servicePartRepository;
-    private final ServiceEntryRepository serviceEntryRepository;
+    private final ServicePartRepository partRepo;
+    private final ServiceEntryRepository entryRepo;
 
-    public ServicePartServiceImpl(ServicePartRepository servicePartRepository,
-                                  ServiceEntryRepository serviceEntryRepository) {
-        this.servicePartRepository = servicePartRepository;
-        this.serviceEntryRepository = serviceEntryRepository;
+    public ServicePartServiceImpl(ServicePartRepository p, ServiceEntryRepository e) {
+        this.partRepo = p;
+        this.entryRepo = e;
     }
 
-    @Override
     public ServicePart createPart(ServicePart part) {
-
-        ServiceEntry entry = serviceEntryRepository
-                .findById(part.getServiceEntry().getId())
-                .orElseThrow();
-
-        if (part.getQuantity() == null || part.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
+        if (part.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity");
         }
 
-        part.setServiceEntry(entry);
-        return servicePartRepository.save(part);
+        entryRepo.findById(part.getServiceEntry().getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        return partRepo.save(part);
     }
 }
