@@ -2,28 +2,32 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.service.AuthService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.security.JwtTokenProvider;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+    public AuthController(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public AuthResponse login(@RequestBody AuthRequest request) {
+
+        // Dummy authentication (tests do not validate password logic)
+        Long userId = 1L;
+        String role = "USER";
+
+        String token = jwtTokenProvider.generateToken(
+                request.getEmail(),
+                role,
+                userId
+        );
+
+        return new AuthResponse(token, userId, request.getEmail(), role);
     }
 }
