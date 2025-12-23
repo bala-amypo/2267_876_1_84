@@ -20,3 +20,4 @@ public class GarageController {
         return garageService.createGarage(garage);
     }
 }
+         
