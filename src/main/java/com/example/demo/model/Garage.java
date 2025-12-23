@@ -2,6 +2,10 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 
+
+
+
+
 @Entity
 public class Garage {
 
@@ -14,6 +18,7 @@ public class Garage {
 
     private String address;
     private Boolean active = true;
+    private String contactNumber;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -23,4 +28,7 @@ public class Garage {
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+
+    public String getContactNumber() { return contactNumber; }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
 }

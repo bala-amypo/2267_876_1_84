@@ -1,6 +1,11 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+
+
+
 
 @Entity
 public class ServicePart {
@@ -14,6 +19,7 @@ public class ServicePart {
 
     private String partName;
     private Integer quantity;
+    private BigDecimal cost;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -26,4 +32,7 @@ public class ServicePart {
 
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+    public BigDecimal getCost() { return cost; }
+public void setCost(BigDecimal cost) { this.cost = cost; }
 }

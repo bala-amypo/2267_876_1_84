@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
+import java.sql.Timestamp;
 
 @Entity
 public class ServiceEntry {
@@ -20,6 +20,7 @@ public class ServiceEntry {
     private String serviceType;
     private LocalDate serviceDate;
     private Integer odometerReading;
+    private Timestamp recordedAt;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -38,4 +39,7 @@ public class ServiceEntry {
 
     public Integer getOdometerReading() { return odometerReading; }
     public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
+
+    public Timestamp getRecordedAt() { return recordedAt; }
+    public void setRecordedAt(Timestamp recordedAt) { this.recordedAt = recordedAt; }
 }
