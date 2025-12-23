@@ -7,7 +7,6 @@ import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,29 +31,30 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow();
 
         Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+                .orElseThrow();
 
         if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Only active vehicles allowed");
+            throw new IllegalArgumentException("Service allowed only for active vehicles");
         }
 
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future date not allowed");
+            throw new IllegalArgumentException("Service date cannot be in the future");
         }
 
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer must be >=");
+                        throw new IllegalArgumentException("Odometer must be >= last reading");
                     }
                 });
 
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
+
         return serviceEntryRepository.save(entry);
     }
 

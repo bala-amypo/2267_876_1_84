@@ -3,7 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Garage;
 import com.example.demo.repository.GarageRepository;
 import com.example.demo.service.GarageService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,24 +16,9 @@ public class GarageServiceImpl implements GarageService {
 
     @Override
     public Garage createGarage(Garage garage) {
-        garageRepository.findByGarageName(garage.getGarageName())
-                .ifPresent(g -> {
-                    throw new IllegalArgumentException("Garage already exists");
-                });
+        if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
+            throw new IllegalArgumentException("Garage already exists");
+        }
         return garageRepository.save(garage);
-    }
-
-    @Override
-    public Garage getGarageById(Long id) {
-        return garageRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Garage not found"));
-    }
-
-    @Override
-    public void deactivateGarage(Long id) {
-        Garage garage = getGarageById(id);
-        garage.setActive(false);
-        garageRepository.save(garage);
     }
 }
