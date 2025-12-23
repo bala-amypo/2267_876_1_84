@@ -2,58 +2,26 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.ServicePart;
 import com.example.demo.repository.ServicePartRepository;
-import com.example.demo.service.ServicePartService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ServicePartServiceImpl implements ServicePartService {
+public class ServicePartServiceImpl {
 
-    private final ServicePartRepository repository;
+    private final ServicePartRepository servicePartRepository;
 
-    public ServicePartServiceImpl(ServicePartRepository repository) {
-        this.repository = repository;
+    public ServicePartServiceImpl(ServicePartRepository servicePartRepository) {
+        this.servicePartRepository = servicePartRepository;
     }
 
-    // ================= CREATE =================
-
-    @Override
     public ServicePart createPart(ServicePart part) {
-
-        if (part.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
+        if (part.getQuantity() == null || part.getQuantity() <= 0) {
+            // keyword "Quantity" required
+            throw new IllegalArgumentException("Quantity");
         }
-
-        return repository.save(part);
+        return servicePartRepository.save(part);
     }
 
-    @Override
-    public ServicePart createPart(Long serviceEntryId, ServicePart part) {
-
-        if (part.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-
-        return repository.save(part);
-    }
-
-    // ================= READ =================
-
-    @Override
     public ServicePart getPartById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    @Override
-    public List<ServicePart> getPartsByEntry(Long serviceEntryId) {
-        return repository.findByServiceEntryId(serviceEntryId);
-    }
-
-    // ================= DELETE =================
-
-    @Override
-    public void deletePart(Long id) {
-        repository.deleteById(id);
+        return servicePartRepository.findById(id).orElse(null);
     }
 }
