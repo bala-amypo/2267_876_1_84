@@ -13,7 +13,6 @@ public class Garage {
     private String garageName;
 
     private String address;
-    private String contactNumber;
     private Boolean active = true;
 
     public Long getId() { return id; }

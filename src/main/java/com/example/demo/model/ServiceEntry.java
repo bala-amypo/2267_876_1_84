@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 public class ServiceEntry {
@@ -20,8 +19,6 @@ public class ServiceEntry {
     private String serviceType;
     private LocalDate serviceDate;
     private Integer odometerReading;
-    private String description;
-    private LocalDateTime recordedAt = LocalDateTime.now();
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
