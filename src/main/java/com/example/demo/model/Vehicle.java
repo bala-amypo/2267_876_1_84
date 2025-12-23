@@ -1,84 +1,46 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "vehicles")
 public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String vin;
 
-    @Column(nullable = false, unique = true)
-    private String registrationNumber;
+    private String make;
+    private String model;
+    private Integer year;
 
     @Column(nullable = false)
-    private String ownerName;
+    private Long ownerId;
 
-    @Column(nullable = false)
-    private Long ownerId;  
+    private Boolean active = true;
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
-    @Column(nullable = false)
-    private boolean active = true;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Vehicle() {
-        
-    }
+    public String getVin() { return vin; }
+    public void setVin(String vin) { this.vin = vin; }
 
-    public Vehicle(String vin, String registrationNumber,
-                   String ownerName, Long ownerId) {
-        this.vin = vin;
-        this.registrationNumber = registrationNumber;
-        this.ownerName = ownerName;
-        this.ownerId = ownerId;
-        this.active = true;
-    }
+    public String getMake() { return make; }
+    public void setMake(String make) { this.make = make; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
 
-    public String getVin() {
-        return vin;
-    }
+    public Integer getYear() { return year; }
+    public void setYear(Integer year) { this.year = year; }
 
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
+    public Long getOwnerId() { return ownerId; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
-
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public Long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }
