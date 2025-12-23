@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    // REQUIRED by tests
     Optional<Vehicle> findByVin(String vin);
 
-    // REQUIRED by tests
     List<Vehicle> findByOwnerId(Long ownerId);
 }
