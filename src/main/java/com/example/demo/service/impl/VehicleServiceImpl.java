@@ -3,41 +3,44 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Vehicle;
 import com.example.demo.repository.VehicleRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // ✅ THIS WAS MISSING (LAST ONE)
 public class VehicleServiceImpl {
 
-    private final VehicleRepository repo;
+    private final VehicleRepository vehicleRepository;
 
-    public VehicleServiceImpl(VehicleRepository repo) {
-        this.repo = repo;
+    public VehicleServiceImpl(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
     }
 
-    public Vehicle createVehicle(Vehicle v) {
-        if (repo.findByVin(v.getVin()).isPresent()) {
-            throw new IllegalArgumentException("VIN already exists");
-        }
-        return repo.save(v);
+    public Vehicle createVehicle(Vehicle vehicle) {
+        vehicleRepository.findByVin(vehicle.getVin())
+                .ifPresent(v -> {
+                    throw new IllegalArgumentException("VIN already exists");
+                });
+        return vehicleRepository.save(vehicle);
     }
 
     public Vehicle getVehicleById(Long id) {
-        return repo.findById(id)
+        return vehicleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
     }
 
     public Vehicle getVehicleByVin(String vin) {
-        return repo.findByVin(vin)
+        return vehicleRepository.findByVin(vin)
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
     }
 
     public List<Vehicle> getVehiclesByOwner(Long ownerId) {
-        return repo.findByOwnerId(ownerId);
+        return vehicleRepository.findByOwnerId(ownerId);
     }
 
     public void deactivateVehicle(Long id) {
-        Vehicle v = getVehicleById(id);
-        v.setActive(false);
-        repo.save(v);
+        Vehicle vehicle = getVehicleById(id);
+        vehicle.setActive(false);
+        vehicleRepository.save(vehicle);
     }
 }

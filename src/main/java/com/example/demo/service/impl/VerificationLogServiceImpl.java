@@ -4,24 +4,30 @@ import com.example.demo.model.VerificationLog;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VerificationLogRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service   // ✅ LAST MISSING ANNOTATION
 public class VerificationLogServiceImpl {
 
-    private final VerificationLogRepository repo;
-    private final ServiceEntryRepository entryRepo;
+    private final VerificationLogRepository verificationLogRepository;
+    private final ServiceEntryRepository serviceEntryRepository;
 
-    public VerificationLogServiceImpl(VerificationLogRepository r, ServiceEntryRepository e) {
-        this.repo = r;
-        this.entryRepo = e;
+    public VerificationLogServiceImpl(
+            VerificationLogRepository verificationLogRepository,
+            ServiceEntryRepository serviceEntryRepository
+    ) {
+        this.verificationLogRepository = verificationLogRepository;
+        this.serviceEntryRepository = serviceEntryRepository;
     }
 
     public VerificationLog createLog(VerificationLog log) {
-        entryRepo.findById(log.getServiceEntry().getId())
-                .orElseThrow(EntityNotFoundException::new);
+
+        serviceEntryRepository.findById(log.getServiceEntry().getId())
+                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
 
         log.setVerifiedAt(LocalDateTime.now());
-        return repo.save(log);
+        return verificationLogRepository.save(log);
     }
 }
