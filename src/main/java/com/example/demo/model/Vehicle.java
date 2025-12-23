@@ -1,26 +1,29 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
+@Table(name = "vehicles")
 public class Vehicle {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @Column(unique = true)
     private String vin;
+
     private String make;
     private String model;
-    private Integer year;
     private Long ownerId;
     private Boolean active = true;
-    private Timestamp createdAt;
+
+    @OneToMany(mappedBy = "vehicle")
+    private List<ServiceEntry> serviceEntries;
 
     public Vehicle() {}
 
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -33,15 +36,9 @@ public class Vehicle {
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
 
-    public Integer getYear() { return year; }
-    public void setYear(Integer year) { this.year = year; }
-
     public Long getOwnerId() { return ownerId; }
     public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
-
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }

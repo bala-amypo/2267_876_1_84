@@ -3,16 +3,16 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "garages")
 public class Garage {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @Column(unique = true)
     private String garageName;
+
     private String address;
-    private String contactNumber;
     private Boolean active = true;
 
     public Garage() {}
@@ -25,9 +25,6 @@ public class Garage {
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
-
-    public String getContactNumber() { return contactNumber; }
-    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }

@@ -2,13 +2,13 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
+@Table(name = "service_entries")
 public class ServiceEntry {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne
@@ -20,8 +20,9 @@ public class ServiceEntry {
     private String serviceType;
     private LocalDate serviceDate;
     private Integer odometerReading;
-    private String description;
-    private Timestamp recordedAt;
+
+    @OneToMany(mappedBy = "serviceEntry")
+    private List<ServicePart> parts;
 
     public ServiceEntry() {}
 
@@ -42,7 +43,4 @@ public class ServiceEntry {
 
     public Integer getOdometerReading() { return odometerReading; }
     public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
-
-    public Timestamp getRecordedAt() { return recordedAt; }
-    public void setRecordedAt(Timestamp recordedAt) { this.recordedAt = recordedAt; }
 }
