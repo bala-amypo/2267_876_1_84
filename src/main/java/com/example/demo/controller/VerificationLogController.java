@@ -1,36 +1,30 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.VerificationLog;
-import com.example.demo.service.VerificationLogService;
+import com.example.demo.service.impl.VerificationLogServiceImpl;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/verification-logs")
+@Tag(name = "Verification Log")
 public class VerificationLogController {
 
-    private final VerificationLogService service;
+    private final VerificationLogServiceImpl verificationLogService;
 
-    public VerificationLogController(VerificationLogService service) {
-        this.service = service;
+    public VerificationLogController(VerificationLogServiceImpl verificationLogService) {
+        this.verificationLogService = verificationLogService;
     }
 
     // POST – Create verification log
     @PostMapping
-    public VerificationLog create(@RequestBody VerificationLog log) {
-        return service.createLog(log);
+    public VerificationLog createLog(@RequestBody VerificationLog log) {
+        return verificationLogService.createLog(log);
     }
 
     // GET – Log by ID
     @GetMapping("/{id}")
     public VerificationLog getById(@PathVariable Long id) {
-        return service.getLogById(id);
-    }
-
-    // GET – Logs by service entry
-    @GetMapping("/entry/{entryId}")
-    public List<VerificationLog> getByEntry(@PathVariable Long entryId) {
-        return service.getLogsByEntry(entryId);
+        return verificationLogService.getLogById(id);
     }
 }
