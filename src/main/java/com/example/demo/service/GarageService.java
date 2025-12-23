@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Garage;
-import java.util.List;
 
 public interface GarageService {
 
@@ -9,9 +8,5 @@ public interface GarageService {
 
     Garage getGarageById(Long id);
 
-    List<Garage> getAllGarages();     // ✅ ADD
-
-    Garage updateGarage(Long id, Garage garage); // ✅ ADD
-
-    Garage deactivateGarage(Long id);
+    void deactivateGarage(Long id);
 }

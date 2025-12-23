@@ -29,7 +29,7 @@
 
         <!-- ================= CORE ================= -->
 
-        <!-- Web -->
+        <!-- Spring Web (REST + Servlet support) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -41,16 +41,16 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- MySQL -->
+        <!-- MySQL Driver -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ================= SECURITY & JWT ================= -->
+        <!-- ================= SECURITY ================= -->
 
-        <!-- Spring Security -->
+        <!-- Spring Security (required for JwtTokenProvider bean wiring) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -85,7 +85,7 @@
             <version>2.5.0</version>
         </dependency>
 
-        <!-- ================= LOMBOK (MANDATORY FOR TESTS) ================= -->
+        <!-- ================= LOMBOK ================= -->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -95,14 +95,21 @@
 
         <!-- ================= TESTING ================= -->
 
-        <!-- Spring Boot Test (JUnit + Mockito support) -->
+        <!-- Spring Boot Test (Mockito, Assertions, Context) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <!-- We use TestNG instead of JUnit -->
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- TestNG (required by test cases) -->
+        <!-- TestNG (MANDATORY – college test file uses TestNG) -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -121,13 +128,17 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Surefire for TestNG -->
+            <!-- Surefire Plugin for TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                    </includes>
                 </configuration>
                 <dependencies>
                     <dependency>
