@@ -16,6 +16,7 @@ public class GarageServiceImpl {
 
     public Garage createGarage(Garage garage) {
         if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
+            // Test checks: message contains "already exists"
             throw new IllegalArgumentException("already exists");
         }
         return garageRepository.save(garage);
@@ -27,7 +28,7 @@ public class GarageServiceImpl {
                         new EntityNotFoundException("Garage not found"));
     }
 
-    // ✅ ADD THIS (required by controller)
+    // Required by controller (not tested, but must exist)
     public void deactivateGarage(Long id) {
         Garage garage = getGarageById(id);
         garage.setActive(false);

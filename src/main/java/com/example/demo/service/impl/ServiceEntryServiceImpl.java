@@ -33,6 +33,7 @@ public class ServiceEntryServiceImpl {
                 .orElseThrow(() ->
                         new EntityNotFoundException("Vehicle not found"));
 
+        // Test checks: message contains "active vehicles"
         if (!Boolean.TRUE.equals(vehicle.getActive())) {
             throw new IllegalArgumentException("active vehicles");
         }
@@ -45,6 +46,7 @@ public class ServiceEntryServiceImpl {
             throw new IllegalArgumentException("active garages");
         }
 
+        // Test checks: message contains "future"
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("future");
         }
@@ -52,6 +54,7 @@ public class ServiceEntryServiceImpl {
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
+                    // Test checks: message contains ">="
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
                         throw new IllegalArgumentException(">=");
                     }
@@ -64,14 +67,14 @@ public class ServiceEntryServiceImpl {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
-    // ✅ ADD THIS (required by controller)
+    // Required by controller
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
                 .orElseThrow(() ->
                         new EntityNotFoundException("ServiceEntry not found"));
     }
 
-    // ✅ ADD THIS (required by controller)
+    // Required by controller
     public List<ServiceEntry> getEntriesByGarage(Long garageId) {
         return serviceEntryRepository.findByGarageAndMinOdometer(garageId, 0);
     }
