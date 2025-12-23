@@ -1,29 +1,45 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import jakarta.validation.constraints.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(unique = true)
     private String vin;
 
+    @NotBlank
     private String make;
+
+    @NotBlank
     private String model;
+
+    @NotNull
     private Long ownerId;
+
     private Boolean active = true;
 
-    @OneToMany(mappedBy = "vehicle")
-    private List<ServiceEntry> serviceEntries;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public Vehicle() {}
 
-    // getters & setters
+    public Vehicle(String vin, String make, String model, Long ownerId) {
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.ownerId = ownerId;
+        this.active = true;
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -41,4 +57,7 @@ public class Vehicle {
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
