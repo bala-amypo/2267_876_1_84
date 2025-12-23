@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
-import com.example.demo.service.impl.VehicleServiceImpl;
+import com.example.demo.service.VehicleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,34 +10,34 @@ import java.util.List;
 @RequestMapping("/vehicles")
 public class VehicleController {
 
-    private final VehicleServiceImpl vehicleService;
+    private final VehicleService vehicleService;   // ✅ INTERFACE ONLY
 
-    public VehicleController(VehicleServiceImpl vehicleService) {
+    public VehicleController(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
     }
 
+    // ---------------- CREATE VEHICLE ----------------
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle vehicle) {
+    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
         return vehicleService.createVehicle(vehicle);
     }
 
+    // ---------------- GET VEHICLE BY ID ----------------
     @GetMapping("/{id}")
-    public Vehicle getById(@PathVariable Long id) {
+    public Vehicle getVehicleById(@PathVariable Long id) {
         return vehicleService.getVehicleById(id);
     }
 
-    @GetMapping("/vin/{vin}")
-    public Vehicle getByVin(@PathVariable String vin) {
-        return vehicleService.getVehicleByVin(vin);
-    }
-
+    // ---------------- GET VEHICLES BY OWNER ----------------
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
+    public List<Vehicle> getVehiclesByOwner(@PathVariable Long ownerId) {
         return vehicleService.getVehiclesByOwner(ownerId);
     }
 
+    // ---------------- DEACTIVATE VEHICLE (IMPORTANT) ----------------
+    // ✅ MUST BE PUT (as per image & REST semantics)
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
+    public void deactivateVehicle(@PathVariable Long id) {
         vehicleService.deactivateVehicle(id);
     }
 }
