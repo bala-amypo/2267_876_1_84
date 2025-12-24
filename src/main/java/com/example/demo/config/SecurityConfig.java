@@ -15,8 +15,10 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> {})   // ✅ REQUIRED FOR SWAGGER
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(
+                            "/swagger-ui.html",   // ✅ MISSING EARLIER
                             "/swagger-ui/**",
                             "/v3/api-docs/**",
                             "/health",
