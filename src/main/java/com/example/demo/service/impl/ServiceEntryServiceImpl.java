@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Garage;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.Vehicle;
@@ -8,13 +7,13 @@ import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
-import org.springframework.stereotype.Service;
+import jakarta.persistence.EntityNotFoundException;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
-@Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
+
     private final ServiceEntryRepository serviceEntryRepository;
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
@@ -29,45 +28,42 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
-        Vehicle vehicle = entry.getVehicle();
-        if (vehicle != null && vehicle.getId() != null) {
-            vehicle = vehicleRepository.findById(vehicle.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
-            entry.setVehicle(vehicle);
-        }
-        
+
+        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+
         if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Only active vehicles can have service entries");
+            throw new IllegalArgumentException("Only active vehicles allowed");
         }
 
-        Garage garage = entry.getGarage();
-        if (garage != null && garage.getId() != null) {
-            garage = garageRepository.findById(garage.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Garage not found"));
-            entry.setGarage(garage);
-        }
-        
+        Garage garage = garageRepository.findById(entry.getGarage().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+
         if (!garage.getActive()) {
-            throw new IllegalArgumentException("Garage is not active");
+            throw new IllegalArgumentException("Only active garages allowed");
         }
 
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Service date cannot be in the future");
+            throw new IllegalArgumentException("future date not allowed");
         }
 
-        Optional<ServiceEntry> lastService = serviceEntryRepository
-            .findTopByVehicleOrderByOdometerReadingDesc(vehicle);
-        
-        if (lastService.isPresent() && entry.getOdometerReading() < lastService.get().getOdometerReading()) {
-            throw new IllegalArgumentException("Odometer reading must be >= previous reading");
-        }
+        serviceEntryRepository
+                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
+                .ifPresent(last -> {
+                    if (entry.getOdometerReading() < last.getOdometerReading()) {
+                        throw new IllegalArgumentException("Odometer must be >=");
+                    }
+                });
 
+        entry.setVehicle(vehicle);
+        entry.setGarage(garage);
         return serviceEntryRepository.save(entry);
     }
 
     @Override
-    public Optional<ServiceEntry> getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id);
+    public ServiceEntry getServiceEntryById(Long id) {
+        return serviceEntryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Service entry not found"));
     }
 
     @Override
@@ -76,21 +72,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     @Override
-    public List<ServiceEntry> getAllServiceEntries() {
-        return serviceEntryRepository.findAll();
-    }
-
-    @Override
-    public ServiceEntry updateServiceEntry(Long id, ServiceEntry entry) {
-        ServiceEntry existing = serviceEntryRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Service entry not found"));
-        
-        existing.setServiceType(entry.getServiceType());
-        existing.setServiceDate(entry.getServiceDate());
-        existing.setOdometerReading(entry.getOdometerReading());
-        existing.setCost(entry.getCost());
-        existing.setNotes(entry.getNotes());
-        
-        return serviceEntryRepository.save(existing);
+    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
+        return serviceEntryRepository.findByGarageId(garageId);
     }
 }
