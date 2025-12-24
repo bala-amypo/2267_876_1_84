@@ -19,7 +19,7 @@ public class OpenApiConfig {
                         .version("1.0")
                         .description("API for Vehicle, Garage, Service Entries, Parts and Verification"))
                 .servers(List.of(
-                        new Server().url("http://localhost:9001").description("Local Server"),
+                        
                         new Server().url("https://9157.32procr.amypo.ai/").description("Production Server")
                 ));
     }
