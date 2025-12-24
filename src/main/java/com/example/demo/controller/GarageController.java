@@ -18,15 +18,6 @@ public class GarageController {
 
     @PostMapping
     public Garage create(@RequestBody Garage garage) {
-
-        // SERVER-CONTROLLED FIELDS
-        garage.setId(null);
-        garage.setActive(true);
-
-        if (garage.getGarageName() == null || garage.getGarageName().isBlank()) {
-            throw new IllegalArgumentException("garageName is required");
-        }
-
         return garageService.createGarage(garage);
     }
 

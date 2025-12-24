@@ -1,48 +1,64 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
-@Table(
-        name = "garages",
-        uniqueConstraints = @UniqueConstraint(columnNames = "garageName")
-)
-@JsonIgnoreProperties(
-        value = {"id", "active"},
-        allowGetters = true
-)
+@Table(name = "garages")
 public class Garage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "garage_name", unique = true, nullable = false)
     private String garageName;
 
-    @Column(nullable = false)
     private String address;
 
-    @Column(nullable = false)
     private String contactNumber;
 
     @Column(nullable = false)
     private Boolean active = true;
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // ===== Getters & Setters =====
 
-    public String getGarageName() { return garageName; }
-    public void setGarageName(String garageName) { this.garageName = garageName; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getContactNumber() { return contactNumber; }
-    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
+    public String getGarageName() {
+        return garageName;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public void setGarageName(String garageName) {
+        this.garageName = garageName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }
