@@ -19,7 +19,7 @@ public class ServicePart {
     private BigDecimal cost;
     private Integer quantity;
 
-    // getters & setters
+    // ===== Getters & Setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
