@@ -8,11 +8,11 @@ public interface GarageService {
 
     Garage createGarage(Garage garage);
 
-    Garage updateGarage(Long id, Garage garage);
-
     Garage getGarageById(Long id);
 
     List<Garage> getAllGarages();
+
+    Garage updateGarage(Long id, Garage garage);
 
     void deactivateGarage(Long id);
 }

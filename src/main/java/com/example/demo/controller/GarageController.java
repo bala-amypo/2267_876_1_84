@@ -18,12 +18,16 @@ public class GarageController {
 
     @PostMapping
     public Garage create(@RequestBody Garage garage) {
-        return garageService.createGarage(garage);
-    }
 
-    @PutMapping("/{id}")
-    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
-        return garageService.updateGarage(id, garage);
+        // SERVER-CONTROLLED FIELDS
+        garage.setId(null);
+        garage.setActive(true);
+
+        if (garage.getGarageName() == null || garage.getGarageName().isBlank()) {
+            throw new IllegalArgumentException("garageName is required");
+        }
+
+        return garageService.createGarage(garage);
     }
 
     @GetMapping("/{id}")
@@ -34,6 +38,11 @@ public class GarageController {
     @GetMapping
     public List<Garage> getAll() {
         return garageService.getAllGarages();
+    }
+
+    @PutMapping("/{id}")
+    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
+        return garageService.updateGarage(id, garage);
     }
 
     @PutMapping("/{id}/deactivate")
