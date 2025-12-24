@@ -19,13 +19,16 @@ public class ServiceEntry {
     private Garage garage;
 
     private String serviceType;
+
     private LocalDate serviceDate;
+
     private Integer odometerReading;
+
     private String description;
 
     private LocalDateTime recordedAt = LocalDateTime.now();
 
-    // getters & setters
+    // ===== Getters & Setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

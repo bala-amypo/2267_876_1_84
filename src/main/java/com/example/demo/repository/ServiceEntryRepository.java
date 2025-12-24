@@ -17,8 +17,6 @@ public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long
 
     List<ServiceEntry> findByGarageId(Long garageId);
 
-    /* --- Advanced query methods used in tests (HQL / HCQL section) --- */
-
     @Query("select s from ServiceEntry s where s.garage.id = :garageId and s.odometerReading > :minOdometer")
     List<ServiceEntry> findByGarageAndMinOdometer(Long garageId, Integer minOdometer);
 
