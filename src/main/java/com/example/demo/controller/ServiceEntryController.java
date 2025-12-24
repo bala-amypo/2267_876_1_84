@@ -2,14 +2,14 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/service-entries")
+@RequestMapping("/service-entries")
 public class ServiceEntryController {
+
     private final ServiceEntryService serviceEntryService;
 
     public ServiceEntryController(ServiceEntryService serviceEntryService) {
@@ -17,29 +17,22 @@ public class ServiceEntryController {
     }
 
     @PostMapping
-    public ResponseEntity<ServiceEntry> createServiceEntry(@Valid @RequestBody ServiceEntry entry) {
-        return ResponseEntity.ok(serviceEntryService.createServiceEntry(entry));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ServiceEntry> updateServiceEntry(@PathVariable Long id, @Valid @RequestBody ServiceEntry entry) {
-        return ResponseEntity.ok(serviceEntryService.updateServiceEntry(id, entry));
-    }
-
-    @GetMapping("/vehicle/{vehicleId}")
-    public ResponseEntity<List<ServiceEntry>> getEntriesForVehicle(@PathVariable Long vehicleId) {
-        return ResponseEntity.ok(serviceEntryService.getEntriesForVehicle(vehicleId));
+    public ServiceEntry create(@RequestBody ServiceEntry entry) {
+        return serviceEntryService.createServiceEntry(entry);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceEntry> getServiceEntryById(@PathVariable Long id) {
-        return serviceEntryService.getServiceEntryById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public ServiceEntry getById(@PathVariable Long id) {
+        return serviceEntryService.getServiceEntryById(id);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ServiceEntry>> getAllServiceEntries() {
-        return ResponseEntity.ok(serviceEntryService.getAllServiceEntries());
+    @GetMapping("/vehicle/{vehicleId}")
+    public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
+        return serviceEntryService.getEntriesForVehicle(vehicleId);
+    }
+
+    @GetMapping("/garage/{garageId}")
+    public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
+        return serviceEntryService.getEntriesByGarage(garageId);
     }
 }
