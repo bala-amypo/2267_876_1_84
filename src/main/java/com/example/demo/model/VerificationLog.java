@@ -1,38 +1,24 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "verification_logs")
 public class VerificationLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "service_entry_id")
+    @ManyToOne(optional = false)
     private ServiceEntry serviceEntry;
 
-    @CreationTimestamp
     private LocalDateTime verifiedAt;
+    private Boolean verifiedBySystem = true;
+    private String notes;
 
-    @NotBlank
-    private String verifiedBy;
-
-    public VerificationLog() {}
-
-    public VerificationLog(Long serviceEntryId, String verifiedBy) {
-        if (serviceEntryId != null) {
-            this.serviceEntry = new ServiceEntry();
-            this.serviceEntry.setId(serviceEntryId);
-        }
-        this.verifiedBy = verifiedBy;
-    }
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -42,6 +28,9 @@ public class VerificationLog {
     public LocalDateTime getVerifiedAt() { return verifiedAt; }
     public void setVerifiedAt(LocalDateTime verifiedAt) { this.verifiedAt = verifiedAt; }
 
-    public String getVerifiedBy() { return verifiedBy; }
-    public void setVerifiedBy(String verifiedBy) { this.verifiedBy = verifiedBy; }
+    public Boolean getVerifiedBySystem() { return verifiedBySystem; }
+    public void setVerifiedBySystem(Boolean verifiedBySystem) { this.verifiedBySystem = verifiedBySystem; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 }

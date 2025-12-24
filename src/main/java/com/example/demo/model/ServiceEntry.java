@@ -1,68 +1,31 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import org.hibernate.annotations.CreationTimestamp;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "service_entries")
 public class ServiceEntry {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "vehicle_id")
+    @ManyToOne(optional = false)
     private Vehicle vehicle;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "garage_id")
+    @ManyToOne(optional = false)
     private Garage garage;
 
-    @NotBlank
     private String serviceType;
-
-    @NotNull
-    @PastOrPresent
     private LocalDate serviceDate;
+    private Integer odometerReading;
+    private String description;
 
-    @NotNull
-    @Positive
-    private Long odometerReading;
+    private LocalDateTime recordedAt = LocalDateTime.now();
 
-    @NotNull
-    @Positive
-    private BigDecimal cost;
-
-    @Lob
-    @Size(max = 2000)
-    private String notes;
-
-    @CreationTimestamp
-    private LocalDateTime submittedAt;
-
-    public ServiceEntry() {}
-
-    public ServiceEntry(Long vehicleId, Long garageId, String serviceType, LocalDate serviceDate, Long odometerReading, BigDecimal cost) {
-        if (vehicleId != null) {
-            this.vehicle = new Vehicle();
-            this.vehicle.setId(vehicleId);
-        }
-        if (garageId != null) {
-            this.garage = new Garage();
-            this.garage.setId(garageId);
-        }
-        this.serviceType = serviceType;
-        this.serviceDate = serviceDate;
-        this.odometerReading = odometerReading;
-        this.cost = cost;
-    }
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -78,15 +41,11 @@ public class ServiceEntry {
     public LocalDate getServiceDate() { return serviceDate; }
     public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
 
-    public Long getOdometerReading() { return odometerReading; }
-    public void setOdometerReading(Long odometerReading) { this.odometerReading = odometerReading; }
+    public Integer getOdometerReading() { return odometerReading; }
+    public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
 
-    public BigDecimal getCost() { return cost; }
-    public void setCost(BigDecimal cost) { this.cost = cost; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
-
-    public LocalDateTime getSubmittedAt() { return submittedAt; }
-    public void setSubmittedAt(LocalDateTime submittedAt) { this.submittedAt = submittedAt; }
+    public LocalDateTime getRecordedAt() { return recordedAt; }
 }
