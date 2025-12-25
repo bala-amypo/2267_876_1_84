@@ -5,6 +5,8 @@ import com.example.demo.repository.ServicePartRepository;
 import com.example.demo.service.ServicePartService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ServicePartServiceImpl implements ServicePartService {
 
@@ -15,7 +17,17 @@ public class ServicePartServiceImpl implements ServicePartService {
     }
 
     @Override
-    public ServicePart createPart(ServicePart part) {
+    public ServicePart create(ServicePart part) {
         return repo.save(part);
+    }
+
+    @Override
+    public ServicePart getById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<ServicePart> getByServiceEntry(Long serviceEntryId) {
+        return repo.findByServiceEntryId(serviceEntryId);
     }
 }

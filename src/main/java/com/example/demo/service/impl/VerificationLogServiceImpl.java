@@ -1,21 +1,33 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.ServicePart;
-import com.example.demo.repository.ServicePartRepository;
-import com.example.demo.service.ServicePartService;
+import com.example.demo.model.VerificationLog;
+import com.example.demo.repository.VerificationLogRepository;
+import com.example.demo.service.VerificationLogService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class ServicePartServiceImpl implements ServicePartService {
+public class VerificationLogServiceImpl implements VerificationLogService {
 
-    private final ServicePartRepository repo;
+    private final VerificationLogRepository repo;
 
-    public ServicePartServiceImpl(ServicePartRepository repo) {
+    public VerificationLogServiceImpl(VerificationLogRepository repo) {
         this.repo = repo;
     }
 
     @Override
-    public ServicePart createPart(ServicePart part) {
-        return repo.save(part);
+    public VerificationLog createLog(VerificationLog log) {
+        return repo.save(log);
+    }
+
+    @Override
+    public VerificationLog getById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<VerificationLog> getByServiceEntry(Long serviceEntryId) {
+        return repo.findByServiceEntryId(serviceEntryId);
     }
 }
