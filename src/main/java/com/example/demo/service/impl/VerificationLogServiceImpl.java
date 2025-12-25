@@ -17,7 +17,7 @@ public class VerificationLogServiceImpl implements VerificationLogService {
     }
 
     @Override
-    public VerificationLog createLog(VerificationLog log) {
+    public VerificationLog create(VerificationLog log) {
         return repo.save(log);
     }
 

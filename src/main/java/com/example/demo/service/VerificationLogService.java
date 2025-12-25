@@ -5,7 +5,9 @@ import java.util.List;
 
 public interface VerificationLogService {
 
-    VerificationLog createLog(VerificationLog log);
+    VerificationLog create(VerificationLog log);
+
     VerificationLog getById(Long id);
+
     List<VerificationLog> getByServiceEntry(Long serviceEntryId);
 }
