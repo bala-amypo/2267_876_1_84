@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Garage;
 import com.example.demo.service.GarageService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,27 +18,17 @@ public class GarageController {
     }
 
     @PostMapping
-    public Garage create(@RequestBody Garage garage) {
-        return garageService.createGarage(garage);
+    public ResponseEntity<Garage> create(@RequestBody Garage garage) {
+        return ResponseEntity.ok(garageService.createGarage(garage));
     }
 
     @GetMapping("/{id}")
-    public Garage getById(@PathVariable Long id) {
-        return garageService.getGarageById(id);
+    public ResponseEntity<Garage> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(garageService.getGarageById(id));
     }
 
     @GetMapping
-    public List<Garage> getAll() {
-        return garageService.getAllGarages();
-    }
-
-    @PutMapping("/{id}")
-    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
-        return garageService.updateGarage(id, garage);
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        garageService.deactivateGarage(id);
+    public ResponseEntity<List<Garage>> getAll() {
+        return ResponseEntity.ok(garageService.getAllGarages());
     }
 }

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.VerificationLog;
 import com.example.demo.service.VerificationLogService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,12 @@ public class VerificationLogController {
     }
 
     @PostMapping
-    public VerificationLog create(@RequestBody VerificationLog log) {
-        return verificationLogService.createLog(log);
-    }
-
-    @GetMapping("/{id}")
-    public VerificationLog getById(@PathVariable Long id) {
-        return verificationLogService.getLogById(id);
+    public ResponseEntity<VerificationLog> create(@RequestBody VerificationLog log) {
+        return ResponseEntity.ok(verificationLogService.createLog(log));
     }
 
     @GetMapping("/entry/{entryId}")
-    public List<VerificationLog> getByEntry(@PathVariable Long entryId) {
-        return verificationLogService.getLogsForEntry(entryId);
+    public ResponseEntity<List<VerificationLog>> getByEntry(@PathVariable Long entryId) {
+        return ResponseEntity.ok(verificationLogService.getLogsForServiceEntry(entryId));
     }
 }

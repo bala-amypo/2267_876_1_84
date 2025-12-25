@@ -2,8 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -17,22 +19,23 @@ public class ServiceEntryController {
     }
 
     @PostMapping
-    public ServiceEntry create(@RequestBody ServiceEntry entry) {
-        return serviceEntryService.createServiceEntry(entry);
-    }
-
-    @GetMapping("/{id}")
-    public ServiceEntry getById(@PathVariable Long id) {
-        return serviceEntryService.getServiceEntryById(id);
+    public ResponseEntity<ServiceEntry> create(@RequestBody ServiceEntry entry) {
+        return ResponseEntity.ok(serviceEntryService.createServiceEntry(entry));
     }
 
     @GetMapping("/vehicle/{vehicleId}")
-    public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
-        return serviceEntryService.getEntriesForVehicle(vehicleId);
+    public ResponseEntity<List<ServiceEntry>> getForVehicle(@PathVariable Long vehicleId) {
+        return ResponseEntity.ok(serviceEntryService.getEntriesForVehicle(vehicleId));
     }
 
-    @GetMapping("/garage/{garageId}")
-    public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
-        return serviceEntryService.getEntriesByGarage(garageId);
+    @GetMapping("/vehicle/{vehicleId}/range")
+    public ResponseEntity<List<ServiceEntry>> getByDateRange(
+            @PathVariable Long vehicleId,
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to
+    ) {
+        return ResponseEntity.ok(
+                serviceEntryService.getEntriesByVehicleAndDateRange(vehicleId, from, to)
+        );
     }
 }

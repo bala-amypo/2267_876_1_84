@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ServicePart;
 import com.example.demo.service.ServicePartService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,12 @@ public class ServicePartController {
     }
 
     @PostMapping
-    public ServicePart create(@RequestBody ServicePart part) {
-        return servicePartService.createPart(part);
-    }
-
-    @GetMapping("/{id}")
-    public ServicePart getById(@PathVariable Long id) {
-        return servicePartService.getPartById(id);
+    public ResponseEntity<ServicePart> create(@RequestBody ServicePart part) {
+        return ResponseEntity.ok(servicePartService.createPart(part));
     }
 
     @GetMapping("/entry/{entryId}")
-    public List<ServicePart> getByEntry(@PathVariable Long entryId) {
-        return servicePartService.getPartsForEntry(entryId);
+    public ResponseEntity<List<ServicePart>> getByEntry(@PathVariable Long entryId) {
+        return ResponseEntity.ok(servicePartService.getPartsForServiceEntry(entryId));
     }
 }
