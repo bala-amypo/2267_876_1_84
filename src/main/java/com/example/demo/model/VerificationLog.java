@@ -1,33 +1,23 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "verification_logs")
-public class VerificationLog {
+@Table(name = "service_parts")
+public class ServicePart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String partName;
+    private int quantity;
+    private double cost;
+
     @ManyToOne
     private ServiceEntry serviceEntry;
 
-    private String verifiedBy;
-    private LocalDateTime verifiedAt;
-
-    // ===== REQUIRED GETTERS / SETTERS =====
-
-    public Long getId() {
-        return id;
-    }
-
-    // ✅ REQUIRED BY SERVICE
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // REQUIRED BY TESTS
     public ServiceEntry getServiceEntry() {
         return serviceEntry;
     }
@@ -36,24 +26,16 @@ public class VerificationLog {
         this.serviceEntry = serviceEntry;
     }
 
-    // ✅ THIS METHOD FIXES YOUR ERROR
-    public Long getServiceEntryId() {
-        return serviceEntry != null ? serviceEntry.getId() : null;
-    }
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getVerifiedBy() {
-        return verifiedBy;
-    }
+    public String getPartName() { return partName; }
+    public void setPartName(String partName) { this.partName = partName; }
 
-    public void setVerifiedBy(String verifiedBy) {
-        this.verifiedBy = verifiedBy;
-    }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public LocalDateTime getVerifiedAt() {
-        return verifiedAt;
-    }
-
-    public void setVerifiedAt(LocalDateTime verifiedAt) {
-        this.verifiedAt = verifiedAt;
-    }
+    public double getCost() { return cost; }
+    public void setCost(double cost) { this.cost = cost; }
 }

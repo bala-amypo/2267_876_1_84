@@ -23,10 +23,9 @@ public class ServiceEntry {
     private int odometerReading;
     private String description;
 
-    private LocalDateTime recordedAt;
+    private LocalDateTime recordedAt = LocalDateTime.now();
 
-    // ===== getters & setters =====
-
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

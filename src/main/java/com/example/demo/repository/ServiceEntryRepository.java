@@ -9,16 +9,15 @@ import java.util.List;
 
 public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    // ✅ required by tests
-    ServiceEntry findTopByVehicleOrderByOdometerReadingDesc(Vehicle vehicle);
-
     List<ServiceEntry> findByVehicleId(Long vehicleId);
+
+    List<ServiceEntry> findByVehicleAndServiceDateBetween(
+            Vehicle vehicle, LocalDate start, LocalDate end);
+
+    ServiceEntry findTopByVehicleOrderByOdometerReadingDesc(Vehicle vehicle);
 
     List<ServiceEntry> findByGarageId(Long garageId);
 
-    List<ServiceEntry> findByGarageIdAndOdometerReadingGreaterThanEqual(Long garageId, int min);
-
-    List<ServiceEntry> findByVehicleIdAndServiceDateBetween(
-            Long vehicleId, LocalDate start, LocalDate end
-    );
+    List<ServiceEntry> findByGarageIdAndOdometerReadingGreaterThan(
+            Long garageId, int minOdometer);
 }

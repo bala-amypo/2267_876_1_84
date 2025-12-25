@@ -1,57 +1,52 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "service_parts")
-public class ServicePart {
+@Table(name = "service_entries")
+public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String partName;
-    private int cost;
+    @ManyToOne
+    private Vehicle vehicle;
 
     @ManyToOne
-    private ServiceEntry serviceEntry;
+    private Garage garage;
 
-    // ===== REQUIRED GETTERS / SETTERS =====
+    private String serviceType;
+    private LocalDate serviceDate;
+    private int odometerReading;
+    private String description;
 
-    public Long getId() {
-        return id;
-    }
+    private LocalDateTime recordedAt = LocalDateTime.now();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getPartName() {
-        return partName;
-    }
+    public Vehicle getVehicle() { return vehicle; }
+    public void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
 
-    public void setPartName(String partName) {
-        this.partName = partName;
-    }
+    public Garage getGarage() { return garage; }
+    public void setGarage(Garage garage) { this.garage = garage; }
 
-    public int getCost() {
-        return cost;
-    }
+    public String getServiceType() { return serviceType; }
+    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
 
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
+    public LocalDate getServiceDate() { return serviceDate; }
+    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
 
-    public ServiceEntry getServiceEntry() {
-        return serviceEntry;
-    }
+    public int getOdometerReading() { return odometerReading; }
+    public void setOdometerReading(int odometerReading) { this.odometerReading = odometerReading; }
 
-    public void setServiceEntry(ServiceEntry serviceEntry) {
-        this.serviceEntry = serviceEntry;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    // ✅ THIS METHOD FIXES YOUR ERROR
-    public Long getServiceEntryId() {
-        return serviceEntry != null ? serviceEntry.getId() : null;
-    }
+    public LocalDateTime getRecordedAt() { return recordedAt; }
+    public void setRecordedAt(LocalDateTime recordedAt) { this.recordedAt = recordedAt; }
 }
