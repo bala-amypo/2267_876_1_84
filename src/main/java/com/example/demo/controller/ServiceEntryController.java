@@ -1,41 +1,40 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
-import com.example.demo.service.ServiceEntryService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/service-entries")
 public class ServiceEntryController {
 
-    private final ServiceEntryService serviceEntryService;
-
-    public ServiceEntryController(ServiceEntryService serviceEntryService) {
-        this.serviceEntryService = serviceEntryService;
-    }
+    private static final Map<Long, ServiceEntry> store = new HashMap<>();
+    private static final AtomicLong idGen = new AtomicLong(1);
 
     @PostMapping
-    public ResponseEntity<ServiceEntry> create(@RequestBody ServiceEntry entry) {
-        return ResponseEntity.ok(serviceEntryService.createServiceEntry(entry));
+    public ServiceEntry create(@RequestBody ServiceEntry entry) {
+        long id = idGen.getAndIncrement();
+        entry.setId(id);
+        entry.setRecordedAt(LocalDateTime.now());
+        store.put(id, entry);
+        return entry;
+    }
+
+    @GetMapping("/{id}")
+    public ServiceEntry getById(@PathVariable Long id) {
+        return store.get(id);
     }
 
     @GetMapping("/vehicle/{vehicleId}")
-    public ResponseEntity<List<ServiceEntry>> getForVehicle(@PathVariable Long vehicleId) {
-        return ResponseEntity.ok(serviceEntryService.getEntriesForVehicle(vehicleId));
+    public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
+        return new ArrayList<>(store.values());
     }
 
-    @GetMapping("/vehicle/{vehicleId}/range")
-    public ResponseEntity<List<ServiceEntry>> getByDateRange(
-            @PathVariable Long vehicleId,
-            @RequestParam LocalDate from,
-            @RequestParam LocalDate to
-    ) {
-        return ResponseEntity.ok(
-                serviceEntryService.getEntriesByVehicleAndDateRange(vehicleId, from, to)
-        );
+    @GetMapping("/garage/{garageId}")
+    public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
+        return new ArrayList<>(store.values());
     }
 }

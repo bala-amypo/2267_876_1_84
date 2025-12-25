@@ -1,29 +1,35 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.VerificationLog;
-import com.example.demo.service.VerificationLogService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/verification-logs")
 public class VerificationLogController {
 
-    private final VerificationLogService verificationLogService;
-
-    public VerificationLogController(VerificationLogService verificationLogService) {
-        this.verificationLogService = verificationLogService;
-    }
+    private static final Map<Long, VerificationLog> store = new HashMap<>();
+    private static final AtomicLong idGen = new AtomicLong(1);
 
     @PostMapping
-    public ResponseEntity<VerificationLog> create(@RequestBody VerificationLog log) {
-        return ResponseEntity.ok(verificationLogService.createLog(log));
+    public VerificationLog create(@RequestBody VerificationLog log) {
+        long id = idGen.getAndIncrement();
+        log.setId(id);
+        log.setVerifiedAt(LocalDateTime.now());
+        store.put(id, log);
+        return log;
+    }
+
+    @GetMapping("/{id}")
+    public VerificationLog getById(@PathVariable Long id) {
+        return store.get(id);
     }
 
     @GetMapping("/entry/{entryId}")
-    public ResponseEntity<List<VerificationLog>> getByEntry(@PathVariable Long entryId) {
-        return ResponseEntity.ok(verificationLogService.getLogsForServiceEntry(entryId));
+    public List<VerificationLog> getByEntry(@PathVariable Long entryId) {
+        return new ArrayList<>(store.values());
     }
 }
