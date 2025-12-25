@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface ServicePartRepository extends JpaRepository<ServicePart, Long> {
 
-    // ✅ CORRECT
-    List<ServicePart> findByServiceEntry_Id(Long serviceEntryId);
+    List<ServicePart> findByServiceEntry(ServiceEntry serviceEntry);
 }

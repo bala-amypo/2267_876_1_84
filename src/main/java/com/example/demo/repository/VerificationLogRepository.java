@@ -1,5 +1,8 @@
 package com.example.demo.repository;
 
-public interface VerificationLogRepository {
-    // NO JPA
+import com.example.demo.model.VerificationLog;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface VerificationLogRepository
+        extends JpaRepository<VerificationLog, Long> {
 }

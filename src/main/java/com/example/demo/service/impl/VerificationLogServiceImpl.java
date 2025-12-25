@@ -1,40 +1,21 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.VerificationLog;
-import com.example.demo.service.VerificationLogService;
+import com.example.demo.model.ServicePart;
+import com.example.demo.repository.ServicePartRepository;
+import com.example.demo.service.ServicePartService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-
 @Service
-public class VerificationLogServiceImpl implements VerificationLogService {
+public class ServicePartServiceImpl implements ServicePartService {
 
-    private static final Map<Long, VerificationLog> store = new HashMap<>();
-    private static final AtomicLong idGen = new AtomicLong(1);
+    private final ServicePartRepository repo;
 
-    @Override
-    public VerificationLog create(VerificationLog log) {
-        log.setId(idGen.getAndIncrement());
-        log.setVerifiedAt(LocalDateTime.now());
-        store.put(log.getId(), log);
-        return log;
+    public ServicePartServiceImpl(ServicePartRepository repo) {
+        this.repo = repo;
     }
 
     @Override
-    public VerificationLog getById(Long id) {
-        return store.get(id);
-    }
-
-    @Override
-    public List<VerificationLog> getByServiceEntry(Long serviceEntryId) {
-        List<VerificationLog> list = new ArrayList<>();
-        for (VerificationLog v : store.values()) {
-            if (serviceEntryId.equals(v.getServiceEntryId())) {
-                list.add(v);
-            }
-        }
-        return list;
+    public ServicePart createPart(ServicePart part) {
+        return repo.save(part);
     }
 }
