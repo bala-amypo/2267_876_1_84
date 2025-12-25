@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.Vehicle;
 import com.example.demo.repository.ServiceEntryRepository;
+import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,12 @@ import java.util.List;
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     private final ServiceEntryRepository repo;
+    private final VehicleRepository vehicleRepo;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository repo) {
+    public ServiceEntryServiceImpl(ServiceEntryRepository repo,
+                                   VehicleRepository vehicleRepo) {
         this.repo = repo;
+        this.vehicleRepo = vehicleRepo;
     }
 
     @Override
@@ -30,6 +35,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     @Override
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
-        return repo.findByVehicleId(vehicleId);
+        Vehicle v = vehicleRepo.findById(vehicleId).orElse(null);
+        return v == null ? List.of() : repo.findByVehicle(v);
     }
 }

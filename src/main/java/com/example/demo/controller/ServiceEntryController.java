@@ -1,46 +1,36 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
+import com.example.demo.service.ServiceEntryService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @RequestMapping("/service-entries")
 public class ServiceEntryController {
 
-    private static final Map<Long, ServiceEntry> store = new HashMap<>();
-    private static final AtomicLong idGen = new AtomicLong(1);
+    private final ServiceEntryService service;
 
+    public ServiceEntryController(ServiceEntryService service) {
+        this.service = service;
+    }
+
+    // CREATE
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
-        entry.setRecordedAt(LocalDateTime.now());
-        long id = idGen.getAndIncrement();
-        store.put(id, entry);
-        return entry;
+        return service.createServiceEntry(entry);
     }
 
+    // GET BY ID
+    @GetMapping("/{id}")
+    public ServiceEntry getById(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
+    // GET BY VEHICLE
     @GetMapping("/vehicle/{vehicleId}")
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
-        List<ServiceEntry> list = new ArrayList<>();
-        for (ServiceEntry e : store.values()) {
-            if (vehicleId.equals(e.getVehicleId())) {
-                list.add(e);
-            }
-        }
-        return list;
-    }
-
-    @GetMapping("/garage/{garageId}")
-    public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
-        List<ServiceEntry> list = new ArrayList<>();
-        for (ServiceEntry e : store.values()) {
-            if (garageId.equals(e.getGarageId())) {
-                list.add(e);
-            }
-        }
-        return list;
+        return service.getEntriesForVehicle(vehicleId);
     }
 }
