@@ -29,26 +29,64 @@ public class ServiceEntry {
     private LocalDateTime recordedAt = LocalDateTime.now();
 
     // ===== Getters & Setters =====
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public Vehicle getVehicle() { return vehicle; }
-    public void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
+    public Long getId() {
+        return id;
+    }
 
-    public Garage getGarage() { return garage; }
-    public void setGarage(Garage garage) { this.garage = garage; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getServiceType() { return serviceType; }
-    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
 
-    public LocalDate getServiceDate() { return serviceDate; }
-    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
 
-    public Integer getOdometerReading() { return odometerReading; }
-    public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
+    public Garage getGarage() {
+        return garage;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setGarage(Garage garage) {
+        this.garage = garage;
+    }
 
-    public LocalDateTime getRecordedAt() { return recordedAt; }
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public LocalDate getServiceDate() {
+        return serviceDate;
+    }
+
+    public void setServiceDate(LocalDate serviceDate) {
+        this.serviceDate = serviceDate;
+    }
+
+    public Integer getOdometerReading() {
+        return odometerReading;
+    }
+
+    public void setOdometerReading(Integer odometerReading) {
+        this.odometerReading = odometerReading;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getRecordedAt() {
+        return recordedAt;
+    }
 }

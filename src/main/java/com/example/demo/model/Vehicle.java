@@ -1,19 +1,10 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-        name = "vehicles",
-        uniqueConstraints = @UniqueConstraint(columnNames = "vin")
-)
-@JsonIgnoreProperties(
-        value = {"id", "active", "createdAt"},
-        allowGetters = true
-)
+@Table(name = "vehicles", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
 public class Vehicle {
 
     @Id
@@ -23,25 +14,20 @@ public class Vehicle {
     @Column(nullable = false, unique = true)
     private String vin;
 
-    @Column(nullable = false)
     private String make;
 
-    @Column(nullable = false)
     private String model;
 
-    @Column(nullable = false)
     private Integer year;
 
     @Column(nullable = false)
     private Long ownerId;
 
-    @Column(nullable = false)
     private Boolean active = true;
 
-    @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ===== GETTERS & SETTERS =====
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
@@ -101,9 +87,5 @@ public class Vehicle {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

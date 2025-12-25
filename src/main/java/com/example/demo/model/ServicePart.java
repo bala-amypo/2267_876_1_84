@@ -15,26 +15,60 @@ public class ServicePart {
     private ServiceEntry serviceEntry;
 
     private String partName;
+
     private String partNumber;
+
     private BigDecimal cost;
+
     private Integer quantity;
 
     // ===== Getters & Setters =====
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public ServiceEntry getServiceEntry() { return serviceEntry; }
-    public void setServiceEntry(ServiceEntry serviceEntry) { this.serviceEntry = serviceEntry; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getPartName() { return partName; }
-    public void setPartName(String partName) { this.partName = partName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getPartNumber() { return partNumber; }
-    public void setPartNumber(String partNumber) { this.partNumber = partNumber; }
+    public ServiceEntry getServiceEntry() {
+        return serviceEntry;
+    }
 
-    public BigDecimal getCost() { return cost; }
-    public void setCost(BigDecimal cost) { this.cost = cost; }
+    public void setServiceEntry(ServiceEntry serviceEntry) {
+        this.serviceEntry = serviceEntry;
+    }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
+
+    public String getPartNumber() {
+        return partNumber;
+    }
+
+    public void setPartNumber(String partNumber) {
+        this.partNumber = partNumber;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 }

@@ -3,21 +3,20 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "garages")
+@Table(name = "garages", uniqueConstraints = @UniqueConstraint(columnNames = "garageName"))
 public class Garage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "garage_name", unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String garageName;
 
     private String address;
 
     private String contactNumber;
 
-    @Column(nullable = false)
     private Boolean active = true;
 
     // ===== Getters & Setters =====
