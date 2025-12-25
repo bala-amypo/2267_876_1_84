@@ -1,10 +1,16 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name = "vehicles", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
+@Table(
+        name = "vehicles",
+        uniqueConstraints = @UniqueConstraint(columnNames = "vin")
+)
 public class Vehicle {
 
     @Id
@@ -27,7 +33,7 @@ public class Vehicle {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ===== Getters & Setters =====
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
