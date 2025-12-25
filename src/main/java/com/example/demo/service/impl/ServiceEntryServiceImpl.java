@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
@@ -31,16 +30,23 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     @Override
-    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+    public List<ServiceEntry> findEntriesForVehicle(Long vehicleId) {
         return repo.findByVehicleId(vehicleId);
     }
 
     @Override
-    public List<ServiceEntry> getVehicleHistory(Long vehicleId,
-                                                LocalDate from,
-                                                LocalDate to) {
-        Vehicle v = new Vehicle();
-        v.setId(vehicleId);
-        return repo.findByVehicleAndServiceDateBetween(v, from, to);
+    public List<ServiceEntry> findByGarageAndMinOdometer(Long garageId, int minOdometer) {
+        return repo.findByGarageIdAndOdometerReadingGreaterThanEqual(
+                garageId, minOdometer
+        );
+    }
+
+    @Override
+    public List<ServiceEntry> findByVehicleAndDateRange(
+            Long vehicleId, LocalDate from, LocalDate to) {
+
+        return repo.findByVehicleIdAndServiceDateBetween(
+                vehicleId, from, to
+        );
     }
 }

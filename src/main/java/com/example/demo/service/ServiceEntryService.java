@@ -11,7 +11,11 @@ public interface ServiceEntryService {
 
     ServiceEntry getById(Long id);
 
-    List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
+    List<ServiceEntry> findEntriesForVehicle(Long vehicleId);
 
-    List<ServiceEntry> getVehicleHistory(Long vehicleId, LocalDate from, LocalDate to);
+    List<ServiceEntry> findByGarageAndMinOdometer(Long garageId, int minOdometer);
+
+    List<ServiceEntry> findByVehicleAndDateRange(
+            Long vehicleId, LocalDate from, LocalDate to
+    );
 }
