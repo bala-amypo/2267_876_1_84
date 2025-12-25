@@ -12,18 +12,15 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI openAPI() {
-
-        // 🔴 IMPORTANT: This MUST match your Swagger UI domain
-        Server hostedServer = new Server();
-        hostedServer.setUrl("https://9157.32procr.amypo.ai");
-        hostedServer.setDescription("Hosted API Server");
-
+    public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("Vehicle Service History API")
-                        .description("All APIs return 200 OK")
-                        .version("1.0.0"))
-                .servers(List.of(hostedServer));
+                        .version("1.0")
+                        .description("API for Vehicle, Garage, Service Entries, Parts and Verification"))
+                .servers(List.of(
+                        new Server().url("http://localhost:9001").description("Local Server"),
+                        new Server().url("https://9232.pro604cr.amypo.ai").description("Production Server")
+                ));
     }
 }
