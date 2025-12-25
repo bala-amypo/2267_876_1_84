@@ -1,75 +1,50 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
+import com.example.demo.service.VehicleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @RequestMapping("/vehicles")
 public class VehicleController {
 
-    private static final Map<Long, Vehicle> store = new HashMap<>();
-    private static final AtomicLong idGen = new AtomicLong(1);
+    private final VehicleService vehicleService;
 
-    // CREATE
+    public VehicleController(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
+    }
+
+    // CREATE VEHICLE
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle vehicle) {
-        long id = idGen.getAndIncrement();
-
-        try {
-            var idField = Vehicle.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(vehicle, id);
-
-            var createdAtField = Vehicle.class.getDeclaredField("createdAt");
-            createdAtField.setAccessible(true);
-            createdAtField.set(vehicle, LocalDateTime.now());
-        } catch (Exception ignored) {}
-
-        vehicle.setActive(true);
-        store.put(id, vehicle);
-        return vehicle;
+    public ResponseEntity<Vehicle> create(@RequestBody Vehicle vehicle) {
+        return ResponseEntity.ok(vehicleService.createVehicle(vehicle));
     }
 
-    // GET BY ID
+    // GET VEHICLE BY ID
     @GetMapping("/{id}")
-    public Vehicle getById(@PathVariable Long id) {
-        return store.get(id); // null if not found
+    public ResponseEntity<Vehicle> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(vehicleService.getVehicleById(id));
     }
 
-    // GET BY VIN
+    // GET VEHICLE BY VIN
     @GetMapping("/vin/{vin}")
-    public Vehicle getByVin(@PathVariable String vin) {
-        for (Vehicle v : store.values()) {
-            if (vin.equals(v.getVin())) {
-                return v;
-            }
-        }
-        return null;
+    public ResponseEntity<Vehicle> getByVin(@PathVariable String vin) {
+        return ResponseEntity.ok(vehicleService.getVehicleByVin(vin));
     }
 
-    // GET BY OWNER
+    // GET VEHICLES BY OWNER
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
-        List<Vehicle> list = new ArrayList<>();
-        for (Vehicle v : store.values()) {
-            if (ownerId.equals(v.getOwnerId())) {
-                list.add(v);
-            }
-        }
-        return list;
+    public ResponseEntity<List<Vehicle>> getByOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 
-    // DEACTIVATE
+    // DEACTIVATE VEHICLE
     @PutMapping("/{id}/deactivate")
-    public Vehicle deactivate(@PathVariable Long id) {
-        Vehicle v = store.get(id);
-        if (v != null) {
-            v.setActive(false);
-        }
-        return v;
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        vehicleService.deactivateVehicle(id);
+        return ResponseEntity.ok().build();
     }
 }
