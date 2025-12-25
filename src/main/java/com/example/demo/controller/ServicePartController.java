@@ -1,33 +1,33 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ServicePart;
+import com.example.demo.service.ServicePartService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @RequestMapping("/service-parts")
 public class ServicePartController {
 
-    private static final Map<Long, ServicePart> store = new HashMap<>();
-    private static final AtomicLong idGen = new AtomicLong(1);
+    private final ServicePartService service;
+
+    public ServicePartController(ServicePartService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ServicePart create(@RequestBody ServicePart part) {
-        long id = idGen.getAndIncrement();
-        part.setId(id);
-        store.put(id, part);
-        return part;
+        return service.create(part);
     }
 
     @GetMapping("/{id}")
     public ServicePart getById(@PathVariable Long id) {
-        return store.get(id);
+        return service.getById(id);
     }
 
-    @GetMapping("/entry/{entryId}")
-    public List<ServicePart> getByEntry(@PathVariable Long entryId) {
-        return new ArrayList<>(store.values());
+    @GetMapping("/service-entry/{serviceEntryId}")
+    public List<ServicePart> getByServiceEntry(@PathVariable Long serviceEntryId) {
+        return service.getByServiceEntry(serviceEntryId);
     }
 }
