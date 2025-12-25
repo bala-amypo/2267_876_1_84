@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
-import com.example.demo.service.VehicleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -12,21 +11,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequestMapping("/vehicles")
 public class VehicleController {
 
-    private final VehicleService vehicleService;
+    private static final Map<Long, Vehicle> store = new HashMap<>();
+    private static final AtomicLong idGen = new AtomicLong(1);
 
-    // In-memory storage for Swagger/demo
-    private static final Map<Long, Vehicle> STORE = new HashMap<>();
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(1);
-
-    public VehicleController(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
-    }
-
-    // ---------- CREATE VEHICLE ----------
+    // CREATE
     @PostMapping
-    public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
-
-        long id = ID_GENERATOR.getAndIncrement();
+    public Vehicle create(@RequestBody Vehicle vehicle) {
+        long id = idGen.getAndIncrement();
 
         try {
             var idField = Vehicle.class.getDeclaredField("id");
@@ -39,35 +30,46 @@ public class VehicleController {
         } catch (Exception ignored) {}
 
         vehicle.setActive(true);
-        STORE.put(id, vehicle);
-
+        store.put(id, vehicle);
         return vehicle;
     }
 
-    // ---------- GET BY ID ----------
+    // GET BY ID
     @GetMapping("/{id}")
-    public Vehicle getVehicleById(@PathVariable Long id) {
-        Vehicle v = STORE.get(id);
-        if (v == null) {
-            return null; // Swagger shows empty, no error
+    public Vehicle getById(@PathVariable Long id) {
+        return store.get(id); // null if not found
+    }
+
+    // GET BY VIN
+    @GetMapping("/vin/{vin}")
+    public Vehicle getByVin(@PathVariable String vin) {
+        for (Vehicle v : store.values()) {
+            if (vin.equals(v.getVin())) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    // GET BY OWNER
+    @GetMapping("/owner/{ownerId}")
+    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
+        List<Vehicle> list = new ArrayList<>();
+        for (Vehicle v : store.values()) {
+            if (ownerId.equals(v.getOwnerId())) {
+                list.add(v);
+            }
+        }
+        return list;
+    }
+
+    // DEACTIVATE
+    @PutMapping("/{id}/deactivate")
+    public Vehicle deactivate(@PathVariable Long id) {
+        Vehicle v = store.get(id);
+        if (v != null) {
+            v.setActive(false);
         }
         return v;
-    }
-
-    // ---------- BELOW METHODS KEEP REAL SERVICE (TEST SAFE) ----------
-
-    @GetMapping("/vin/{vin}")
-    public Vehicle getVehicleByVin(@PathVariable String vin) {
-        return vehicleService.getVehicleByVin(vin);
-    }
-
-    @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getVehiclesByOwner(@PathVariable Long ownerId) {
-        return vehicleService.getVehiclesByOwner(ownerId);
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public void deactivateVehicle(@PathVariable Long id) {
-        vehicleService.deactivateVehicle(id);
     }
 }
