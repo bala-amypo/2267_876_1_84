@@ -17,17 +17,42 @@ public class VerificationLog {
     private String verifiedBy;
     private LocalDateTime verifiedAt;
 
-    public Long getId() { return id; }
+    // ===== REQUIRED GETTERS / SETTERS =====
 
-    public ServiceEntry getServiceEntry() { return serviceEntry; }
+    public Long getId() {
+        return id;
+    }
+
+    // ✅ REQUIRED BY SERVICE
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public ServiceEntry getServiceEntry() {
+        return serviceEntry;
+    }
+
     public void setServiceEntry(ServiceEntry serviceEntry) {
         this.serviceEntry = serviceEntry;
     }
 
-    public String getVerifiedBy() { return verifiedBy; }
-    public void setVerifiedBy(String verifiedBy) { this.verifiedBy = verifiedBy; }
+    // ✅ THIS METHOD FIXES YOUR ERROR
+    public Long getServiceEntryId() {
+        return serviceEntry != null ? serviceEntry.getId() : null;
+    }
 
-    public LocalDateTime getVerifiedAt() { return verifiedAt; }
+    public String getVerifiedBy() {
+        return verifiedBy;
+    }
+
+    public void setVerifiedBy(String verifiedBy) {
+        this.verifiedBy = verifiedBy;
+    }
+
+    public LocalDateTime getVerifiedAt() {
+        return verifiedAt;
+    }
+
     public void setVerifiedAt(LocalDateTime verifiedAt) {
         this.verifiedAt = verifiedAt;
     }
