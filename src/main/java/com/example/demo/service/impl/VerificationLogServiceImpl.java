@@ -16,10 +16,9 @@ public class VerificationLogServiceImpl implements VerificationLogService {
 
     @Override
     public VerificationLog create(VerificationLog log) {
-        long id = idGen.getAndIncrement();
-        log.setId(id);
+        log.setId(idGen.getAndIncrement());
         log.setVerifiedAt(LocalDateTime.now());
-        store.put(id, log);
+        store.put(log.getId(), log);
         return log;
     }
 

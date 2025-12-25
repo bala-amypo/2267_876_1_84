@@ -14,8 +14,6 @@ public class ServiceEntry {
     private String description;
     private LocalDateTime recordedAt;
 
-    // GETTERS & SETTERS
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -37,9 +35,7 @@ public class ServiceEntry {
     }
 
     public String getDescription() { return description; }
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setDescription(String description) { this.description = description; }
 
     public LocalDateTime getRecordedAt() { return recordedAt; }
     public void setRecordedAt(LocalDateTime recordedAt) {
