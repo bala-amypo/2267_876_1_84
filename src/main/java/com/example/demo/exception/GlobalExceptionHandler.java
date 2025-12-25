@@ -9,7 +9,6 @@ public class GlobalExceptionHandler {
 
     /**
      * Validation errors (VIN, Quantity, >=, future, already exists)
-     * Swagger should still show 200
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
@@ -18,18 +17,12 @@ public class GlobalExceptionHandler {
 
     /**
      * Entity not found errors
-     * Swagger should still show 200
      */
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
         return ResponseEntity.ok(ex.getMessage());
     }
 
-    /**
-     * Safety net – prevents 500 appearing in Swagger
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAny(Exception ex) {
-        return ResponseEntity.ok("OK");
-    }
+    // ❌ DO NOT catch generic Exception
+    // Removing this fixes "OK" overriding real responses
 }
