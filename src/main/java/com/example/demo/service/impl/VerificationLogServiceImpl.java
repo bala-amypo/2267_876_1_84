@@ -6,10 +6,12 @@ import com.example.demo.model.VerificationLog;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationLogService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class VerificationLogServiceImpl implements VerificationLogService {
 
     private final VerificationLogRepository verificationLogRepository;
