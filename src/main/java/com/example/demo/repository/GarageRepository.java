@@ -1,11 +1,13 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.Garage;
+import com.example.demo.model.ServiceEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface GarageRepository extends JpaRepository<Garage, Long> {
+public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    Optional<Garage> findByGarageName(String garageName);
+    List<ServiceEntry> findByVehicleId(Long vehicleId);
+
+    List<ServiceEntry> findByGarageId(Long garageId);
 }

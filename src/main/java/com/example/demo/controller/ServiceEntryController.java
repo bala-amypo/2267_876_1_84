@@ -1,40 +1,42 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
+import com.example.demo.repository.ServiceEntryRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @RequestMapping("/service-entries")
 public class ServiceEntryController {
 
-    private static final Map<Long, ServiceEntry> store = new HashMap<>();
-    private static final AtomicLong idGen = new AtomicLong(1);
+    private final ServiceEntryRepository repo;
 
+    public ServiceEntryController(ServiceEntryRepository repo) {
+        this.repo = repo;
+    }
+
+    // CREATE
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
-        long id = idGen.getAndIncrement();
-        entry.setId(id);
-        entry.setRecordedAt(LocalDateTime.now());
-        store.put(id, entry);
-        return entry;
+        return repo.save(entry);
     }
 
+    // GET BY ID
     @GetMapping("/{id}")
     public ServiceEntry getById(@PathVariable Long id) {
-        return store.get(id);
+        return repo.findById(id).orElse(null);
     }
 
+    // GET BY VEHICLE
     @GetMapping("/vehicle/{vehicleId}")
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
-        return new ArrayList<>(store.values());
+        return repo.findByVehicleId(vehicleId);
     }
 
+    // GET BY GARAGE
     @GetMapping("/garage/{garageId}")
     public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
-        return new ArrayList<>(store.values());
+        return repo.findByGarageId(garageId);
     }
 }
