@@ -14,15 +14,16 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
 
-        Server localServer = new Server();
-        localServer.setUrl("http://localhost:9001");
-        localServer.setDescription("Local Server");
+        // 🔴 IMPORTANT: This MUST match your Swagger UI domain
+        Server hostedServer = new Server();
+        hostedServer.setUrl("https://9157.32procr.amypo.ai");
+        hostedServer.setDescription("Hosted API Server");
 
         return new OpenAPI()
                 .info(new Info()
                         .title("Vehicle Service History API")
                         .description("All APIs return 200 OK")
                         .version("1.0.0"))
-                .servers(List.of(localServer));
+                .servers(List.of(hostedServer));
     }
 }
