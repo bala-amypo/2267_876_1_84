@@ -1,41 +1,43 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Garage;
+import com.example.demo.service.GarageService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
 
 @RestController
 @RequestMapping("/garages")
 public class GarageController {
 
-    private static final Map<Long, Garage> store = new HashMap<>();
-    private static final AtomicLong idGen = new AtomicLong(1);
+    private final GarageService garageService;
+
+    public GarageController(GarageService garageService) {
+        this.garageService = garageService;
+    }
 
     @PostMapping
     public Garage create(@RequestBody Garage garage) {
-        long id = idGen.getAndIncrement();
-        garage.setId(id);
-        garage.setActive(true);
-        store.put(id, garage);
-        return garage;
+        return garageService.createGarage(garage);
+    }
+
+    @PutMapping("/{id}")
+    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
+        return garageService.updateGarage(id, garage);
     }
 
     @GetMapping("/{id}")
     public Garage getById(@PathVariable Long id) {
-        return store.get(id);
+        return garageService.getGarageById(id);
     }
 
     @GetMapping
     public List<Garage> getAll() {
-        return new ArrayList<>(store.values());
+        return garageService.getAllGarages();
     }
 
     @PutMapping("/{id}/deactivate")
-    public Garage deactivate(@PathVariable Long id) {
-        Garage g = store.get(id);
-        if (g != null) g.setActive(false);
-        return g;
+    public void deactivate(@PathVariable Long id) {
+        garageService.deactivateGarage(id);
     }
 }

@@ -10,24 +10,24 @@ import java.util.List;
 @RequestMapping("/service-parts")
 public class ServicePartController {
 
-    private final ServicePartService service;
+    private final ServicePartService servicePartService;
 
-    public ServicePartController(ServicePartService service) {
-        this.service = service;
+    public ServicePartController(ServicePartService servicePartService) {
+        this.servicePartService = servicePartService;
     }
 
     @PostMapping
     public ServicePart create(@RequestBody ServicePart part) {
-        return service.create(part);
+        return servicePartService.createPart(part);
     }
 
     @GetMapping("/{id}")
     public ServicePart getById(@PathVariable Long id) {
-        return service.getById(id);
+        return servicePartService.getPartById(id);
     }
 
-    @GetMapping("/service-entry/{serviceEntryId}")
-    public List<ServicePart> getByServiceEntry(@PathVariable Long serviceEntryId) {
-        return service.getByServiceEntry(serviceEntryId);
+    @GetMapping("/entry/{entryId}")
+    public List<ServicePart> getByEntry(@PathVariable Long entryId) {
+        return servicePartService.getPartsForEntry(entryId);
     }
 }
