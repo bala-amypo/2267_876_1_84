@@ -11,8 +11,4 @@ public interface GarageService {
     Garage getGarageById(Long id);
 
     List<Garage> getAllGarages();
-
-    Garage updateGarage(Long id, Garage garage);
-
-    void deactivateGarage(Long id);
 }
