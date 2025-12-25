@@ -1,64 +1,31 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "verification_logs")
 public class VerificationLog {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(optional = false)
-    private ServiceEntry serviceEntry;
-
+    private Long serviceEntryId;
+    private String verifiedBy;
     private LocalDateTime verifiedAt;
 
-    private Boolean verifiedBySystem = true;
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    private String notes;
-
-    // ===== Getters & Setters =====
-
-    public Long getId() {
-        return id;
+    public Long getServiceEntryId() { return serviceEntryId; }
+    public void setServiceEntryId(Long serviceEntryId) {
+        this.serviceEntryId = serviceEntryId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getVerifiedBy() { return verifiedBy; }
+    public void setVerifiedBy(String verifiedBy) {
+        this.verifiedBy = verifiedBy;
     }
 
-    public ServiceEntry getServiceEntry() {
-        return serviceEntry;
-    }
-
-    public void setServiceEntry(ServiceEntry serviceEntry) {
-        this.serviceEntry = serviceEntry;
-    }
-
-    public LocalDateTime getVerifiedAt() {
-        return verifiedAt;
-    }
-
+    public LocalDateTime getVerifiedAt() { return verifiedAt; }
     public void setVerifiedAt(LocalDateTime verifiedAt) {
         this.verifiedAt = verifiedAt;
     }
-
-    public Boolean getVerifiedBySystem() {
-        return verifiedBySystem;
-    }
-
-    public void setVerifiedBySystem(Boolean verifiedBySystem) {
-        this.verifiedBySystem = verifiedBySystem;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 }
+  

@@ -1,45 +1,41 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.EntityNotFoundException;
-import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.VerificationLog;
-import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationLogService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class VerificationLogServiceImpl implements VerificationLogService {
 
-    private final VerificationLogRepository verificationLogRepository;
-    private final ServiceEntryRepository serviceEntryRepository;
-
-    public VerificationLogServiceImpl(
-            VerificationLogRepository verificationLogRepository,
-            ServiceEntryRepository serviceEntryRepository
-    ) {
-        this.verificationLogRepository = verificationLogRepository;
-        this.serviceEntryRepository = serviceEntryRepository;
-    }
+    private static final Map<Long, VerificationLog> store = new HashMap<>();
+    private static final AtomicLong idGen = new AtomicLong(1);
 
     @Override
-    public VerificationLog createLog(VerificationLog log) {
-
-        ServiceEntry entry = serviceEntryRepository.findById(
-                log.getServiceEntry().getId()
-        ).orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
-
-        log.setServiceEntry(entry);
+    public VerificationLog create(VerificationLog log) {
+        long id = idGen.getAndIncrement();
+        log.setId(id);
         log.setVerifiedAt(LocalDateTime.now());
-
-        return verificationLogRepository.save(log);
+        store.put(id, log);
+        return log;
     }
 
     @Override
-    public List<VerificationLog> getLogsForServiceEntry(Long serviceEntryId) {
-        return verificationLogRepository.findByServiceEntryId(serviceEntryId);
+    public VerificationLog getById(Long id) {
+        return store.get(id);
+    }
+
+    @Override
+    public List<VerificationLog> getByServiceEntry(Long serviceEntryId) {
+        List<VerificationLog> list = new ArrayList<>();
+        for (VerificationLog v : store.values()) {
+            if (serviceEntryId.equals(v.getServiceEntryId())) {
+                list.add(v);
+            }
+        }
+        return list;
     }
 }
