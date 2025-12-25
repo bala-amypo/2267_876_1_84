@@ -12,10 +12,14 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ✅ PROPER JPA RELATIONSHIP
     @ManyToOne(optional = false)
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
+    // ✅ PROPER JPA RELATIONSHIP
     @ManyToOne(optional = false)
+    @JoinColumn(name = "garage_id")
     private Garage garage;
 
     private String serviceType;
@@ -26,16 +30,13 @@ public class ServiceEntry {
 
     private String description;
 
-    private LocalDateTime recordedAt = LocalDateTime.now();
+    // ✅ AUTO-FILLED
+    private LocalDateTime recordedAt;
 
-    // ===== Getters & Setters =====
+    // ================= GETTERS & SETTERS =================
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Vehicle getVehicle() {
@@ -88,5 +89,9 @@ public class ServiceEntry {
 
     public LocalDateTime getRecordedAt() {
         return recordedAt;
+    }
+
+    public void setRecordedAt(LocalDateTime recordedAt) {
+        this.recordedAt = recordedAt;
     }
 }
