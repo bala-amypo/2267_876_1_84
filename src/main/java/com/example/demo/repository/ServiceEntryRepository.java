@@ -7,8 +7,7 @@ import java.util.List;
 
 public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    List<ServiceEntry> findByVehicleId(Long vehicleId);
+    List<ServiceEntry> findByVehicle_Id(Long vehicleId);
 
-    // ✅ ADD THIS
-    List<ServiceEntry> findByGarageId(Long garageId);
+    List<ServiceEntry> findByGarage_Id(Long garageId);
 }
