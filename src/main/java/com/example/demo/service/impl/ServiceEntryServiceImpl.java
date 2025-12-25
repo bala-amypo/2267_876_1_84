@@ -5,7 +5,7 @@ import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,16 +18,18 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     @Override
-    public ServiceEntry create(ServiceEntry entry) {
+    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+        entry.setRecordedAt(LocalDateTime.now());
         return repo.save(entry);
     }
 
     @Override
-    public List<ServiceEntry> getByVehicleAndDateRange(
-            Long vehicleId,
-            LocalDate from,
-            LocalDate to
-    ) {
-        return repo.findByVehicleIdAndServiceDateBetween(vehicleId, from, to);
+    public ServiceEntry getById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+        return repo.findByVehicleId(vehicleId);
     }
 }

@@ -9,21 +9,13 @@ public class ServicePart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long serviceEntryId;
     private String partName;
     private int quantity;
     private double cost;
 
-    // REQUIRED BY TESTS
-    public Long getServiceEntryId() {
-        return serviceEntryId;
-    }
+    @ManyToOne
+    private ServiceEntry serviceEntry;
 
-    public void setServiceEntryId(Long serviceEntryId) {
-        this.serviceEntryId = serviceEntryId;
-    }
-
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -35,4 +27,7 @@ public class ServicePart {
 
     public double getCost() { return cost; }
     public void setCost(double cost) { this.cost = cost; }
+
+    public ServiceEntry getServiceEntry() { return serviceEntry; }
+    public void setServiceEntry(ServiceEntry serviceEntry) { this.serviceEntry = serviceEntry; }
 }
