@@ -1,26 +1,31 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "verification_logs")
 public class VerificationLog {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long serviceEntryId;
+
+    @ManyToOne
+    private ServiceEntry serviceEntry;
+
     private String verifiedBy;
     private LocalDateTime verifiedAt;
 
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
-    public Long getServiceEntryId() { return serviceEntryId; }
-    public void setServiceEntryId(Long serviceEntryId) {
-        this.serviceEntryId = serviceEntryId;
+    public ServiceEntry getServiceEntry() { return serviceEntry; }
+    public void setServiceEntry(ServiceEntry serviceEntry) {
+        this.serviceEntry = serviceEntry;
     }
 
     public String getVerifiedBy() { return verifiedBy; }
-    public void setVerifiedBy(String verifiedBy) {
-        this.verifiedBy = verifiedBy;
-    }
+    public void setVerifiedBy(String verifiedBy) { this.verifiedBy = verifiedBy; }
 
     public LocalDateTime getVerifiedAt() { return verifiedAt; }
     public void setVerifiedAt(LocalDateTime verifiedAt) {
