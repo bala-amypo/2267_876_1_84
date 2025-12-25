@@ -11,40 +11,27 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Vehicle vehicle;
-
-    @ManyToOne
-    private Garage garage;
-
-    private String serviceType;
-    private LocalDate serviceDate;
+    private Long vehicleId;
+    private Long garageId;
     private int odometerReading;
-    private String description;
+    private LocalDate serviceDate;
     private LocalDateTime recordedAt;
 
-    // ===== getters & setters =====
-
+    // ===== REQUIRED GETTERS / SETTERS =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Vehicle getVehicle() { return vehicle; }
-    public void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
+    public Long getVehicleId() { return vehicleId; }
+    public void setVehicleId(Long vehicleId) { this.vehicleId = vehicleId; }
 
-    public Garage getGarage() { return garage; }
-    public void setGarage(Garage garage) { this.garage = garage; }
-
-    public String getServiceType() { return serviceType; }
-    public void setServiceType(String serviceType) { this.serviceType = serviceType; }
-
-    public LocalDate getServiceDate() { return serviceDate; }
-    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
+    public Long getGarageId() { return garageId; }
+    public void setGarageId(Long garageId) { this.garageId = garageId; }
 
     public int getOdometerReading() { return odometerReading; }
     public void setOdometerReading(int odometerReading) { this.odometerReading = odometerReading; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public LocalDate getServiceDate() { return serviceDate; }
+    public void setServiceDate(LocalDate serviceDate) { this.serviceDate = serviceDate; }
 
     public LocalDateTime getRecordedAt() { return recordedAt; }
     public void setRecordedAt(LocalDateTime recordedAt) { this.recordedAt = recordedAt; }
