@@ -6,15 +6,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
+public interface ServiceEntryRepository
+        extends JpaRepository<ServiceEntry, Long> {
 
     List<ServiceEntry> findByVehicleId(Long vehicleId);
 
-    List<ServiceEntry> findByGarageIdAndOdometerReadingGreaterThanEqual(
-            Long garageId, int minOdometer
+    List<ServiceEntry> findByVehicleIdAndServiceDateBetween(
+            Long vehicleId,
+            LocalDate from,
+            LocalDate to
     );
 
-    List<ServiceEntry> findByVehicleIdAndServiceDateBetween(
-            Long vehicleId, LocalDate from, LocalDate to
+    List<ServiceEntry> findByGarageIdAndOdometerReadingGreaterThanEqual(
+            Long garageId,
+            int odometer
     );
 }

@@ -30,23 +30,28 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     @Override
-    public List<ServiceEntry> findEntriesForVehicle(Long vehicleId) {
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return repo.findByVehicleId(vehicleId);
     }
 
     @Override
-    public List<ServiceEntry> findByGarageAndMinOdometer(Long garageId, int minOdometer) {
-        return repo.findByGarageIdAndOdometerReadingGreaterThanEqual(
-                garageId, minOdometer
+    public List<ServiceEntry> getVehicleHistory(
+            Long vehicleId,
+            LocalDate from,
+            LocalDate to) {
+
+        return repo.findByVehicleIdAndServiceDateBetween(
+                vehicleId, from, to
         );
     }
 
     @Override
-    public List<ServiceEntry> findByVehicleAndDateRange(
-            Long vehicleId, LocalDate from, LocalDate to) {
+    public List<ServiceEntry> findByGarageAndMinOdometer(
+            Long garageId,
+            int minOdometer) {
 
-        return repo.findByVehicleIdAndServiceDateBetween(
-                vehicleId, from, to
+        return repo.findByGarageIdAndOdometerReadingGreaterThanEqual(
+                garageId, minOdometer
         );
     }
 }
