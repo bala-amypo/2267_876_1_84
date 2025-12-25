@@ -1,29 +1,38 @@
 package com.example.demo.security;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
     public String generateToken(String email, String role, Long userId) {
-        // Tests MOCK this method, so implementation can be simple
-        return "jwt-token";
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("role", role)
+                .claim("userId", userId)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(key)
+                .compact();
     }
 
     public boolean validateToken(String token) {
-        // Tests MOCK this method
-        return true;
-    }
-
-    public String getEmailFromToken(String token) {
-        return "user@example.com";
-    }
-
-    public String getRoleFromToken(String token) {
-        return "USER";
-    }
-
-    public Long getUserIdFromToken(String token) {
-        return 1L;
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 }
