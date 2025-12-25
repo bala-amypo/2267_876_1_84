@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -31,6 +33,7 @@ public class Vehicle {
 
     private Boolean active = true;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // ===== GETTERS & SETTERS =====
@@ -39,6 +42,7 @@ public class Vehicle {
         return id;
     }
 
+    // ❌ NO setter for id (important)
     public void setId(Long id) {
         this.id = id;
     }
