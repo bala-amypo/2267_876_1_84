@@ -16,14 +16,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User register(User user) {
+        user.setId(null);          // ensure new record
+        user.setPassword(user.getPassword());
+        return repository.save(user);
+    }
+
+    @Override
     public User getByEmail(String email) {
         return repository.findByEmail(email)
                 .orElseThrow(() ->
                         new EntityNotFoundException("User not found"));
-    }
-
-    @Override
-    public User createUser(User user) {
-        return repository.save(user);
     }
 }
