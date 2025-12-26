@@ -1,14 +1,14 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Garage;
 import com.example.demo.repository.GarageRepository;
 import com.example.demo.service.GarageService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // ✅ REQUIRED
+@Service
 public class GarageServiceImpl implements GarageService {
 
     private final GarageRepository garageRepository;
@@ -37,7 +37,8 @@ public class GarageServiceImpl implements GarageService {
     @Override
     public Garage getGarageById(Long id) {
         return garageRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Garage not found"));
     }
 
     @Override
