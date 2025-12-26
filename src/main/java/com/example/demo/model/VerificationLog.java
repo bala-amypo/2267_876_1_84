@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 @Entity
 public class VerificationLog {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne

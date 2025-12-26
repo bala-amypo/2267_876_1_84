@@ -6,8 +6,7 @@ import java.math.BigDecimal;
 @Entity
 public class ServicePart {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne

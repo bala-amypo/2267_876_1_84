@@ -1,11 +1,13 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Vehicle;
 import com.example.demo.repository.VehicleRepository;
+import com.example.demo.exception.EntityNotFoundException;
+import com.example.demo.service.VehicleService;
+
 import java.util.List;
 
-public class VehicleServiceImpl {
+public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository repo;
 
@@ -14,8 +16,9 @@ public class VehicleServiceImpl {
     }
 
     public Vehicle createVehicle(Vehicle v) {
-        if (repo.findByVin(v.getVin()).isPresent())
-            throw new IllegalArgumentException("VIN");
+        if (repo.findByVin(v.getVin()).isPresent()) {
+            throw new IllegalArgumentException("VIN already exists");
+        }
         return repo.save(v);
     }
 
