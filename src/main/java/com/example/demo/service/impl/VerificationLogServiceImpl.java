@@ -5,15 +5,16 @@ import com.example.demo.model.VerificationLog;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationLogService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // ✅ THIS WAS THE LAST MISSING ONE
 public class VerificationLogServiceImpl implements VerificationLogService {
 
     private final VerificationLogRepository verificationLogRepository;
     private final ServiceEntryRepository serviceEntryRepository;
 
-    // ✅ Constructor Injection
     public VerificationLogServiceImpl(
             VerificationLogRepository verificationLogRepository,
             ServiceEntryRepository serviceEntryRepository
@@ -24,10 +25,8 @@ public class VerificationLogServiceImpl implements VerificationLogService {
 
     @Override
     public VerificationLog createLog(VerificationLog log) {
-
         serviceEntryRepository.findById(log.getServiceEntry().getId())
                 .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
-
         return verificationLogRepository.save(log);
     }
 
