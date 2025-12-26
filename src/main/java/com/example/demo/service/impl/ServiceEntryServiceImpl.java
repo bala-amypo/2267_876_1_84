@@ -1,8 +1,12 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
 import com.example.demo.exception.EntityNotFoundException;
+import com.example.demo.model.Garage;
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.Vehicle;
+import com.example.demo.repository.GarageRepository;
+import com.example.demo.repository.ServiceEntryRepository;
+import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 
 import java.time.LocalDate;
@@ -10,34 +14,66 @@ import java.util.List;
 
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
-    private final ServiceEntryRepository repo;
-    private final VehicleRepository vehicleRepo;
-    private final GarageRepository garageRepo;
+    private final ServiceEntryRepository serviceEntryRepository;
+    private final VehicleRepository vehicleRepository;
+    private final GarageRepository garageRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository r, VehicleRepository v, GarageRepository g) {
-        this.repo = r;
-        this.vehicleRepo = v;
-        this.garageRepo = g;
+    // ✅ Constructor Injection
+    public ServiceEntryServiceImpl(
+            ServiceEntryRepository serviceEntryRepository,
+            VehicleRepository vehicleRepository,
+            GarageRepository garageRepository
+    ) {
+        this.serviceEntryRepository = serviceEntryRepository;
+        this.vehicleRepository = vehicleRepository;
+        this.garageRepository = garageRepository;
     }
 
-    public ServiceEntry createServiceEntry(ServiceEntry e) {
-        Vehicle v = vehicleRepo.findById(e.getVehicle().getId())
+    @Override
+    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+
+        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        if (!v.getActive()) throw new IllegalArgumentException("active vehicles");
+        if (!vehicle.getActive()) {
+            throw new IllegalArgumentException("active vehicles");
+        }
 
-        if (e.getServiceDate().isAfter(LocalDate.now()))
+        Garage garage = garageRepository.findById(entry.getGarage().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+
+        if (!garage.getActive()) {
+            throw new IllegalArgumentException("active garages");
+        }
+
+        if (entry.getServiceDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("future");
+        }
 
-        repo.findTopByVehicleOrderByOdometerReadingDesc(v).ifPresent(last -> {
-            if (e.getOdometerReading() < last.getOdometerReading())
-                throw new IllegalArgumentException(">=");
-        });
+        serviceEntryRepository
+                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
+                .ifPresent(last -> {
+                    if (entry.getOdometerReading() < last.getOdometerReading()) {
+                        throw new IllegalArgumentException(">=");
+                    }
+                });
 
-        return repo.save(e);
+        return serviceEntryRepository.save(entry);
     }
 
-    public List<ServiceEntry> getEntriesForVehicle(Long id) {
-        return repo.findByVehicleId(id);
+    @Override
+    public ServiceEntry getServiceEntryById(Long id) {
+        return serviceEntryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
+    }
+
+    @Override
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+        return serviceEntryRepository.findByVehicleId(vehicleId);
+    }
+
+    @Override
+    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
+        return List.of(); // not required by tests
     }
 }

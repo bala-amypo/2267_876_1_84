@@ -1,28 +1,34 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 public class ServiceEntry {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Vehicle vehicle;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Garage garage;
 
     private String serviceType;
+
     private LocalDate serviceDate;
+
     private Integer odometerReading;
+
     private String description;
 
     private LocalDateTime recordedAt = LocalDateTime.now();
 
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -40,4 +46,7 @@ public class ServiceEntry {
 
     public Integer getOdometerReading() { return odometerReading; }
     public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }
