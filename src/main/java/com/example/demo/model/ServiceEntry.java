@@ -1,25 +1,24 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "service_entry")
 public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties({"serviceEntries"})
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties({"serviceEntries"})
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "garage_id")
     private Garage garage;
 
     private String serviceType;
@@ -30,12 +29,17 @@ public class ServiceEntry {
 
     private String description;
 
-    private LocalDateTime recordedAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private LocalDateTime recordedAt;
 
     // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Vehicle getVehicle() {
@@ -88,5 +92,9 @@ public class ServiceEntry {
 
     public LocalDateTime getRecordedAt() {
         return recordedAt;
+    }
+
+    public void setRecordedAt(LocalDateTime recordedAt) {
+        this.recordedAt = recordedAt;
     }
 }

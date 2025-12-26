@@ -21,7 +21,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
 
-    // ✅ CONSTRUCTOR INJECTION (TEST REQUIRED)
+    // ✅ Constructor Injection (MANDATORY for tests)
     public ServiceEntryServiceImpl(
             ServiceEntryRepository serviceEntryRepository,
             VehicleRepository vehicleRepository,
@@ -55,12 +55,9 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (!Boolean.TRUE.equals(garage.getActive())) {
-            throw new IllegalArgumentException("Garage not active");
-        }
-
         // 🔹 DATE VALIDATION
-        if (entry.getServiceDate() == null || entry.getServiceDate().isAfter(LocalDate.now())) {
+        if (entry.getServiceDate() == null ||
+                entry.getServiceDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("future");
         }
 
@@ -73,7 +70,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
                     }
                 });
 
-        // 🔹 ATTACH MANAGED ENTITIES
+        // 🔹 ATTACH MANAGED ENTITIES (CRITICAL)
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
