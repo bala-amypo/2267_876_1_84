@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(
-    name = "garages",
-    uniqueConstraints = @UniqueConstraint(columnNames = "garageName")
+        name = "garages",
+        uniqueConstraints = @UniqueConstraint(columnNames = "garage_name")
 )
 public class Garage {
 
@@ -13,21 +13,21 @@ public class Garage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "garage_name", nullable = false, unique = true)
     private String garageName;
 
+    @Column(nullable = false)
     private String address;
+
+    @Column(nullable = false)
     private String contactNumber;
 
+    @Column(nullable = false)
     private Boolean active = true;
 
     // ===== Getters & Setters =====
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getGarageName() {
