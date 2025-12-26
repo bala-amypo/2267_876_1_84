@@ -6,13 +6,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController   // ✅ REQUIRED
 @RequestMapping("/garages")
 public class GarageController {
 
     private final GarageService garageService;
 
-    // ✅ CONSTRUCTOR REQUIRED
     public GarageController(GarageService garageService) {
         this.garageService = garageService;
     }
@@ -20,11 +19,6 @@ public class GarageController {
     @PostMapping
     public Garage create(@RequestBody Garage garage) {
         return garageService.createGarage(garage);
-    }
-
-    @PutMapping("/{id}")
-    public Garage update(@PathVariable Long id, @RequestBody Garage garage) {
-        return garageService.updateGarage(id, garage);
     }
 
     @GetMapping("/{id}")
