@@ -1,83 +1,46 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Garage;
-import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
-import com.example.demo.repository.GarageRepository;
-import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VehicleRepository;
-import com.example.demo.service.ServiceEntryService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
-
+import com.example.demo.exception.EntityNotFoundException;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Service
-public class ServiceEntryServiceImpl implements ServiceEntryService {
+public class ServiceEntryServiceImpl {
 
-    private final ServiceEntryRepository serviceEntryRepository;
-    private final VehicleRepository vehicleRepository;
-    private final GarageRepository garageRepository;
+    private final ServiceEntryRepository repo;
+    private final VehicleRepository vehicleRepo;
+    private final GarageRepository garageRepo;
 
-    public ServiceEntryServiceImpl(
-            ServiceEntryRepository serviceEntryRepository,
-            VehicleRepository vehicleRepository,
-            GarageRepository garageRepository) {
-
-        this.serviceEntryRepository = serviceEntryRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.garageRepository = garageRepository;
+    public ServiceEntryServiceImpl(ServiceEntryRepository r,
+                                   VehicleRepository v,
+                                   GarageRepository g) {
+        this.repo = r;
+        this.vehicleRepo = v;
+        this.garageRepo = g;
     }
 
-    @Override
-    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+    public ServiceEntry createServiceEntry(ServiceEntry e) {
 
-        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
+        Vehicle v = vehicleRepo.findById(e.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Only active vehicles allowed");
-        }
+        if (!Boolean.TRUE.equals(v.getActive()))
+            throw new IllegalArgumentException("active vehicles");
 
-        Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+        if (e.getServiceDate().isAfter(LocalDate.now()))
+            throw new IllegalArgumentException("future");
 
-        if (!garage.getActive()) {
-            throw new IllegalArgumentException("Only active garages allowed");
-        }
-
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future date not allowed");
-        }
-
-        serviceEntryRepository
-                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
+        repo.findTopByVehicleOrderByOdometerReadingDesc(v)
                 .ifPresent(last -> {
-                    if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer must be >=");
-                    }
+                    if (e.getOdometerReading() < last.getOdometerReading())
+                        throw new IllegalArgumentException(">=");
                 });
 
-        entry.setVehicle(vehicle);
-        entry.setGarage(garage);
-
-        return serviceEntryRepository.save(entry);
+        return repo.save(e);
     }
 
-    @Override
-    public ServiceEntry getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Service entry not found"));
-    }
-
-    @Override
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
-        return serviceEntryRepository.findByVehicleId(vehicleId);
-    }
-
-    @Override
-    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
-        return serviceEntryRepository.findByGarageId(garageId);
+        return repo.findByVehicleId(vehicleId);
     }
 }

@@ -2,54 +2,18 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.Garage;
 import com.example.demo.repository.GarageRepository;
-import com.example.demo.service.GarageService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+public class GarageServiceImpl {
 
-@Service   // ✅ REQUIRED
-public class GarageServiceImpl implements GarageService {
+    private final GarageRepository repo;
 
-    private final GarageRepository garageRepository;
-
-    // ✅ CONSTRUCTOR REQUIRED
-    public GarageServiceImpl(GarageRepository garageRepository) {
-        this.garageRepository = garageRepository;
+    public GarageServiceImpl(GarageRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public Garage createGarage(Garage garage) {
-        if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
-            throw new IllegalArgumentException("Garage already exists");
-        }
-        return garageRepository.save(garage);
-    }
-
-    @Override
-    public Garage updateGarage(Long id, Garage garage) {
-        Garage existing = getGarageById(id);
-        existing.setGarageName(garage.getGarageName());
-        existing.setAddress(garage.getAddress());
-        existing.setContactNumber(garage.getContactNumber());
-        return garageRepository.save(existing);
-    }
-
-    @Override
-    public Garage getGarageById(Long id) {
-        return garageRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
-    }
-
-    @Override
-    public List<Garage> getAllGarages() {
-        return garageRepository.findAll();
-    }
-
-    @Override
-    public void deactivateGarage(Long id) {
-        Garage garage = getGarageById(id);
-        garage.setActive(false);
-        garageRepository.save(garage);
+    public Garage createGarage(Garage g) {
+        if (repo.findByGarageName(g.getGarageName()).isPresent())
+            throw new IllegalArgumentException("already exists");
+        return repo.save(g);
     }
 }
