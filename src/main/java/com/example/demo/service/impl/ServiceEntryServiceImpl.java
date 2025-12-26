@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Garage;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.Vehicle;
@@ -7,10 +8,10 @@ import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,67 +21,70 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
 
-    // ✅ Constructor Injection (MANDATORY)
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                   VehicleRepository vehicleRepository,
-                                   GarageRepository garageRepository) {
+    // ✅ CONSTRUCTOR INJECTION (TEST REQUIRED)
+    public ServiceEntryServiceImpl(
+            ServiceEntryRepository serviceEntryRepository,
+            VehicleRepository vehicleRepository,
+            GarageRepository garageRepository
+    ) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
         this.garageRepository = garageRepository;
     }
 
-    // ================= CREATE =================
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        // 1️⃣ Fetch Vehicle
-        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Vehicle not found"));
+        if (entry.getVehicle() == null || entry.getVehicle().getId() == null) {
+            throw new IllegalArgumentException("Vehicle not found");
+        }
 
-        // 2️⃣ Check Vehicle Active
-        if (!vehicle.getActive()) {
+        if (entry.getGarage() == null || entry.getGarage().getId() == null) {
+            throw new IllegalArgumentException("Garage not found");
+        }
+
+        // 🔹 LOAD MANAGED VEHICLE
+        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+
+        if (!Boolean.TRUE.equals(vehicle.getActive())) {
             throw new IllegalArgumentException("active vehicles");
         }
 
-        // 3️⃣ Fetch Garage
+        // 🔹 LOAD MANAGED GARAGE
         Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Garage not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        // 4️⃣ Check Garage Active
-        if (!garage.getActive()) {
-            throw new IllegalArgumentException("active garages");
+        if (!Boolean.TRUE.equals(garage.getActive())) {
+            throw new IllegalArgumentException("Garage not active");
         }
 
-        // 5️⃣ Future Date Validation
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
+        // 🔹 DATE VALIDATION
+        if (entry.getServiceDate() == null || entry.getServiceDate().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("future");
         }
 
-        // 6️⃣ Odometer Validation (>= last reading)
+        // 🔹 ODOMETER VALIDATION
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
-                .ifPresent(lastEntry -> {
-                    if (entry.getOdometerReading() < lastEntry.getOdometerReading()) {
+                .ifPresent(last -> {
+                    if (entry.getOdometerReading() < last.getOdometerReading()) {
                         throw new IllegalArgumentException(">=");
                     }
                 });
 
-        // 7️⃣ Reattach managed entities
+        // 🔹 ATTACH MANAGED ENTITIES
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
+        entry.setRecordedAt(LocalDateTime.now());
 
-        // 8️⃣ Save & return
         return serviceEntryRepository.save(entry);
     }
 
-    // ================= READ =================
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("ServiceEntry not found"));
+                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
     }
 
     @Override
