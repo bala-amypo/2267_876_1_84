@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Vehicle {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -23,7 +24,7 @@ public class Vehicle {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // getters & setters (ALL REQUIRED)
+    // ===== Getters & Setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
