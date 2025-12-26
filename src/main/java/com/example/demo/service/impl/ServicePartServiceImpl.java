@@ -5,15 +5,16 @@ import com.example.demo.model.ServicePart;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.ServicePartRepository;
 import com.example.demo.service.ServicePartService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // ✅ THIS WAS MISSING
 public class ServicePartServiceImpl implements ServicePartService {
 
     private final ServicePartRepository servicePartRepository;
     private final ServiceEntryRepository serviceEntryRepository;
 
-    // ✅ Constructor Injection
     public ServicePartServiceImpl(
             ServicePartRepository servicePartRepository,
             ServiceEntryRepository serviceEntryRepository
