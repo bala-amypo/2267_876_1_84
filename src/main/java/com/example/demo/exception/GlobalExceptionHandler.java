@@ -1,9 +1,11 @@
 package com.example.demo.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,11 +26,22 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    // 🔥 THIS IS THE MISSING PIECE
+    // 🔥 DB unique / constraint violations
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrity(DataIntegrityViolationException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("VIN already exists");
+                .body("Invalid or duplicate data");
+    }
+
+    // 🔥 Hibernate validation / flush-time errors
+    @ExceptionHandler({
+            ConstraintViolationException.class,
+            TransactionSystemException.class
+    })
+    public ResponseEntity<String> handleConstraint(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Validation failed");
     }
 }
