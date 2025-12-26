@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vehicles", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
+@Table(name = "vehicle", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
 public class Vehicle {
 
     @Id
@@ -25,7 +25,6 @@ public class Vehicle {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
