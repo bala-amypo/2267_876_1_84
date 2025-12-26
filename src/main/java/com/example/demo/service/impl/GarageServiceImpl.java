@@ -4,23 +4,25 @@ import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Garage;
 import com.example.demo.repository.GarageRepository;
 import com.example.demo.service.GarageService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service   // ✅ REQUIRED
 public class GarageServiceImpl implements GarageService {
 
     private final GarageRepository garageRepository;
 
-    // ✅ Constructor Injection (MANDATORY)
     public GarageServiceImpl(GarageRepository garageRepository) {
         this.garageRepository = garageRepository;
     }
 
     @Override
     public Garage createGarage(Garage garage) {
-        if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
-            throw new IllegalArgumentException("already exists");
-        }
+        garageRepository.findByGarageName(garage.getGarageName())
+                .ifPresent(g -> {
+                    throw new IllegalArgumentException("already exists");
+                });
         return garageRepository.save(garage);
     }
 
