@@ -2,32 +2,34 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ServicePart;
 import com.example.demo.service.ServicePartService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/service-parts")
+@RequestMapping("/api/service-parts")
+@Tag(name = "Service Part")
 public class ServicePartController {
 
-    private final ServicePartService servicePartService;
+    private final ServicePartService service;
 
-    public ServicePartController(ServicePartService servicePartService) {
-        this.servicePartService = servicePartService;
+    public ServicePartController(ServicePartService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ServicePart create(@RequestBody ServicePart part) {
-        return servicePartService.createPart(part);
+        return service.createPart(part);
     }
 
     @GetMapping("/{id}")
     public ServicePart getById(@PathVariable Long id) {
-        return servicePartService.getPartById(id);
+        return service.getPartById(id);
     }
 
     @GetMapping("/entry/{entryId}")
     public List<ServicePart> getByEntry(@PathVariable Long entryId) {
-        return servicePartService.getPartsForEntry(entryId);
+        return service.getPartsForEntry(entryId);
     }
 }

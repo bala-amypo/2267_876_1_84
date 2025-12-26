@@ -1,44 +1,11 @@
-package com.example.demo.service.impl;
+package com.example.demo.repository;
 
-import com.example.demo.model.Vehicle;
-import com.example.demo.repository.VehicleRepository;
-import com.example.demo.exception.EntityNotFoundException;
-import com.example.demo.service.VehicleService;
+import com.example.demo.model.ServicePart;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public class VehicleServiceImpl implements VehicleService {
+public interface ServicePartRepository extends JpaRepository<ServicePart, Long> {
 
-    private final VehicleRepository repo;
-
-    public VehicleServiceImpl(VehicleRepository repo) {
-        this.repo = repo;
-    }
-
-    public Vehicle createVehicle(Vehicle v) {
-        if (repo.findByVin(v.getVin()).isPresent()) {
-            throw new IllegalArgumentException("VIN already exists");
-        }
-        return repo.save(v);
-    }
-
-    public Vehicle getVehicleById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
-    }
-
-    public Vehicle getVehicleByVin(String vin) {
-        return repo.findByVin(vin)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
-    }
-
-    public List<Vehicle> getVehiclesByOwner(Long ownerId) {
-        return repo.findByOwnerId(ownerId);
-    }
-
-    public void deactivateVehicle(Long id) {
-        Vehicle v = getVehicleById(id);
-        v.setActive(false);
-        repo.save(v);
-    }
+    List<ServicePart> findByServiceEntryId(Long entryId);
 }
