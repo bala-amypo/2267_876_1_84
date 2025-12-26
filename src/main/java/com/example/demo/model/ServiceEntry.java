@@ -5,30 +5,24 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "service_entries")
 public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Vehicle vehicle;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Garage garage;
 
     private String serviceType;
-
     private LocalDate serviceDate;
-
     private Integer odometerReading;
-
     private String description;
-
     private LocalDateTime recordedAt = LocalDateTime.now();
 
-    // ===== Getters & Setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -46,9 +40,4 @@ public class ServiceEntry {
 
     public Integer getOdometerReading() { return odometerReading; }
     public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public LocalDateTime getRecordedAt() { return recordedAt; }
 }
