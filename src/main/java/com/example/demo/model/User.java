@@ -10,14 +10,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
-    private String role;
+    @Column(nullable = false)
+    private String role = "USER";   // ✅ ONLY USER ROLE
 
-    // ===== GETTERS & SETTERS =====
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
@@ -30,11 +32,11 @@ public class User {
     public String getEmail() {
         return email;
     }
-
+ 
     public void setEmail(String email) {
         this.email = email;
     }
-
+ 
     public String getPassword() {
         return password;
     }
@@ -46,8 +48,6 @@ public class User {
     public String getRole() {
         return role;
     }
- 
-    public void setRole(String role) {
-        this.role = role;
-    }
+
+    // ❌ No setter for role (role is fixed to USER)
 }
