@@ -1,15 +1,15 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.ServicePart;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.ServicePartRepository;
 import com.example.demo.service.ServicePartService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // ✅ THIS WAS MISSING
+@Service
 public class ServicePartServiceImpl implements ServicePartService {
 
     private final ServicePartRepository servicePartRepository;
@@ -27,7 +27,8 @@ public class ServicePartServiceImpl implements ServicePartService {
     public ServicePart createPart(ServicePart part) {
 
         serviceEntryRepository.findById(part.getServiceEntry().getId())
-                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("ServiceEntry not found"));
 
         if (part.getQuantity() == null || part.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity");
@@ -39,7 +40,8 @@ public class ServicePartServiceImpl implements ServicePartService {
     @Override
     public ServicePart getPartById(Long id) {
         return servicePartRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("ServicePart not found"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("ServicePart not found"));
     }
 
     @Override
