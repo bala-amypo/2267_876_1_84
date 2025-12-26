@@ -4,13 +4,15 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 400 – Bad Request (validation / business errors)
+    // 400 – invalid input / business rule
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity
@@ -18,7 +20,7 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    // 404 – Not Found
+    // 404 – entity not found
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
         return ResponseEntity
@@ -26,15 +28,31 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    // 400 – Database constraint violations (unique VIN, etc.)
+    // 400 – JSON parse errors (Swagger mistakes)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleJsonError(HttpMessageNotReadableException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Invalid JSON request");
+    }
+
+    // 400 – DB constraint issues (FK, NOT NULL, UNIQUE)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrity(DataIntegrityViolationException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body("Invalid or duplicate data");
+                .body("Invalid request data");
     }
 
-    // 500 – Fallback (real server errors only)
+    // 400 – validation errors (if any)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Validation failed");
+    }
+
+    // ❗ LAST – catch-all (prevents Swagger 500 screen)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneric(Exception ex) {
         return ResponseEntity
