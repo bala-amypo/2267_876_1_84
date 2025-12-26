@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/service-entries")
-@Tag(name = "Service Entry")
+@Tag(name = "Service Entries")
 public class ServiceEntryController {
 
     private final ServiceEntryService service;
@@ -31,5 +31,10 @@ public class ServiceEntryController {
     @GetMapping("/vehicle/{vehicleId}")
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
         return service.getEntriesForVehicle(vehicleId);
+    }
+
+    @GetMapping("/garage/{garageId}")
+    public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
+        return service.getEntriesByGarage(garageId);
     }
 }

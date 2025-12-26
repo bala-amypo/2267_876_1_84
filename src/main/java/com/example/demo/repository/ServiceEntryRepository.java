@@ -14,12 +14,10 @@ public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long
 
     List<ServiceEntry> findByVehicleId(Long vehicleId);
 
-    // used by tests (conceptual only)
-    default List<ServiceEntry> findByGarageAndMinOdometer(Long garageId, int minOdometer) {
-        return List.of();
-    }
+    List<ServiceEntry> findByGarageId(Long garageId);
 
-    default List<ServiceEntry> findByVehicleAndDateRange(Long vehicleId, LocalDate from, LocalDate to) {
-        return List.of();
-    }
+    // Optional (used in tests)
+    List<ServiceEntry> findByVehicleAndServiceDateBetween(
+            Vehicle vehicle, LocalDate from, LocalDate to
+    );
 }

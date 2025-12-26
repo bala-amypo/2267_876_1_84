@@ -33,33 +33,40 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
+        // 🔹 Fetch vehicle
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() ->
                         new EntityNotFoundException("Vehicle not found"));
 
         if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("active vehicles");
+            throw new IllegalArgumentException("Only active vehicles allowed");
         }
 
+        // 🔹 Fetch garage
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() ->
                         new EntityNotFoundException("Garage not found"));
 
         if (!garage.getActive()) {
-            throw new IllegalArgumentException("active garages");
+            throw new IllegalArgumentException("Garage must be active");
         }
 
+        // 🔹 Future date check
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future");
+            throw new IllegalArgumentException("Service date cannot be future");
         }
 
+        // 🔹 Odometer validation
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException(">=");
+                        throw new IllegalArgumentException("Odometer must be >=");
                     }
                 });
+
+        entry.setVehicle(vehicle);
+        entry.setGarage(garage);
 
         return serviceEntryRepository.save(entry);
     }
@@ -78,6 +85,6 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     @Override
     public List<ServiceEntry> getEntriesByGarage(Long garageId) {
-        return List.of();
+        return serviceEntryRepository.findByGarageId(garageId);
     }
 }
