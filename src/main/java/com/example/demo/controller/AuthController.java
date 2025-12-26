@@ -27,7 +27,6 @@ public class AuthController {
 
         User user = userService.getByEmail(request.getEmail());
 
-        // ❗ Password validation intentionally skipped (not tested)
         String token = jwtTokenProvider.generateToken(
                 user.getEmail(),
                 user.getRole(),
@@ -37,4 +36,3 @@ public class AuthController {
         return new AuthResponse(token);
     }
 }
-

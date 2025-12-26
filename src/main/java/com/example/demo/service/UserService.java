@@ -4,6 +4,7 @@ import com.example.demo.model.User;
 
 public interface UserService {
 
-    // 🔴 REQUIRED — AuthController depends on this
     User getByEmail(String email);
+
+    User createUser(User user);
 }
