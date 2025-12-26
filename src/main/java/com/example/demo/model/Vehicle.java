@@ -4,14 +4,12 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vehicle", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
 public class Vehicle {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String vin;
 
     private String make;
@@ -25,6 +23,7 @@ public class Vehicle {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // getters & setters (ALL REQUIRED)
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

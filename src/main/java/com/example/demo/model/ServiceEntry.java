@@ -7,8 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 public class ServiceEntry {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne
@@ -21,6 +20,7 @@ public class ServiceEntry {
     private LocalDate serviceDate;
     private Integer odometerReading;
     private String description;
+
     private LocalDateTime recordedAt = LocalDateTime.now();
 
     public Long getId() { return id; }
