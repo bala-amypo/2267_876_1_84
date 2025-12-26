@@ -13,24 +13,33 @@ public class GarageServiceImpl implements GarageService {
 
     private final GarageRepository garageRepository;
 
+    // ✅ CONSTRUCTOR REQUIRED
     public GarageServiceImpl(GarageRepository garageRepository) {
         this.garageRepository = garageRepository;
     }
 
     @Override
     public Garage createGarage(Garage garage) {
+
+        if (garage.getGarageName() == null || garage.getGarageName().isBlank()) {
+            throw new IllegalArgumentException("Garage name is required");
+        }
+
         if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
             throw new IllegalArgumentException("Garage already exists");
         }
+
         return garageRepository.save(garage);
     }
 
     @Override
     public Garage updateGarage(Long id, Garage garage) {
         Garage existing = getGarageById(id);
+
         existing.setGarageName(garage.getGarageName());
         existing.setAddress(garage.getAddress());
         existing.setContactNumber(garage.getContactNumber());
+
         return garageRepository.save(existing);
     }
 
