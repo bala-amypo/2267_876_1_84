@@ -39,6 +39,11 @@ public class ServiceEntry {
         return id;
     }
 
+    public void setId(Long id) {
+    this.id = id;
+}
+
+
     public Vehicle getVehicle() {
         return vehicle;
     }
