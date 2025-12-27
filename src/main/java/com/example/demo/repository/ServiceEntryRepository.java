@@ -4,7 +4,6 @@ import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,9 +14,4 @@ public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long
     List<ServiceEntry> findByVehicleId(Long vehicleId);
 
     List<ServiceEntry> findByGarageId(Long garageId);
-
-    // Optional (used in tests)
-    List<ServiceEntry> findByVehicleAndServiceDateBetween(
-            Vehicle vehicle, LocalDate from, LocalDate to
-    );
 }
