@@ -12,12 +12,10 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔴 MUST be optional = false
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    // 🔴 THIS IS WHAT FIXES YOUR FK ERROR
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "garage_id", nullable = false)
     private Garage garage;
@@ -33,7 +31,6 @@ public class ServiceEntry {
     @Column(nullable = false)
     private LocalDateTime recordedAt;
 
-    // ---------- GETTERS & SETTERS ----------
 
     public Long getId() {
         return id;

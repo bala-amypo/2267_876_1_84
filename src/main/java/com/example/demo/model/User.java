@@ -49,5 +49,4 @@ public class User {
         return role;
     }
 
-    // ❌ No setter for role (role is fixed to USER)
 }

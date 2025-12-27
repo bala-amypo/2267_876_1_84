@@ -29,7 +29,7 @@ public class AuthController {
 
         String token = jwtTokenProvider.generateToken(
                 user.getEmail(),
-                user.getRole(),   // always USER
+                user.getRole(),   
                 user.getId()
         );
 
