@@ -1,59 +1,17 @@
-@Service
-public class ServiceEntryServiceImpl implements ServiceEntryService {
+package com.example.demo.repository;
 
-    private final ServiceEntryRepository serviceEntryRepository;
-    private final VehicleRepository vehicleRepository;
-    private final GarageRepository garageRepository;
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.Vehicle;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    public ServiceEntryServiceImpl(
-            ServiceEntryRepository serviceEntryRepository,
-            VehicleRepository vehicleRepository,
-            GarageRepository garageRepository
-    ) {
-        this.serviceEntryRepository = serviceEntryRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.garageRepository = garageRepository;
-    }
+import java.util.List;
+import java.util.Optional;
+@Repository
+public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    @Override
-    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+    Optional<ServiceEntry> findTopByVehicleOrderByOdometerReadingDesc(Vehicle vehicle);
 
-        // 1️⃣ Load managed Vehicle
-        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+    List<ServiceEntry> findByVehicleId(Long vehicleId);
 
-        if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("active vehicles");
-        }
-
-        // 2️⃣ Load managed Garage
-        Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
-
-        if (!garage.getActive()) {
-            throw new IllegalArgumentException("Garage not active");
-        }
-
-        // 3️⃣ Validate service date
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future");
-        }
-
-        // 4️⃣ Validate odometer
-        serviceEntryRepository
-                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
-                .ifPresent(last -> {
-                    if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException(">=");
-                    }
-                });
-
-        // 5️⃣ Attach managed entities
-        entry.setVehicle(vehicle);
-        entry.setGarage(garage);
-        entry.setRecordedAt(LocalDateTime.now());
-
-        // 6️⃣ SAVE
-        return serviceEntryRepository.save(entry);
-    }
+    List<ServiceEntry> findByGarageId(Long garageId);
 }
