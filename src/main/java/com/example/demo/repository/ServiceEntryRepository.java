@@ -17,7 +17,6 @@ public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long
 
     List<ServiceEntry> findByGarageId(Long garageId);
 
-    // 🔴 REQUIRED BY TEST CASE
     @Query("""
         SELECT s FROM ServiceEntry s
         WHERE s.garage.id = :garageId

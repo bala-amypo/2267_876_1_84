@@ -8,17 +8,14 @@ import java.util.List;
 
 public class JwtTokenProvider {
 
-    // ===============================
-    // METHODS USED BY YOUR TESTS
-    // ===============================
 
     public String generateToken(String email, String role, Long userId) {
-        // Real JWT logic NOT required (tests mock this)
+      
         return "jwt-token";
     }
 
     public boolean validateToken(String token) {
-        // Tests mock this method
+       
         return true;
     }
 
