@@ -22,8 +22,8 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final GarageRepository garageRepository;
 
     public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                  VehicleRepository vehicleRepository,
-                                  GarageRepository garageRepository) {
+                                   VehicleRepository vehicleRepository,
+                                   GarageRepository garageRepository) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
         this.garageRepository = garageRepository;
@@ -35,29 +35,29 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ✅ FIX #1 — EXACT CHECK EXPECTED BY TEST
-        if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("inactive vehicle");
+        // ✅ TEST: inactive OR null vehicle
+        if (vehicle.getActive() == null || vehicle.getActive() == false) {
+            throw new IllegalArgumentException("Vehicle is inactive");
         }
 
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (!garage.getActive()) {
-            throw new IllegalArgumentException("inactive garage");
+        if (garage.getActive() == null || garage.getActive() == false) {
+            throw new IllegalArgumentException("Garage is inactive");
         }
 
-        // ✅ FIX #2 — future date
+        // ✅ TEST: future date not allowed
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future service date");
+            throw new IllegalArgumentException("Future service date");
         }
 
-        // ✅ FIX #3 — odometer constraint (THIS WAS FAILING)
+        // ✅ TEST: odometer must increase
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("odometer constraint violated");
+                        throw new IllegalArgumentException("Odometer constraint violated");
                     }
                 });
 
@@ -71,7 +71,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Service entry not found"));
+                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
     }
 
     @Override
