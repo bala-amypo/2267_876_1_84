@@ -9,6 +9,7 @@ import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,20 +32,22 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         this.garageRepository = garageRepository;
     }
 
+    // ================= POST =================
     @Override
+    @Transactional
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        if (!vehicle.getActive()) {
+        if (!Boolean.TRUE.equals(vehicle.getActive())) {
             throw new IllegalArgumentException("active vehicles");
         }
 
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (!garage.getActive()) {
+        if (!Boolean.TRUE.equals(garage.getActive())) {
             throw new IllegalArgumentException("Garage not active");
         }
 
@@ -67,18 +70,24 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.save(entry);
     }
 
+    // ================= GET BY ID =================
     @Override
+    @Transactional(readOnly = true)
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
     }
 
+    // ================= GET BY VEHICLE =================
     @Override
+    @Transactional(readOnly = true)
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
+    // ================= GET BY GARAGE =================
     @Override
+    @Transactional(readOnly = true)
     public List<ServiceEntry> getEntriesByGarage(Long garageId) {
         return serviceEntryRepository.findByGarageId(garageId);
     }
