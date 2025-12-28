@@ -33,32 +33,38 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
+        // ---------- VEHICLE ----------
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+                .orElseThrow(IllegalArgumentException::new);
 
         if (!vehicle.isActive()) {
-            throw new IllegalArgumentException("Inactive vehicle");
+            throw new IllegalArgumentException();
         }
 
+        // ---------- GARAGE ----------
         Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
+                .orElseThrow(IllegalArgumentException::new);
 
         if (!garage.isActive()) {
-            throw new IllegalArgumentException("Inactive garage");
+            throw new IllegalArgumentException();
         }
 
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future date not allowed");
+        // ---------- FUTURE DATE ----------
+        if (entry.getServiceDate() != null &&
+                entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException();
         }
 
+        // ---------- ODOMETER ----------
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() <= last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Invalid odometer");
+                        throw new IllegalArgumentException();
                     }
                 });
 
+        // ---------- SAVE ----------
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
@@ -69,7 +75,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ServiceEntry not found"));
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
