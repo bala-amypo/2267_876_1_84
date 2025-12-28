@@ -21,11 +21,9 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
 
-    public ServiceEntryServiceImpl(
-            ServiceEntryRepository serviceEntryRepository,
-            VehicleRepository vehicleRepository,
-            GarageRepository garageRepository
-    ) {
+    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
+                                  VehicleRepository vehicleRepository,
+                                  GarageRepository garageRepository) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
         this.garageRepository = garageRepository;
@@ -37,29 +35,34 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ✅ TEST 1: Inactive vehicle
-        if (!vehicle.getActive()) {
+        // ✅ TEST 1: inactive vehicle
+        if (vehicle.getActive() == null || !vehicle.getActive()) {
             throw new IllegalArgumentException("Vehicle is inactive");
         }
 
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (!garage.getActive()) {
+        if (garage.getActive() == null || !garage.getActive()) {
             throw new IllegalArgumentException("Garage is inactive");
         }
 
-        // ✅ TEST 2: Future date not allowed
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future service date not allowed");
+        // ✅ TEST 2: future date
+        if (entry.getServiceDate() != null &&
+                entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Service date cannot be in the future");
         }
 
-        // ✅ TEST 3: Odometer constraint
+        // ✅ TEST 3: odometer constraint
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
-                    if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer reading less than previous");
+                    if (entry.getOdometerReading() != null &&
+                            last.getOdometerReading() != null &&
+                            entry.getOdometerReading() < last.getOdometerReading()) {
+                        throw new IllegalArgumentException(
+                                "Odometer reading must be greater than or equal to last service"
+                        );
                     }
                 });
 
