@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,14 +14,15 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "vehicle_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Vehicle vehicle;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "garage_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Garage garage;
-    
 
     private String serviceType;
 
@@ -32,15 +35,15 @@ public class ServiceEntry {
     @Column(nullable = false)
     private LocalDateTime recordedAt;
 
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-    this.id = id;
-}
-
+        this.id = id;
+    }
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -94,7 +97,6 @@ public class ServiceEntry {
         return recordedAt;
     }
 
-    // 🔴 YOU WERE MISSING THIS
     public void setRecordedAt(LocalDateTime recordedAt) {
         this.recordedAt = recordedAt;
     }
