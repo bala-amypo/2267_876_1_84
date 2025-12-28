@@ -32,27 +32,33 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
+        // ---------- VEHICLE ----------
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ✅ TEST: inactive OR null vehicle
-        if (vehicle.getActive() == null || vehicle.getActive() == false) {
+        if (vehicle.getActive() == null || !vehicle.getActive()) {
             throw new IllegalArgumentException("Vehicle is inactive");
         }
 
+        // ---------- GARAGE ----------
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (garage.getActive() == null || garage.getActive() == false) {
+        if (garage.getActive() == null || !garage.getActive()) {
             throw new IllegalArgumentException("Garage is inactive");
         }
 
-        // ✅ TEST: future date not allowed
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future service date");
+        // ---------- SERVICE DATE ----------
+        if (entry.getServiceDate() == null ||
+                entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future service date not allowed");
         }
 
-        // ✅ TEST: odometer must increase
+        // ---------- ODOMETER ----------
+        if (entry.getOdometerReading() == null) {
+            throw new IllegalArgumentException("Invalid odometer reading");
+        }
+
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
@@ -61,6 +67,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
                     }
                 });
 
+        // ---------- SAVE ----------
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
