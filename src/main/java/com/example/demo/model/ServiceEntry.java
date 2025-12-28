@@ -12,13 +12,23 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id", nullable = false)
-    private Vehicle vehicle;
+    //@ManyToOne(optional = false, fetch = FetchType.LAZY)
+    //@JoinColumn(name = "vehicle_id", nullable = false)
+    //private Vehicle vehicle;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "garage_id", nullable = false)
-    private Garage garage;
+    //@ManyToOne(optional = false, fetch = FetchType.LAZY)
+    //@JoinColumn(name = "garage_id", nullable = false)
+    //private Garage garage;
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "vehicle_id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+private Vehicle vehicle;
+
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "garage_id")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+private Garage garage;
+
 
     private String serviceType;
 
