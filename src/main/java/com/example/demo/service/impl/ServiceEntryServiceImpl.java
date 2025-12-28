@@ -32,34 +32,32 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         this.garageRepository = garageRepository;
     }
 
-    // ================= POST =================
     @Override
-    @Transactional
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        if (!Boolean.TRUE.equals(vehicle.getActive())) {
-            throw new IllegalArgumentException("active vehicles");
+        if (!vehicle.getActive()) {
+            throw new IllegalArgumentException("Vehicle inactive");
         }
 
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (!Boolean.TRUE.equals(garage.getActive())) {
-            throw new IllegalArgumentException("Garage not active");
+        if (!garage.getActive()) {
+            throw new IllegalArgumentException("Garage inactive");
         }
 
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("future");
+            throw new IllegalArgumentException("Future service date not allowed");
         }
 
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException(">=");
+                        throw new IllegalArgumentException("Invalid odometer");
                     }
                 });
 
@@ -70,7 +68,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.save(entry);
     }
 
-    // ================= GET BY ID =================
+    // 🔴 THIS FIXES YOUR GET ERROR
     @Override
     @Transactional(readOnly = true)
     public ServiceEntry getServiceEntryById(Long id) {
@@ -78,14 +76,12 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
                 .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
     }
 
-    // ================= GET BY VEHICLE =================
     @Override
     @Transactional(readOnly = true)
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
-    // ================= GET BY GARAGE =================
     @Override
     @Transactional(readOnly = true)
     public List<ServiceEntry> getEntriesByGarage(Long garageId) {
