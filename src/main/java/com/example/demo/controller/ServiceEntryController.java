@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +24,21 @@ public class ServiceEntryController {
         return service.createServiceEntry(entry);
     }
 
+    // ✅ FIXED GET
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public ServiceEntry getById(@PathVariable Long id) {
         return service.getServiceEntryById(id);
     }
 
     @GetMapping("/vehicle/{vehicleId}")
+    @Transactional(readOnly = true)
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
         return service.getEntriesForVehicle(vehicleId);
     }
 
     @GetMapping("/garage/{garageId}")
+    @Transactional(readOnly = true)
     public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
         return service.getEntriesByGarage(garageId);
     }
