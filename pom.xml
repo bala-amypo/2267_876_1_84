@@ -31,7 +31,7 @@
 
         <!-- ========= CORE ========= -->
 
-        <!-- Spring Web (REST + Servlet support) -->
+        <!-- Spring Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -43,14 +43,14 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- MySQL (Production) -->
+        <!-- MySQL Driver -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- H2 (Test / Local Safe DB) -->
+        <!-- H2 (Safe local/testing DB) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -86,7 +86,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ========= SWAGGER / OPENAPI ========= -->
+        <!-- ========= SWAGGER ========= -->
 
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -94,9 +94,20 @@
             <version>2.5.0</version>
         </dependency>
 
+        <!-- ========= JACKSON (FIXES JsonIgnoreProperties ERROR) ========= -->
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
         <!-- ========= SERVLET ========= -->
 
-        <!-- Required for HttpServlet (Health servlet) -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -112,7 +123,7 @@
 
         <!-- ========= TESTING ========= -->
 
-        <!-- TestNG (MANDATORY – college test file uses TestNG) -->
+        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -120,7 +131,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Mockito Core (REQUIRED for @Mock / @InjectMocks) -->
+        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -128,18 +139,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Test (MockHttpServletRequest/Response) -->
+        <!-- Spring Test -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
 
     </dependencies>
 
@@ -153,7 +158,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Surefire Plugin for TestNG -->
+            <!-- Surefire Plugin (TestNG support) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
