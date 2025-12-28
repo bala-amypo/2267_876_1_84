@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
@@ -32,40 +31,39 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
+        // Vehicle must exist
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ✅ TEST 1: inactive vehicle
-        if (vehicle.getActive() == null || !vehicle.getActive()) {
+        // ❌ Inactive vehicle NOT allowed
+        if (!vehicle.getActive()) {
             throw new IllegalArgumentException("Vehicle is inactive");
         }
 
+        // Garage must exist
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (garage.getActive() == null || !garage.getActive()) {
+        // ❌ Inactive garage NOT allowed
+        if (!garage.getActive()) {
             throw new IllegalArgumentException("Garage is inactive");
         }
 
-        // ✅ TEST 2: future date
-        if (entry.getServiceDate() != null &&
-                entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Service date cannot be in the future");
+        // ❌ Future date NOT allowed
+        if (entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future service date not allowed");
         }
 
-        // ✅ TEST 3: odometer constraint
+        // ❌ Odometer must be >= last service
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
-                    if (entry.getOdometerReading() != null &&
-                            last.getOdometerReading() != null &&
-                            entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException(
-                                "Odometer reading must be greater than or equal to last service"
-                        );
+                    if (entry.getOdometerReading() < last.getOdometerReading()) {
+                        throw new IllegalArgumentException("Odometer constraint violated");
                     }
                 });
 
+        // Set managed entities
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
@@ -77,15 +75,5 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
-    }
-
-    @Override
-    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
-        return serviceEntryRepository.findByVehicleId(vehicleId);
-    }
-
-    @Override
-    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
-        return serviceEntryRepository.findByGarageId(garageId);
     }
 }
