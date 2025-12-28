@@ -32,36 +32,32 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        // ✅ VEHICLE EXISTS
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ✅ INACTIVE VEHICLE TEST (FAIL CASE 1)
-        if (vehicle.getActive() == null || !vehicle.getActive()) {
-            throw new IllegalArgumentException("Vehicle is inactive");
+        // ✅ TEST 1: INACTIVE VEHICLE
+        if (Boolean.FALSE.equals(vehicle.getActive())) {
+            throw new IllegalArgumentException("Vehicle inactive");
         }
 
-        // ✅ GARAGE EXISTS
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        // ✅ INACTIVE GARAGE
-        if (garage.getActive() == null || !garage.getActive()) {
-            throw new IllegalArgumentException("Garage is inactive");
+        if (Boolean.FALSE.equals(garage.getActive())) {
+            throw new IllegalArgumentException("Garage inactive");
         }
 
-        // ✅ FUTURE DATE TEST (FAIL CASE 2)
-        if (entry.getServiceDate() == null ||
-                entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future service date not allowed");
+        // ✅ TEST 2: FUTURE DATE
+        if (entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future date");
         }
 
-        // ✅ ODOMETER CONSTRAINT TEST (FAIL CASE 3)
+        // ✅ TEST 3: ODOMETER CONSTRAINT
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer reading cannot decrease");
+                        throw new IllegalArgumentException("Odometer invalid");
                     }
                 });
 
