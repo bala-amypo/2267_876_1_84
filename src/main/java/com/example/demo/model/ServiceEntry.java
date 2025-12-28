@@ -1,39 +1,38 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "service_entry")
+@Table(name = "service_entries")
 public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@ManyToOne(optional = false, fetch = FetchType.LAZY)
-    //@JoinColumn(name = "vehicle_id", nullable = false)
-    //private Vehicle vehicle;
+    // 🔴 IMPORTANT: JsonIgnore FIXES GET API
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicle_id", nullable = false)
+    @JsonIgnore
+    private Vehicle vehicle;
 
-    //@ManyToOne(optional = false, fetch = FetchType.LAZY)
-    //@JoinColumn(name = "garage_id", nullable = false)
-    //private Garage garage;
-@ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "vehicle_id")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-private Vehicle vehicle;
+    // 🔴 IMPORTANT: JsonIgnore FIXES GET API
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "garage_id", nullable = false)
+    @JsonIgnore
+    private Garage garage;
 
-@ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "garage_id")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-private Garage garage;
-
-
+    @Column(nullable = false)
     private String serviceType;
 
+    @Column(nullable = false)
     private LocalDate serviceDate;
 
+    @Column(nullable = false)
     private Integer odometerReading;
 
     private String description;
@@ -41,15 +40,15 @@ private Garage garage;
     @Column(nullable = false)
     private LocalDateTime recordedAt;
 
+    // ================= GETTERS & SETTERS =================
 
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-    this.id = id;
-}
-
+        this.id = id;
+    }
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -103,7 +102,6 @@ private Garage garage;
         return recordedAt;
     }
 
-    // 🔴 YOU WERE MISSING THIS
     public void setRecordedAt(LocalDateTime recordedAt) {
         this.recordedAt = recordedAt;
     }
