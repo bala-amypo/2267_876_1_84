@@ -35,29 +35,29 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ✅ TEST 1: inactive OR null vehicle MUST FAIL
+        // ✅ inactive OR null vehicle
         if (!Boolean.TRUE.equals(vehicle.getActive())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("inactive vehicle");
         }
 
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
         if (!Boolean.TRUE.equals(garage.getActive())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("inactive garage");
         }
 
-        // ✅ TEST 2: future date MUST FAIL
+        // ✅ future date check
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("future service date");
         }
 
-        // ✅ TEST 3: odometer constraint MUST FAIL
+        // ✅ odometer constraint
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException();
+                        throw new IllegalArgumentException("odometer constraint violated");
                     }
                 });
 
