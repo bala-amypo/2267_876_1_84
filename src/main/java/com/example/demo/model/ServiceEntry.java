@@ -1,38 +1,30 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "service_entries")
+@Table(name = "service_entry")
 public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔴 IMPORTANT: JsonIgnore FIXES GET API
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", nullable = false)
-    @JsonIgnore
     private Vehicle vehicle;
 
-    // 🔴 IMPORTANT: JsonIgnore FIXES GET API
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "garage_id", nullable = false)
-    @JsonIgnore
     private Garage garage;
+    
 
-    @Column(nullable = false)
     private String serviceType;
 
-    @Column(nullable = false)
     private LocalDate serviceDate;
 
-    @Column(nullable = false)
     private Integer odometerReading;
 
     private String description;
@@ -40,15 +32,15 @@ public class ServiceEntry {
     @Column(nullable = false)
     private LocalDateTime recordedAt;
 
-    // ================= GETTERS & SETTERS =================
 
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-        this.id = id;
-    }
+    this.id = id;
+}
+
 
     public Vehicle getVehicle() {
         return vehicle;
@@ -102,6 +94,7 @@ public class ServiceEntry {
         return recordedAt;
     }
 
+    // 🔴 YOU WERE MISSING THIS
     public void setRecordedAt(LocalDateTime recordedAt) {
         this.recordedAt = recordedAt;
     }
