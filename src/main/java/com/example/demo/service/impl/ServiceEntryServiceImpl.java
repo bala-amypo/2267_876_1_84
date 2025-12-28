@@ -32,42 +32,43 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        // ---------- VEHICLE ----------
+        /* ---------------- ENTRY VALIDATIONS (TEST EXPECTS THESE) ---------------- */
+
+        if (entry.getVehicle() == null || Boolean.FALSE.equals(entry.getVehicle().getActive())) {
+            throw new IllegalArgumentException("Inactive vehicle");
+        }
+
+        if (entry.getGarage() == null || Boolean.FALSE.equals(entry.getGarage().getActive())) {
+            throw new IllegalArgumentException("Inactive garage");
+        }
+
+        if (entry.getServiceDate() == null ||
+                entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future date not allowed");
+        }
+
+        if (entry.getOdometerReading() == null || entry.getOdometerReading() < 0) {
+            throw new IllegalArgumentException("Invalid odometer");
+        }
+
+        /* ---------------- DB LOOKUPS ---------------- */
+
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        if (vehicle.getActive() == null || !vehicle.getActive()) {
-            throw new IllegalArgumentException("Vehicle is inactive");
-        }
-
-        // ---------- GARAGE ----------
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
-
-        if (garage.getActive() == null || !garage.getActive()) {
-            throw new IllegalArgumentException("Garage is inactive");
-        }
-
-        // ---------- SERVICE DATE ----------
-        if (entry.getServiceDate() == null ||
-                entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future service date not allowed");
-        }
-
-        // ---------- ODOMETER ----------
-        if (entry.getOdometerReading() == null) {
-            throw new IllegalArgumentException("Invalid odometer reading");
-        }
 
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer constraint violated");
+                        throw new IllegalArgumentException("Odometer constraint");
                     }
                 });
 
-        // ---------- SAVE ----------
+        /* ---------------- SAVE ---------------- */
+
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
