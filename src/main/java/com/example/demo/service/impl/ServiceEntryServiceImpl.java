@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
@@ -28,42 +29,36 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         this.garageRepository = garageRepository;
     }
 
+    // ================= CREATE =================
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        // Vehicle must exist
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        // ❌ Inactive vehicle NOT allowed
         if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Vehicle is inactive");
+            throw new IllegalArgumentException("Vehicle inactive");
         }
 
-        // Garage must exist
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        // ❌ Inactive garage NOT allowed
         if (!garage.getActive()) {
-            throw new IllegalArgumentException("Garage is inactive");
+            throw new IllegalArgumentException("Garage inactive");
         }
 
-        // ❌ Future date NOT allowed
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future service date not allowed");
+            throw new IllegalArgumentException("Future date");
         }
 
-        // ❌ Odometer must be >= last service
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer constraint violated");
+                        throw new IllegalArgumentException("Odometer invalid");
                     }
                 });
 
-        // Set managed entities
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
@@ -71,9 +66,22 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.save(entry);
     }
 
+    // ================= GET BY ID =================
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
+    }
+
+    // ================= GET BY VEHICLE =================
+    @Override
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+        return serviceEntryRepository.findByVehicleId(vehicleId);
+    }
+
+    // ================= GET BY GARAGE =================
+    @Override
+    public List<ServiceEntry> getEntriesByGarage(Long garageId) {
+        return serviceEntryRepository.findByGarageId(garageId);
     }
 }
