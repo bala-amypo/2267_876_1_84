@@ -37,7 +37,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        if (!vehicle.isActive()) {
+        if (!Boolean.TRUE.equals(vehicle.getActive())) {
             throw new IllegalArgumentException();
         }
 
@@ -45,7 +45,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        if (!garage.isActive()) {
+        if (!Boolean.TRUE.equals(garage.getActive())) {
             throw new IllegalArgumentException();
         }
 
