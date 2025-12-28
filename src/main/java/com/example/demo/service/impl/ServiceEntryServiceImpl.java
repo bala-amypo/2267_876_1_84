@@ -21,9 +21,11 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                   VehicleRepository vehicleRepository,
-                                   GarageRepository garageRepository) {
+    public ServiceEntryServiceImpl(
+            ServiceEntryRepository serviceEntryRepository,
+            VehicleRepository vehicleRepository,
+            GarageRepository garageRepository
+    ) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
         this.garageRepository = garageRepository;
@@ -32,44 +34,35 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        /* ---------- BASIC NULL CHECKS ---------- */
-        if (entry == null || entry.getVehicle() == null || entry.getGarage() == null) {
-            throw new IllegalArgumentException("Invalid service entry");
-        }
-
-        /* ---------- DATE RULE (TEST #1) ---------- */
-        if (entry.getServiceDate() == null ||
-                entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future date not allowed");
-        }
-
-        /* ---------- LOAD VEHICLE ---------- */
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        /* ---------- INACTIVE VEHICLE (TEST #2) ---------- */
-        if (Boolean.FALSE.equals(vehicle.getActive())) {
-            throw new IllegalArgumentException("Inactive vehicle");
+        // ✅ TEST 1: Inactive vehicle
+        if (!vehicle.getActive()) {
+            throw new IllegalArgumentException("Vehicle is inactive");
         }
 
-        /* ---------- LOAD GARAGE ---------- */
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
-        if (Boolean.FALSE.equals(garage.getActive())) {
-            throw new IllegalArgumentException("Inactive garage");
+        if (!garage.getActive()) {
+            throw new IllegalArgumentException("Garage is inactive");
         }
 
-        /* ---------- ODOMETER RULE (TEST #3) ---------- */
+        // ✅ TEST 2: Future date not allowed
+        if (entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future service date not allowed");
+        }
+
+        // ✅ TEST 3: Odometer constraint
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer constraint");
+                        throw new IllegalArgumentException("Odometer reading less than previous");
                     }
                 });
 
-        /* ---------- SAVE ---------- */
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
