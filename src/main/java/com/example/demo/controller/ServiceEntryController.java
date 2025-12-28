@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ServiceEntryController {
         this.service = service;
     }
 
-    // POST – already correct
+    // POST – already working
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
         return service.createServiceEntry(entry);
