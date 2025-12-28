@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.model.Garage;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.Vehicle;
@@ -20,11 +21,9 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
 
-    public ServiceEntryServiceImpl(
-            ServiceEntryRepository serviceEntryRepository,
-            VehicleRepository vehicleRepository,
-            GarageRepository garageRepository
-    ) {
+    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
+                                   VehicleRepository vehicleRepository,
+                                   GarageRepository garageRepository) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
         this.garageRepository = garageRepository;
@@ -33,38 +32,37 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
-        // ---------- VEHICLE ----------
+        // 🚗 Vehicle validation
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
         if (!Boolean.TRUE.equals(vehicle.getActive())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Vehicle is inactive");
         }
 
-        // ---------- GARAGE ----------
+        // 🏭 Garage validation
         Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
         if (!Boolean.TRUE.equals(garage.getActive())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Garage is inactive");
         }
 
-        // ---------- FUTURE DATE ----------
+        // 📅 Future date NOT allowed
         if (entry.getServiceDate() != null &&
                 entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Future service date not allowed");
         }
 
-        // ---------- ODOMETER ----------
+        // ⛽ Odometer constraint
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
-                    if (entry.getOdometerReading() <= last.getOdometerReading()) {
-                        throw new IllegalArgumentException();
+                    if (entry.getOdometerReading() < last.getOdometerReading()) {
+                        throw new IllegalArgumentException("Odometer reading must be increasing");
                     }
                 });
 
-        // ---------- SAVE ----------
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
@@ -75,7 +73,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
     }
 
     @Override
