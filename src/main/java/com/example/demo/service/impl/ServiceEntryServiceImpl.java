@@ -21,44 +21,50 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     private final VehicleRepository vehicleRepository;
     private final GarageRepository garageRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                  VehicleRepository vehicleRepository,
-                                  GarageRepository garageRepository) {
+    public ServiceEntryServiceImpl(
+            ServiceEntryRepository serviceEntryRepository,
+            VehicleRepository vehicleRepository,
+            GarageRepository garageRepository
+    ) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
         this.garageRepository = garageRepository;
     }
 
-    // ================= CREATE =================
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
+        // ---------- VEHICLE ----------
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
         if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Vehicle inactive");
+            throw new IllegalArgumentException();
         }
 
+        // ---------- GARAGE ----------
         Garage garage = garageRepository.findById(entry.getGarage().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
 
         if (!garage.getActive()) {
-            throw new IllegalArgumentException("Garage inactive");
+            throw new IllegalArgumentException();
         }
 
+        // ---------- FUTURE DATE ----------
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future date");
+            throw new IllegalArgumentException();
         }
 
+        // ---------- ODOMETER ----------
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer invalid");
+                        throw new IllegalArgumentException();
                     }
                 });
 
+        // ---------- SAVE ----------
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
@@ -66,20 +72,17 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.save(entry);
     }
 
-    // ================= GET BY ID =================
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
     }
 
-    // ================= GET BY VEHICLE =================
     @Override
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
-    // ================= GET BY GARAGE =================
     @Override
     public List<ServiceEntry> getEntriesByGarage(Long garageId) {
         return serviceEntryRepository.findByGarageId(garageId);
