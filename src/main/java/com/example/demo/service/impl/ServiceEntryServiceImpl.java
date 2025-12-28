@@ -32,32 +32,38 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
+        // 🚨 VEHICLE CHECK
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
 
+        if (vehicle.getActive() == null || !vehicle.getActive()) {
+            throw new IllegalArgumentException("Vehicle is inactive");
+        }
+
+        // 🚨 GARAGE CHECK
         Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
 
-        if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Vehicle inactive");
+        if (garage.getActive() == null || !garage.getActive()) {
+            throw new IllegalArgumentException("Garage is inactive");
         }
 
-        if (!garage.getActive()) {
-            throw new IllegalArgumentException("Garage inactive");
+        // 🚨 FUTURE DATE CHECK
+        if (entry.getServiceDate() == null ||
+                entry.getServiceDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future service date not allowed");
         }
 
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Future date not allowed");
-        }
-
+        // 🚨 ODOMETER CHECK
         serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .ifPresent(last -> {
                     if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Invalid odometer");
+                        throw new IllegalArgumentException("Odometer reading invalid");
                     }
                 });
 
+        // ✅ SET MANAGED ENTITIES
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
         entry.setRecordedAt(LocalDateTime.now());
@@ -81,4 +87,3 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.findByGarageId(garageId);
     }
 }
-    
