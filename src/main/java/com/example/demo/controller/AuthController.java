@@ -17,10 +17,10 @@ public class AuthController {
         private final JwtTokenProvider jwtTokenProvider;
 
             public AuthController(UserService userService,
-                                      JwtTokenProvider jwtTokenProvider) {
-                                              this.userService = userService;
-                                                      this.jwtTokenProvider = jwtTokenProvider;
-                                                          }
+             JwtTokenProvider jwtTokenProvider) {
+             this.userService = userService;
+             this.jwtTokenProvider = jwtTokenProvider;
+             }
 
             @PostMapping("/login")
         public AuthResponse login(@RequestBody AuthRequest request) {
