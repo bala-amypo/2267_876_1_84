@@ -18,12 +18,11 @@ public class ServicePartController {
     public ServicePartController(ServicePartService service) {
         this.service = service;
     }
-
     @PostMapping
     public ServicePart create(@RequestBody ServicePart part) {
         return service.createPart(part);
     }
-art
+
     @GetMapping("/{id}")
     public ServicePart getById(@PathVariable Long id) {
         return service.getPartById(id);
