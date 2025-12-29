@@ -19,22 +19,16 @@ public class VerificationLogController {
         this.service = service;
     }
 
-    // ADMIN – Create log
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public VerificationLog create(@RequestBody VerificationLog log) {
         return service.createLog(log);
     }
 
-    // USER / ADMIN – Get log by ID
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public VerificationLog getById(@PathVariable Long id) {
         return service.getLogById(id);
     }
 
-    // USER / ADMIN – Logs for entry
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/entry/{entryId}")
     public List<VerificationLog> getByEntry(@PathVariable Long entryId) {
         return service.getLogsForEntry(entryId);
