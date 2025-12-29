@@ -14,25 +14,26 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+        private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthController(UserService userService,
-                          JwtTokenProvider jwtTokenProvider) {
-        this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+            public AuthController(UserService userService,
+                                      JwtTokenProvider jwtTokenProvider) {
+                                              this.userService = userService;
+                                                      this.jwtTokenProvider = jwtTokenProvider;
+                                                          }
 
-    @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
+                                                              @PostMapping("/login")
+                                                                  public AuthResponse login(@RequestBody AuthRequest request) {
 
-        User user = userService.getByEmail(request.getEmail());
+                                                                          User user = userService.getByEmail(request.getEmail());
 
-        String token = jwtTokenProvider.generateToken(
-                user.getEmail(),
-                user.getRole(),   
-                user.getId()
-        );
+                                                                                  String token = jwtTokenProvider.generateToken(
+                                                                                                  user.getEmail(),
+                                                                                                                  user.getRole(),   
+                                                                                                                                  user.getId()
+                                                                                                                                          );
 
-        return new AuthResponse(token);
-    }
-}
+                                                                                                                                                  return new AuthResponse(token);
+                                                                                                                                                      }
+                                                                                                                                                      }
+                                                                                                                                                      
