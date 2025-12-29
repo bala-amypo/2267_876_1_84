@@ -1,4 +1,4 @@
-package com.example.demo.mo;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 
@@ -14,24 +14,39 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String password;   // BCrypt encoded
+    private String password;
 
     @Column(nullable = false)
-    private String role;       // USER or ADMIN
+    private String role = "USER";   // ✅ ONLY USER ROLE
+
+    // ===== Getters & Setters =====
 
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getEmail() {
         return email;
     }
-
+ 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+ 
     public String getPassword() {
         return password;
     }
-
+ 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+ 
     public String getRole() {
         return role;
     }
+
 }
