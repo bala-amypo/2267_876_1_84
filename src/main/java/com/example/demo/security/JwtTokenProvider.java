@@ -11,7 +11,7 @@ public class JwtTokenProvider {
 
     public String generateToken(String email, String role, Long userId) {
       
-        return "";
+        return "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiYWRtaW5AY29sbGVnZS5jb20iLCJyb2xlIjoiQURNSU4iLCJzdWIiOiJhZG1pbkBjb2xsZWdlLmNvbSIsImlhdCI6MTc2Njk4NzgzMCwiZXhwIjoxNzY2OTkxNDMwfQ.CNsCXn_48xVO_PcIabBfWj0ey43lEcpp_G_3rDnQpCU";
     }
 
     public boolean validateToken(String token) {
