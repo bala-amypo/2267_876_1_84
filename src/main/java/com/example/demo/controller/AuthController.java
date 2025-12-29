@@ -22,18 +22,18 @@ public class AuthController {
                                                       this.jwtTokenProvider = jwtTokenProvider;
                                                           }
 
-                                                              @PostMapping("/login")
-                                                                  public AuthResponse login(@RequestBody AuthRequest request) {
+            @PostMapping("/login")
+        public AuthResponse login(@RequestBody AuthRequest request) {
 
-                                                                          User user = userService.getByEmail(request.getEmail());
+        User user = userService.getByEmail(request.getEmail());
 
-                                                                                  String token = jwtTokenProvider.generateToken(
-                                                                                                  user.getEmail(),
-                                                                                                                  user.getRole(),   
-                                                                                                                                  user.getId()
-                                                                                                                                          );
+        String token = jwtTokenProvider.generateToken(
+         user.getEmail(),
+         user.getRole(),   
+         user.getId()
+         );
 
-                                                                                                                                                  return new AuthResponse(token);
-                                                                                                                                                      }
+ return new AuthResponse(token);
+ }
 }
                                                                                                                                                       
