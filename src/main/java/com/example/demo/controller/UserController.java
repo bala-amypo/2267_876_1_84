@@ -16,7 +16,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    // ✅ REGISTER USER (ROLE ALWAYS USER)
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.register(user);

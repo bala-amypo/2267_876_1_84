@@ -25,7 +25,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // ❗ Required for Swagger + Tests
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
