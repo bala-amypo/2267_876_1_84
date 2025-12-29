@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.User;
-import com.example.demo.security.JwtUtil;
+import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthController(UserService userService,
-                          JwtUtil jwtUtil) {
+                          JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login")
@@ -30,7 +30,7 @@ public class AuthController {
                 request.getPassword()
         );
 
-        String token = jwtUtil.generateTokenForUser(user);
+        String token = jwtTokenProvider.generateToken(user);
         return new AuthResponse(token);
     }
 }
