@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,31 +19,24 @@ public class ServiceEntryController {
         this.service = service;
     }
 
-    // ADMIN – Create service entry
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
         return service.createServiceEntry(entry);
     }
 
-    // USER / ADMIN – Get entry by ID
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    // ✅ FIXED GET
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public ServiceEntry getById(@PathVariable Long id) {
         return service.getServiceEntryById(id);
     }
 
-    // USER / ADMIN – Get entries for vehicle
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/vehicle/{vehicleId}")
     @Transactional(readOnly = true)
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
         return service.getEntriesForVehicle(vehicleId);
     }
 
-    // ADMIN – Get entries by garage
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/garage/{garageId}")
     @Transactional(readOnly = true)
     public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {

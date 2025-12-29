@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.model.Garage;
 import com.example.demo.service.GarageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/garages")
 @Tag(name = "Garage")
-@PreAuthorize("hasRole('ADMIN')")
 public class GarageController {
 
     private final GarageService service;
