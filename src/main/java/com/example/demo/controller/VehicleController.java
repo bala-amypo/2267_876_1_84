@@ -40,14 +40,12 @@ public class VehicleController {
         return service.getVehicleByVin(vin);
     }
 
-    // USER – List vehicles by owner
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/owner/{ownerId}")
     public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
         return service.getVehiclesByOwner(ownerId);
     }
 
-    // ADMIN – Deactivate vehicle
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/deactivate")
     public void deactivate(@PathVariable Long id) {
