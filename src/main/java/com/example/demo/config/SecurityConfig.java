@@ -1,41 +1,52 @@
-package com.example.demo.config;
+package com.example.demo.security;
 
-import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider provider) {
-        return new JwtAuthenticationFilter(provider);
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // ❗ Required for Swagger + Tests
             .csrf(csrf -> csrf.disable())
-
-            // ❗ Allow everything (tests do NOT expect 401)
-            .authorizeHttpRequests(auth -> auth
-                    .anyRequest().permitAll()
+            .sessionManagement(sm ->
+                sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // ❗ No login, no session
-            .httpBasic(Customizer.withDefaults());
+            .authorizeHttpRequests(auth -> auth
+
+                // 🔓 AUTH
+                .requestMatchers("/api/auth/**").permitAll()
+
+                // 👤 USER ACCESS
+                .requestMatchers("/api/vehicles/**").hasRole("USER")
+                .requestMatchers("/api/service-entries/**").hasAnyRole("USER", "ADMIN")
+
+                // 🛠️ ADMIN / GARAGE ACCESS
+                .requestMatchers("/api/garages/**").hasRole("ADMIN")
+                .requestMatchers("/api/service-parts/**").hasRole("ADMIN")
+                .requestMatchers("/api/verification-logs/**").hasRole("ADMIN")
+
+                // ❌ EVERYTHING ELSE
+                .anyRequest().authenticated()
+            )
+
+            // JWT FILTER (already in your project)
+            .addFilterBefore(
+                jwtAuthenticationFilter(),
+                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
     }
 }
