@@ -19,21 +19,18 @@ public class ServicePartController {
         this.service = service;
     }
 
-    // ADMIN – Add part
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ServicePart create(@RequestBody ServicePart part) {
         return service.createPart(part);
     }
 
-    // USER / ADMIN – Get part
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     public ServicePart getById(@PathVariable Long id) {
         return service.getPartById(id);
     }
 
-    // USER / ADMIN – List parts for entry
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/entry/{entryId}")
     public List<ServicePart> getByEntry(@PathVariable Long entryId) {

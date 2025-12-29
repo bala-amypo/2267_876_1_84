@@ -20,14 +20,12 @@ public class ServiceEntryController {
         this.service = service;
     }
 
-    // ADMIN – Create service entry
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
         return service.createServiceEntry(entry);
     }
 
-    // USER / ADMIN – Get entry by ID
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
@@ -35,7 +33,6 @@ public class ServiceEntryController {
         return service.getServiceEntryById(id);
     }
 
-    // USER / ADMIN – Get entries for vehicle
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/vehicle/{vehicleId}")
     @Transactional(readOnly = true)
@@ -43,7 +40,6 @@ public class ServiceEntryController {
         return service.getEntriesForVehicle(vehicleId);
     }
 
-    // ADMIN – Get entries by garage
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/garage/{garageId}")
     @Transactional(readOnly = true)
