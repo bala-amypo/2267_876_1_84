@@ -19,29 +19,36 @@ public class VehicleController {
         this.service = service;
     }
 
-    // USER: Register vehicle
+    // USER – Register vehicle
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     public Vehicle create(@RequestBody Vehicle vehicle) {
         return service.createVehicle(vehicle);
     }
 
-    // USER: Get vehicle by ID
+    // USER – Get vehicle by ID (own vehicle)
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     public Vehicle getById(@PathVariable Long id) {
         return service.getVehicleById(id);
     }
 
-    // USER: Get vehicles by owner
+    // USER – Get vehicle by VIN
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/vin/{vin}")
+    public Vehicle getByVin(@PathVariable String vin) {
+        return service.getVehicleByVin(vin);
+    }
+
+    // USER – List vehicles by owner
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/owner/{ownerId}")
     public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
         return service.getVehiclesByOwner(ownerId);
     }
 
-    // USER: Deactivate own vehicle
-    @PreAuthorize("hasRole('USER')")
+    // ADMIN – Deactivate vehicle
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}/deactivate")
     public void deactivate(@PathVariable Long id) {
         service.deactivateVehicle(id);
