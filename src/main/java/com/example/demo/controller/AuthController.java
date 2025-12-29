@@ -2,38 +2,35 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.example.demo.model.User;
-import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.entity.User;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @Tag(name = "Authentication")
 public class AuthController {
 
     private final UserService userService;
-        private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
-            public AuthController(UserService userService,
-             JwtTokenProvider jwtTokenProvider) {
-             this.userService = userService;
-             this.jwtTokenProvider = jwtTokenProvider;
-             }
+    public AuthController(UserService userService,
+                          JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+    }
 
-            @PostMapping("/login")
-        public AuthResponse login(@RequestBody AuthRequest request) {
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody AuthRequest request) {
 
-        User user = userService.getByEmail(request.getEmail());
+        User user = userService.authenticate(
+                request.getEmail(),
+                request.getPassword()
+        );
 
-        String token = jwtTokenProvider.generateToken(
-         user.getEmail(),
-         user.getRole(),   
-         user.getId()
-         );
-
- return new AuthResponse(token);
- }
+        String token = jwtUtil.generateTokenForUser(user);
+        return new AuthResponse(token);
+    }
 }
-                                                                                                                                                      

@@ -1,31 +1,34 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.User;
+import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository,
+                           PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public User register(User user) {
-        user.setId(null);          // ensure new record
-        user.setPassword(user.getPassword());
-        return repository.save(user);
-    }
+    public User authenticate(String email, String password) {
 
-    @Override
-    public User getByEmail(String email) {
-        return repository.findByEmail(email)
+        User user = repository.findByEmail(email)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("User not found"));
+                        new IllegalArgumentException("Invalid email"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        return user;
     }
 }
