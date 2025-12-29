@@ -1,48 +1,38 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@Tag(name = "Authentication")
 public class AuthController {
 
-    private final UserRepository repository;
-    private final PasswordEncoder encoder;
-    private final JwtTokenProvider jwt;
+    private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthController(
-            UserRepository repository,
-            PasswordEncoder encoder,
-            JwtTokenProvider jwt) {
-        this.repository = repository;
-        this.encoder = encoder;
-        this.jwt = jwt;
-    }
-
-    @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repository.save(user);
+    public AuthController(UserService userService,
+                          JwtTokenProvider jwtTokenProvider) {
+        this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public AuthResponse login(@RequestBody AuthRequest request) {
 
-        User dbUser = repository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
+        User user = userService.getByEmail(request.getEmail());
 
-        if (!encoder.matches(user.getPassword(), dbUser.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        return jwt.generateToken(
-                dbUser.getEmail(),
-                dbUser.getRole(),
-                dbUser.getId()
+        String token = jwtTokenProvider.generateToken(
+                user.getEmail(),
+                user.getRole(),   
+                user.getId()
         );
+
+        return new AuthResponse(token);
     }
 }
