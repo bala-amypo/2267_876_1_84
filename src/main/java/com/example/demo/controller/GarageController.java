@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/garages")
 @Tag(name = "Garage")
+@PreAuthorize("hasRole('ADMIN')")
 public class GarageController {
 
     private final GarageService service;
