@@ -11,7 +11,7 @@ public class JwtTokenProvider {
 
     public String generateToken(String email, String role, Long userId) {
       
-        return "jwt-token";
+        return "";
     }
 
     public boolean validateToken(String token) {
