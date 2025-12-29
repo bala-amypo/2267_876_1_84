@@ -28,12 +28,11 @@ public class SecurityConfig {
             // ❗ Required for Swagger + Tests
             .csrf(csrf -> csrf.disable())
 
-            // ❗ Allow everything (tests do NOT expect 401)
             .authorizeHttpRequests(auth -> auth
                     .anyRequest().permitAll()
             )
 
-            // ❗ No login, no session
+            
             .httpBasic(Customizer.withDefaults());
 
         return http.build();
