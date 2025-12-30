@@ -20,27 +20,23 @@ public class ServiceEntryController {
         this.service = service;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
         return service.createServiceEntry(entry);
     }
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public ServiceEntry getById(@PathVariable Long id) {
         return service.getServiceEntryById(id);
     }
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/vehicle/{vehicleId}")
     @Transactional(readOnly = true)
     public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
         return service.getEntriesForVehicle(vehicleId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/garage/{garageId}")
     @Transactional(readOnly = true)
     public List<ServiceEntry> getByGarage(@PathVariable Long garageId) {
